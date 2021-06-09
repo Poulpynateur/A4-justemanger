@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+    nginx:
+        image: nginx:1.19
+        ports:
+            - "80:80"
+        volumes:
+            - "./nginx/templates:/etc/nginx/templates"
+            - "./nginx/env-conf:/etc/nginx/env-conf"
+    auth:
+        build:
+            context: ./node-authservice
+        ports:
+            - "3000"
+        volumes:
+            - "./node-authservice:/app"
+    test:
+        build:
+            context: ./node-testservice
+        ports:
+            - "3000"
+        volumes:
+            - "./node-testservice:/app"
