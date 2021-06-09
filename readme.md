@@ -10,3 +10,10 @@ Et ajouter les noms de domaines utilisés par l'application :
 127.0.0.1 auth.juste-manger.local
 127.0.0.1 test.juste-manger.local
 ```
+
+# Démarage
+
+Démarrer avec du load-balancing sur 3 instances de test :
+```
+docker-compose up --scale test=3
+```
