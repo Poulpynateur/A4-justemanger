@@ -36,7 +36,7 @@ server {
 }
 server {
     listen 80;
-    server_name test.juste-manger.local;
+    server_name service.juste-manger.local;
     location / {
         proxy_pass http://test:3000;
         auth_request     /auth;
@@ -47,7 +47,7 @@ server {
         internal;
         proxy_pass              http://auth:3000/auth;
         # proxy_pass_request_body on;
-        proxy_set_body    "token=$http_apikey&token_hint=access_token";
+        proxy_set_body          "token=$http_apikey&token_hint=access_token";
         proxy_set_header        Content-Length "";
         proxy_set_header        X-Original-URI $request_uri;
     }

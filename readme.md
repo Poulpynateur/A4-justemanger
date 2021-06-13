@@ -15,5 +15,16 @@ Et ajouter les noms de domaines utilisés par l'application :
 
 Démarrer avec du load-balancing sur 3 instances de test :
 ```
-docker-compose up --scale test=3
+docker-compose up --scale service=3
+```
+
+/!\ `docker-compose up` ne build pas l'image (ne prend pas en compte les modif apporté au Dockerfile) pour cela il faut utilisé :
+
+```
+docker-compose build
+```
+
+Commande dans la BDD :
+```
+docker-compose exec mongo /bin/bash
 ```

@@ -1,23 +1,41 @@
 version: "3.8"
 services:
-    nginx:
-        image: nginx:1.19
+
+# DB
+    mongo:
+        image: mongo:latest
+        restart: always
         ports:
-            - "80:80"
+            - 27017:27017
+        environment:
+            - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+            - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
         volumes:
-            - "./nginx/templates:/etc/nginx/templates"
-            - "./nginx/env-conf:/etc/nginx/env-conf"
+            - "./mongodb/:/docker-entrypoint-initdb.d/entrypoint.js:ro"
+        command: mongod --quiet --logpath /dev/null 
+
+#    nginx:
+#        image: nginx:1.19
+#        ports:
+#            - "80:80"
+#        volumes:
+#            - "./nginx/templates:/etc/nginx/templates"
+#            - "./nginx/env-conf:/etc/nginx/env-conf"
     auth:
         build:
-            context: ./node-authservice
+            context: ./node-auth
+        depends_on:
+            - "mongo"
         ports:
             - "3000"
         volumes:
-            - "./node-authservice:/app"
-    test:
-        build:
-            context: ./node-testservice
-        ports:
-            - "3000"
-        volumes:
-            - "./node-testservice:/app"
+            - "./node-auth:/app"
+
+#    service:
+#        build:
+#            context: ./node-service
+#        ports:
+#            - "3000"
+#        volumes:
+#            - "./node-service:/app"
