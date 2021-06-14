@@ -2,7 +2,7 @@ version: "3.8"
 services:
 
 # DB
-#    mongo:
+#    db-mongo:
 #        image: mongo:latest
 #        restart: always
 #        ports:
@@ -32,15 +32,15 @@ services:
 #        volumes:
 #            - "./nginx/templates:/etc/nginx/templates"
 #            - "./nginx/env-conf:/etc/nginx/env-conf"
-#    auth:
-#        build:
-#            context: ./node-auth
-#        depends_on:
-#            - "mongo"
-#        ports:
-#            - "3000"
-#        volumes:
-#            - "./node-auth"
+    auth:
+        build:
+            context: ./node-auth
+        depends_on:
+            - "db-sqlserver"
+        ports:
+            - "3000"
+        volumes:
+            - "./node-auth"
 
 #    service:
 #        build:

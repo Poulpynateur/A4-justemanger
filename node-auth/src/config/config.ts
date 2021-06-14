@@ -23,6 +23,8 @@ export default {
     },
     port: parseInt(process.env.PORT as string, 10),
     db: {
+        retry: 5,
+        interval: 10000,
         host: process.env.DB_HOST as string,
         name: process.env.DB_DATABASE as string,
         username: process.env.DB_USERNAME as string,

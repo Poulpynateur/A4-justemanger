@@ -26,7 +26,7 @@ docker-compose build
 
 Clean docker :
 ```
- docker-compose down -v --rmi all --remove-orphans
+docker-compose down -v --rmi all --remove-orphans
 ```
 
 Commande dans la BDD :
