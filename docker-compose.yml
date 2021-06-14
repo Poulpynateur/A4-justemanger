@@ -2,34 +2,45 @@ version: "3.8"
 services:
 
 # DB
-    mongo:
-        image: mongo:latest
-        restart: always
-        ports:
-            - 27017:27017
-        environment:
-            - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-        volumes:
-            - "./mongodb/:/docker-entrypoint-initdb.d/entrypoint.js:ro"
-        command: mongod --quiet --logpath /dev/null 
+#    mongo:
+#        image: mongo:latest
+#        restart: always
+#        ports:
+#            - 27017:27017
+#        environment:
+#            - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+#            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+#        volumes:
+#            - ./db-mongodb/:/docker-entrypoint-initdb.d/entrypoint.js:ro
+#        command: mongod --quiet --logpath /dev/null 
 
+    db-sqlserver:
+        build:
+            context: ./db-sqlserver
+        ports:
+            - 1433:1433
+        environment:
+            SA_PASSWORD: ${SQLSERVER_ROOT_PASSWORD}
+            ACCEPT_EULA: "Y"
+        volumes:
+            - db-vol-sqlserver:/usr/src/app
+        
 #    nginx:
 #        image: nginx:1.19
 #        ports:
-#            - "80:80"
+#            - 80:80
 #        volumes:
 #            - "./nginx/templates:/etc/nginx/templates"
 #            - "./nginx/env-conf:/etc/nginx/env-conf"
-    auth:
-        build:
-            context: ./node-auth
-        depends_on:
-            - "mongo"
-        ports:
-            - "3000"
-        volumes:
-            - "./node-auth:/app"
+#    auth:
+#        build:
+#            context: ./node-auth
+#        depends_on:
+#            - "mongo"
+#        ports:
+#            - "3000"
+#        volumes:
+#            - "./node-auth"
 
 #    service:
 #        build:
@@ -37,4 +48,7 @@ services:
 #        ports:
 #            - "3000"
 #        volumes:
-#            - "./node-service:/app"
+#            - "./node-service"
+
+volumes:
+    db-vol-sqlserver:
