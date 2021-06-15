@@ -7,21 +7,30 @@ export class User {
     constructor(
         public username: string,
         public role: string,
-        public jwt: {
-            accessToken: string,
-            refreshToken: string
-        }
+        public accessToken: string,
+        public refreshToken: string
     ) {}
 }
 
 export namespace UserRepository {
+
+    export function updateUser(user: User)
+    {
+        // Save refresh token hash
+    }
+
     export function getUser(username: string)
     {
-        const user = new User(username, '', {accessToken: '', refreshToken:''});
+        const user = new User(username, '', '', '');
         return user;
     }
 
     export function checkCredentials(username: string, password: string)
+    {
+        return true;
+    }
+
+    export function checkRefreshToken(username: string, refreshToken: string)
     {
         return true;
     }

@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import {Request} from "express";
+import randomstring from 'randomstring';
 
-import config, { JWTconfig } from '../../config/config';
+import config from '../../config/config';
 
 import {User, UserRepository} from '../models/user';
 
@@ -16,25 +17,37 @@ function createTokens(username: string, password: string)
             }
             
             const user: User = UserRepository.getUser(username);
+
+            user.refreshToken = randomstring.generate({
+                length: 256
+            });
+            user.accessToken = generateJwtToken(user);
     
-            user.jwt.accessToken = generateToken(user, config.jwt.access);
-            user.jwt.refreshToken = generateToken(user, config.jwt.refresh);
-    
+            UserRepository.updateUser(user);
             resolve(user);
         }
         catch (error) {
-            error.
             reject(error);
         }
     }); 
 }
 
-
-function refreshAccessToken(refreshToken: string)
+function refreshAccessToken(username: string, refreshToken: string)
 {
-    return checkToken(refreshToken, config.jwt.refresh.secret)
-    .then((user) => {
-        return generateToken(user, config.jwt.refresh);
+    return new Promise((resolve: (accessToken: string) => void, reject: (error: Error) => void) => {
+
+        try
+        {
+            if (!UserRepository.checkRefreshToken(username, refreshToken))
+            {
+                throw new Error("Refresh token is invalid.");
+            }
+            const user: User = UserRepository.getUser(username);
+            resolve(generateJwtToken(user));
+        }
+        catch (error) {
+            reject(error);
+        }
     });
 }
 
@@ -45,18 +58,18 @@ function refreshAccessToken(refreshToken: string)
  * @param expires 
  * @returns 
  */
-function generateToken(user: User, jwtConfig: JWTconfig)
+function generateJwtToken(user: User)
 {
     // don't include whole user to payload
-    return jwt.sign({username: user.username}, jwtConfig.secret, { expiresIn: jwtConfig.validity });
+    return jwt.sign({username: user.username}, config.jwt.secret, { expiresIn: config.jwt.validity });
 }
 
-function checkToken(token: string, secret: string)
+function checkJwtToken(token: string)
 {
     return new Promise((resolve: (user: User) => void, reject: (error: Error) => void) => {
         try
         {
-            const decoded: any = jwt.verify(token, secret);
+            const decoded: any = jwt.verify(token, config.jwt.secret);
             const user = UserRepository.getUser(decoded.username);
             resolve(user);
         }
@@ -65,11 +78,6 @@ function checkToken(token: string, secret: string)
             reject(error);
         }
     }); 
-}
-
-function checkAccessToken(token: string)
-{
-    return checkToken(token, config.jwt.access.secret);
 }
 
 function getTokenFromRequest(req: Request)
@@ -82,5 +90,5 @@ export default {
     getTokenFromRequest,
     createTokens,
     refreshAccessToken,
-    checkAccessToken
+    checkJwtToken
 };

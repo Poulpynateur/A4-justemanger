@@ -22,8 +22,6 @@ services:
         environment:
             SA_PASSWORD: ${SQLSERVER_ROOT_PASSWORD}
             ACCEPT_EULA: "Y"
-        volumes:
-            - db-vol-sqlserver:/usr/src/app
         
 #    nginx:
 #        image: nginx:1.19
@@ -49,6 +47,3 @@ services:
 #            - "3000"
 #        volumes:
 #            - "./node-service"
-
-volumes:
-    db-vol-sqlserver:

@@ -3,6 +3,7 @@ import authService from '../../core/services/authService';
 
 function login(req: Request, res: Response)
 {
+    // TODO : use validator
     authService.createTokens(req.body.username, req.body.password)
     .then((user) => {
         res.status(200).json(user);
@@ -13,10 +14,7 @@ function login(req: Request, res: Response)
 
 function refresh(req: Request, res: Response)
 {
-    const token = authService.getTokenFromRequest(req);
-    if (token == null) return res.status(400).json({message: "No token provided."});
-
-    authService.refreshAccessToken(token)
+    authService.refreshAccessToken(req.body.username, req.body.refreshToken)
     .then((token) => {
         res.status(200).json({accessToken: token});
     }).catch((error) => {
@@ -24,4 +22,15 @@ function refresh(req: Request, res: Response)
     });
 }
 
-export default {login, refresh};
+function verify(req: Request, res: Response)
+{
+    authService.checkJwtToken(req.body.accessToken)
+    .then((user) => {
+        res.status(200).json(user);
+    }).catch((error) => {
+        res.status(400).json({"message": error.message});
+    });
+}
+
+
+export default {login, refresh, verify};
