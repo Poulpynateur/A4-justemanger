@@ -1,4 +1,18 @@
-# Mise en place
+# Setup
+
+## Création des .env
+
+Le .env à la racine du projet doit contenir les clés suivantes :
+```
+MONGO_ROOT_USERNAME=root
+MONGO_ROOT_PASSWORD=pass
+
+SQLSERVER_ROOT_PASSWORD=Password123
+```
+
+Ìl est aussi nécessaire de créer les .env de `/node-auth` et `/node-service` (instructions dans les readme.md).
+
+## Résolution des noms de domaines
 
 Pour que Nginx puisse traiter les noms de domaines, modifier le fichier (ouvrir depuis un notepad administrateur) :
 ```
@@ -24,12 +38,12 @@ docker-compose up --scale service=3
 docker-compose build
 ```
 
-Clean docker :
+Clean completement docker (pas besoin de bu)
 ```
 docker-compose down -v --rmi all --remove-orphans
 ```
 
-Commande dans la BDD :
+Accèder au shell d'un conteneur :
 ```
-docker-compose exec mongo /bin/bash
+docker-compose exec [nom-container] /bin/bash
 ```

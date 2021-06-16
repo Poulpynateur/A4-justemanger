@@ -4,18 +4,25 @@ import * as tedious from 'tedious';
 import logger from './logger';
 import config from './config'
 
-let tries: number = 0;
+import dbFactory from './databaseFactory';
 
 function connect() {
+
+    let tries: number = 0;
+
     const sequelize = new Sequelize(config.db.name, config.db.username, config.db.password, {
         dialect: 'mssql',
         host: config.db.host,
-        dialectModule: tedious
+        dialectModule: tedious,
+        logging: false
     });
 
-    sequelize.authenticate().then((err) => {
-        logger.info(`Connected to database ${config.db.name}`);
+    sequelize.sync({force: true})
+    .then(() => {
+        logger.info(`Connected to DB ${config.db.name}`);
         tries = 0;
+
+        dbFactory.createDefault();
     })
     .catch((err: any) => {
         logger.error(err);
@@ -27,6 +34,7 @@ function connect() {
         }
     });
 
+    return sequelize;
 }
 
 export default {connect};

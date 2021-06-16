@@ -1,53 +1,32 @@
 import jwt from 'jsonwebtoken';
 import {Request} from "express";
-import randomstring from 'randomstring';
+import crypto from "crypto-extra";
 
 import config from '../../config/config';
+import logger from "../../config/logger";
 
-import {User, UserRepository} from '../models/user';
+import {UserDTO, UserRepository} from '../models/user';
 
 function createTokens(username: string, password: string)
 {
-    return new Promise((resolve: (user: User) => void, reject: (error: Error) => void) => {
-        try
-        {
-            if (!UserRepository.checkCredentials(username, password))
-            {
-                throw new Error("Wrong credentials.");
-            }
-            
-            const user: User = UserRepository.getUser(username);
-
-            user.refreshToken = randomstring.generate({
-                length: 256
-            });
-            user.accessToken = generateJwtToken(user);
+    return UserRepository.checkCredentials(username, password)
+    .then((user: UserDTO) => {
+        user.refreshToken = crypto.randomKey(256);
+        user.accessToken = generateJwtToken(user);
     
-            UserRepository.updateUser(user);
-            resolve(user);
-        }
-        catch (error) {
-            reject(error);
-        }
-    }); 
+        return UserRepository.updateRefreshToken(user);
+    })
+    .then((user: UserDTO) => {
+        return user;
+    });
+
 }
 
 function refreshAccessToken(username: string, refreshToken: string)
 {
-    return new Promise((resolve: (accessToken: string) => void, reject: (error: Error) => void) => {
-
-        try
-        {
-            if (!UserRepository.checkRefreshToken(username, refreshToken))
-            {
-                throw new Error("Refresh token is invalid.");
-            }
-            const user: User = UserRepository.getUser(username);
-            resolve(generateJwtToken(user));
-        }
-        catch (error) {
-            reject(error);
-        }
+    return UserRepository.checkRefreshToken(username, refreshToken)
+    .then((user: UserDTO) => {
+        return generateJwtToken(user);
     });
 }
 
@@ -58,7 +37,7 @@ function refreshAccessToken(username: string, refreshToken: string)
  * @param expires 
  * @returns 
  */
-function generateJwtToken(user: User)
+function generateJwtToken(user: UserDTO)
 {
     // don't include whole user to payload
     return jwt.sign({username: user.username}, config.jwt.secret, { expiresIn: config.jwt.validity });
@@ -66,7 +45,7 @@ function generateJwtToken(user: User)
 
 function checkJwtToken(token: string)
 {
-    return new Promise((resolve: (user: User) => void, reject: (error: Error) => void) => {
+    return new Promise((resolve: (user: UserDTO) => void, reject: (error: Error) => void) => {
         try
         {
             const decoded: any = jwt.verify(token, config.jwt.secret);
@@ -77,13 +56,13 @@ function checkJwtToken(token: string)
         {
             reject(error);
         }
-    }); 
+    });
 }
 
-function getTokenFromRequest(req: Request)
+function getTokenFromRequest(req: Request) : string
 {
     const authHeader = req.headers['authorization'];
-    return authHeader && authHeader.split(' ')[1];
+    return authHeader && authHeader.split(' ')[1] || '';
 }
 
 export default {

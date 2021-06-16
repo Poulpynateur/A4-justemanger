@@ -1,37 +1,104 @@
-// ? : pros and cons of using class with static methods vs namespace ?
-// From what I know typescript will not create JS class (may be slower than function), IDK, I am not a JS pro
-// Anyway it is the only place we need namespace since modules are enought most of the time
+import Sequelize from "sequelize";
+import crypto from "crypto-extra";
 
-// FIXME : replace role type by enum
-export class User {
-    constructor(
-        public username: string,
-        public role: string,
-        public accessToken: string,
-        public refreshToken: string
-    ) {}
+import logger from "../../config/logger";
+
+/**** ORM ****/
+export const User = global.db.define('users', {
+    id: {
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+    },
+    username: {
+        type: Sequelize.STRING
+    },
+    password: {
+        type: Sequelize.STRING
+    },
+    refresh_token: {
+        type: Sequelize.STRING(300)
+    },
+    refresh_token_created_at: {
+        type: Sequelize.DATE
+    }
+},{
+    timestamps: false
+});
+
+/**** DTO ****/
+export class UserDTO {
+    public username: string = '';
+    public role?: string;
+    public accessToken?: string;
+    public refreshToken?: string;
+
+    constructor(username: string)
+    {this.username = username}
 }
 
+/**** repository ****/
 export namespace UserRepository {
 
-    export function updateUser(user: User)
+    export function updateRefreshToken(userDTO: UserDTO)
     {
-        // Save refresh token hash
+        return User.findOne({ where: { username: userDTO.username } })
+        .then((user: any) => {
+            // TODO : add refresh_token_created_at
+            return user.update({ refresh_token: crypto.hash(userDTO.refreshToken, {algorithm: 'SHA256'})})
+        })
+        .then((user: any) => {
+            return userDTO;
+        });
     }
 
     export function getUser(username: string)
     {
-        const user = new User(username, '', '', '');
-        return user;
+        return User.findOne({ where: { username: username } })
+        .then((user: any) => {
+            return new Promise((resolve, reject) => {
+                if (user === null)
+                {
+                    reject(new Error("Username not found."));
+                    return;
+                }
+                resolve(new UserDTO(user.username));
+            });
+        });
     }
 
     export function checkCredentials(username: string, password: string)
     {
-        return true;
+        return User.findOne({ where: { username: username, password: crypto.hash(password, {algorithm: 'SHA256'})}})
+        .then((user : any) => {
+            return new Promise((resolve, reject) => {
+                if (user === null)
+                {
+                    reject(new Error("Wrong credentials."));
+                    return;
+                }
+                resolve(new UserDTO(user.username));
+            });
+        });
     }
 
     export function checkRefreshToken(username: string, refreshToken: string)
     {
-        return true;
+        return User.findOne({ where: { username: username, refresh_token: crypto.hash(refreshToken, {algorithm: 'SHA256'})}})
+        .then((user : any) => {
+            return new Promise((resolve, reject) => {
+                if (user === null)
+                {
+                    reject(new Error("Wrong credentials.")); return;
+                }
+                else if (user.refresh_token_created_at)
+                {
+                    logger.data(user.refresh_token_created_at);
+                    reject(new Error("Refresh token expired.")); return;
+                }
+
+                resolve(new UserDTO(user.username));
+            });
+        });
     }
 }

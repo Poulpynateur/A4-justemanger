@@ -1,25 +1,29 @@
 # Setup
 
-.env file need to contain the following keys :
-
+Le .env à la racine du projet doit contenir les clés suivantes :
 ```
 JWT_ACCESS_SECRET=
-JWT_REFRESH_SECRET=
 
-DB_HOST=127.0.0.1
-DB_DATABASE=database_name
-DB_USERNAME=username
-DB_PASSWORD=password
+PORT=3000
+
+DB_HOST=db-sqlserver
+DB_DATABASE=JusteManger
+DB_USERNAME=admin
+DB_PASSWORD=Password123
 ```
 
-Generate secret :
+Générer un secret dans la console pour JWT :
 ```
 node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
 ```
 
+Installer les dépendances de l'application :
+```
+npm install
+```
+
 # Starting
 
-Using the command :
 ```
 npm run dev
 ```

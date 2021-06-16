@@ -31,14 +31,13 @@ services:
 #            - "./nginx/templates:/etc/nginx/templates"
 #            - "./nginx/env-conf:/etc/nginx/env-conf"
     auth:
-        build:
-            context: ./node-auth
+        build: ./node-auth
         depends_on:
-            - "db-sqlserver"
+            - db-sqlserver
         ports:
-            - "3000"
+            - 3000:3000
         volumes:
-            - "./node-auth"
+            - ./node-auth:/app
 
 #    service:
 #        build:

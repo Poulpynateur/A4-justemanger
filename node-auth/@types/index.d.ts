@@ -1,9 +1,16 @@
-import {User} from "../src/core/models/user"
+import {UserDTO} from "../src/core/models/user"
+import Sequelize from "sequelize";
 
 declare global {
     namespace Express {
         export interface Request {
-            currentUser?: User
+            currentUser?: UserDTO
+        }
+    }
+
+    namespace NodeJS {
+        interface Global {
+            db: Sequelize;
         }
     }
 }

@@ -1,13 +1,16 @@
-import {Request, Response} from "express";
+import {Request, Response} from 'express';
+
+import { UserDTO } from '../../core/models/user';
 import authService from '../../core/services/authService';
+
+// TODO : use validator
 
 function login(req: Request, res: Response)
 {
-    // TODO : use validator
     authService.createTokens(req.body.username, req.body.password)
-    .then((user) => {
+    .then((user: UserDTO) => {
         res.status(200).json(user);
-    }).catch((error) => {
+    }).catch((error: Error) => {
         res.status(400).json({"message": error.message});
     });
 }
@@ -15,19 +18,19 @@ function login(req: Request, res: Response)
 function refresh(req: Request, res: Response)
 {
     authService.refreshAccessToken(req.body.username, req.body.refreshToken)
-    .then((token) => {
+    .then((token: string) => {
         res.status(200).json({accessToken: token});
-    }).catch((error) => {
+    }).catch((error: Error) => {
         res.status(400).json({"message": error.message});
     });
 }
 
 function verify(req: Request, res: Response)
 {
-    authService.checkJwtToken(req.body.accessToken)
-    .then((user) => {
+    authService.checkJwtToken(authService.getTokenFromRequest(req))
+    .then((user: UserDTO) => {
         res.status(200).json(user);
-    }).catch((error) => {
+    }).catch((error: Error) => {
         res.status(400).json({"message": error.message});
     });
 }
