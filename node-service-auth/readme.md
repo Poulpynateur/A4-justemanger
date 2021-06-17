@@ -2,8 +2,6 @@
 
 Le .env à la racine du projet doit contenir les clés suivantes :
 ```
-JWT_ACCESS_SECRET=
-
 PORT=3000
 
 DB_HOST=db-sqlserver
@@ -12,10 +10,7 @@ DB_USERNAME=admin
 DB_PASSWORD=Password123
 ```
 
-Générer un secret dans la console pour JWT :
-```
-node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
-```
+Créer les clés publique et privé et les mettre dans les fichiers `./ressources/private.key` et `./ressources/public.pem`.
 
 Installer les dépendances de l'application :
 ```

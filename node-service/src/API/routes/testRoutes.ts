@@ -1,9 +1,10 @@
 import * as express from "express";
 import authWS from '../webservices/testWS';
+import authMiddleware from '../middleware/authMiddleware';
 
 let router = express.Router();
 
-router.post('/test', authWS.test);
-router.post('/test-secured', authWS.test);
+router.get('/', authWS.test);
+router.get('/secured', authMiddleware.authenticateToken, authWS.testSecured);
 
 export default router;

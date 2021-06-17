@@ -40,7 +40,7 @@ function refreshAccessToken(username: string, refreshToken: string)
 function generateJwtToken(user: UserDTO)
 {
     // don't include whole user to payload
-    return jwt.sign({username: user.username}, config.jwt.secret, { expiresIn: config.jwt.validity });
+    return jwt.sign({username: user.username}, config.jwt.private, { expiresIn: config.jwt.validity, algorithm: 'RS256' });
 }
 
 function checkJwtToken(token: string)
@@ -48,7 +48,7 @@ function checkJwtToken(token: string)
     return new Promise((resolve: (user: UserDTO) => void, reject: (error: Error) => void) => {
         try
         {
-            const decoded: any = jwt.verify(token, config.jwt.secret);
+            const decoded: any = jwt.verify(token, config.jwt.public, {algorithms: ['RS256']});
             const user = UserRepository.getUser(decoded.username);
             resolve(user);
         }

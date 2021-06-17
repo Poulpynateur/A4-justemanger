@@ -23,26 +23,28 @@ services:
             SA_PASSWORD: ${SQLSERVER_ROOT_PASSWORD}
             ACCEPT_EULA: "Y"
         
-#    nginx:
-#        image: nginx:1.19
+#    proxy:
+#        build: ./node-proxy
 #        ports:
-#            - 80:80
+#            - 3000:3000
 #        volumes:
-#            - "./nginx/templates:/etc/nginx/templates"
-#            - "./nginx/env-conf:/etc/nginx/env-conf"
-    auth:
-        build: ./node-auth
+#            - ./node-proxy:/app
+
+# Services
+    service-auth:
+        build: ./node-service-auth
         depends_on:
             - db-sqlserver
         ports:
             - 3000:3000
         volumes:
-            - ./node-auth:/app
+            - ./node-service-auth:/app
 
-#    service:
-#        build:
-#            context: ./node-service
-#        ports:
-#            - "3000"
-#        volumes:
-#            - "./node-service"
+    service-test:
+        build: ./node-service
+#        depends_on:
+#            - db-mongo
+        ports:
+            - 8000:3000
+        volumes:
+            - ./node-service:/app

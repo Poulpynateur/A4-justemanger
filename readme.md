@@ -38,7 +38,7 @@ docker-compose up --scale service=3
 docker-compose build
 ```
 
-Clean completement docker (pas besoin de bu)
+Clean completement docker (pas besoin de up)
 ```
 docker-compose down -v --rmi all --remove-orphans
 ```

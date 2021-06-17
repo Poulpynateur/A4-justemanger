@@ -6,4 +6,9 @@ function test(req: Request, res: Response)
     res.status(200).json({message: testService.testService()});
 }
 
-export default {test};
+function testSecured(req: Request, res: Response)
+{
+    res.status(200).json({payload: req.currentUser});
+}
+
+export default {test, testSecured};

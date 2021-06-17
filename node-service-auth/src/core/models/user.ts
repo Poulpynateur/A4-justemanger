@@ -2,6 +2,7 @@ import Sequelize from "sequelize";
 import crypto from "crypto-extra";
 
 import logger from "../../config/logger";
+import config from "../../config/config";
 
 /**** ORM ****/
 export const User = global.db.define('users', {
@@ -45,7 +46,7 @@ export namespace UserRepository {
         return User.findOne({ where: { username: userDTO.username } })
         .then((user: any) => {
             // TODO : add refresh_token_created_at
-            return user.update({ refresh_token: crypto.hash(userDTO.refreshToken, {algorithm: 'SHA256'})})
+            return user.update({ refresh_token: crypto.hash(userDTO.refreshToken, {algorithm: 'SHA256'}), refresh_token_created_at: Date.now()})
         })
         .then((user: any) => {
             return userDTO;
@@ -87,11 +88,13 @@ export namespace UserRepository {
         return User.findOne({ where: { username: username, refresh_token: crypto.hash(refreshToken, {algorithm: 'SHA256'})}})
         .then((user : any) => {
             return new Promise((resolve, reject) => {
+                const consumptionTimeout = user.refresh_token_created_at;
+                consumptionTimeout.setDate(consumptionTimeout.getDate() + config.refresh_token_validity);
                 if (user === null)
                 {
                     reject(new Error("Wrong credentials.")); return;
                 }
-                else if (user.refresh_token_created_at)
+                else if (consumptionTimeout > new Date())
                 {
                     logger.data(user.refresh_token_created_at);
                     reject(new Error("Refresh token expired.")); return;

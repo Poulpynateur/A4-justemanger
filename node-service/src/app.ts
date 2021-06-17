@@ -8,7 +8,7 @@ import logger from './config/logger';
 
 import router from './API/routes/index';
 
-database.connect();
+// database.connect();
 
 /**** app setup ****/
 const app = express();
@@ -28,7 +28,7 @@ app.use((err: any, req: any, res: any, next: any) => {
 
 /**** routes setup *****/
 const routes_path = '/api/v' + config.API_version;
-app.use(routes_path + '/', router);
+app.use('/', router);
 
 /**** starting ****/
 app.listen(config.port, () => {

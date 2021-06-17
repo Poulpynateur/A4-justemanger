@@ -1,11 +1,14 @@
 import dotenv from "dotenv";
+import fs from 'fs';
 
 dotenv.config();
 export default {
     API_version: 1,
+    refresh_token_validity: 7, // days
     jwt: {
         validity: '1800s',
-        secret: process.env.JWT_ACCESS_SECRET as string
+        private: fs.readFileSync('./ressources/private.key', 'utf-8'),
+        public: fs.readFileSync('./ressources/public.pem', 'utf-8')
     },
     port: parseInt(process.env.PORT as string, 10),
     db: {
