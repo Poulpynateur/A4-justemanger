@@ -1,6 +1,6 @@
 # Setup
 
-Le .env à la racine du projet doit contenir les clés suivantes (JWT_ACCESS_SECRET doit être identique a `node-controller`) :
+Le .env à la racine du projet doit contenir les clés suivantes :
 ```
 PORT=3000
 

@@ -3,7 +3,6 @@ import fs from 'fs';
 
 dotenv.config();
 export default {
-    API_version: 1,
     port: parseInt(process.env.PORT as string, 10),
     jwt: {
         public: fs.readFileSync('./ressources/public.pem', 'utf-8')

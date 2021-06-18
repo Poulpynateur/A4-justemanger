@@ -3,10 +3,9 @@ import cors from "cors";
 import morgan from 'morgan';
 
 import config from './config/config'
-import database from './config/database';
 import logger from './config/logger';
 
-import router from './API/routes/index';
+import router from './proxy/routes/routes';
 
 // database.connect();
 
@@ -23,7 +22,7 @@ app.use(morgan('tiny', { stream: {
 }}));
 app.use((err: any, req: any, res: any, next: any) => {
     logger.error(err.stack);
-    res.status(500).json({msg: 'An error occured'});
+    res.status(500).json({message: 'Unable to find the requested resource.'});
 });
 
 /**** routes setup *****/

@@ -3,7 +3,6 @@ import fs from 'fs';
 
 dotenv.config();
 export default {
-    API_version: 1,
     refresh_token_validity: 7, // days
     jwt: {
         validity: '1800s',

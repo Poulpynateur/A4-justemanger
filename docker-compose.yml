@@ -22,29 +22,28 @@ services:
         environment:
             SA_PASSWORD: ${SQLSERVER_ROOT_PASSWORD}
             ACCEPT_EULA: "Y"
+        # Stop logging
+        logging:
+            driver: none
         
-#    proxy:
-#        build: ./node-proxy
-#        ports:
-#            - 3000:3000
-#        volumes:
-#            - ./node-proxy:/app
+    proxy:
+        build: ./node-proxy
+        ports:
+            - 8000:8000
+        volumes:
+            - ./node-proxy:/app
 
 # Services
     service-auth:
         build: ./node-service-auth
         depends_on:
             - db-sqlserver
-        ports:
-            - 3000:3000
         volumes:
             - ./node-service-auth:/app
 
     service-test:
         build: ./node-service
 #        depends_on:
-#            - db-mongo
-        ports:
-            - 8000:3000
+#             - db-mongo
         volumes:
             - ./node-service:/app

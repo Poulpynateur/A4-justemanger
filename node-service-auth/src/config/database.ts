@@ -4,12 +4,11 @@ import * as tedious from 'tedious';
 import logger from './logger';
 import config from './config'
 
-import dbFactory from './databaseFactory';
+import migration from './migration';
+
+let tries: number = 0;
 
 function connect() {
-
-    let tries: number = 0;
-
     const sequelize = new Sequelize(config.db.name, config.db.username, config.db.password, {
         dialect: 'mssql',
         host: config.db.host,
@@ -17,12 +16,12 @@ function connect() {
         logging: false
     });
 
-    sequelize.sync({force: true})
+    sequelize.authenticate()
     .then(() => {
         logger.info(`Connected to DB ${config.db.name}`);
         tries = 0;
 
-        dbFactory.createDefault();
+        migration.createDefault();
     })
     .catch((err: any) => {
         logger.error(err);
