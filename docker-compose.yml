@@ -1,7 +1,7 @@
 version: "3.8"
 services:
 
-# DB
+## DB
 #    db-mongo:
 #        image: mongo:latest
 #        restart: always
@@ -14,36 +14,43 @@ services:
 #            - ./db-mongodb/:/docker-entrypoint-initdb.d/entrypoint.js:ro
 #        command: mongod --quiet --logpath /dev/null 
 
-    db-sqlserver:
-        build:
-            context: ./db-sqlserver
-        ports:
-            - 1433:1433
-        environment:
-            SA_PASSWORD: ${SQLSERVER_ROOT_PASSWORD}
-            ACCEPT_EULA: "Y"
-        # Stop logging
-        logging:
-            driver: none
-        
-    proxy:
-        build: ./node-proxy
-        ports:
-            - 8000:8000
-        volumes:
-            - ./node-proxy:/app
+#    db-sqlserver:
+#        build:
+#            context: ./db-sqlserver
+#        ports:
+#            - 1433:1433
+#        environment:
+#            SA_PASSWORD: ${SQLSERVER_ROOT_PASSWORD}
+#            ACCEPT_EULA: "Y"
+#        # Stop logging
+#        logging:
+#            driver: none
 
-# Services
-    service-auth:
-        build: ./node-service-auth
-        depends_on:
-            - db-sqlserver
-        volumes:
-            - ./node-service-auth:/app
+#    proxy:
+#        build: ./node-proxy
+#        ports:
+#            - 8000:8000
+#        volumes:
+#            - ./node-proxy:/app
 
-    service-test:
-        build: ./node-service
+## Services
+#    service-auth:
+#        build: ./node-service-auth
+#        depends_on:
+#            - db-sqlserver
+#        volumes:
+#            - ./node-service-auth:/app
+#
+#    service-test:
+#        build: ./node-service
 #        depends_on:
 #             - db-mongo
-        volumes:
-            - ./node-service:/app
+#        volumes:
+#            - ./node-service:/app
+
+## /!\ Only for production, for test use `npm run serve` on the host inside the ./node-vuejs
+#    prod-vuejs:
+#        build:
+#            context: ./node-vuejs
+#        ports:
+#            - 8080:8080
