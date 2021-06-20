@@ -13,34 +13,34 @@ services:
 #        volumes:
 #            - ./db-mongodb/:/docker-entrypoint-initdb.d/entrypoint.js:ro
 #        command: mongod --quiet --logpath /dev/null 
-
-#    db-sqlserver:
-#        build:
-#            context: ./db-sqlserver
-#        ports:
-#            - 1433:1433
-#        environment:
-#            SA_PASSWORD: ${SQLSERVER_ROOT_PASSWORD}
-#            ACCEPT_EULA: "Y"
-#        # Stop logging
-#        logging:
-#            driver: none
-
-#    proxy:
-#        build: ./node-proxy
-#        ports:
-#            - 8000:8000
-#        volumes:
-#            - ./node-proxy:/app
-
-## Services
-#    service-auth:
-#        build: ./node-service-auth
-#        depends_on:
-#            - db-sqlserver
-#        volumes:
-#            - ./node-service-auth:/app
 #
+    db-sqlserver:
+        build:
+            context: ./db-sqlserver
+        ports:
+            - 1433:1433
+        environment:
+            SA_PASSWORD: ${SQLSERVER_ROOT_PASSWORD}
+            ACCEPT_EULA: "Y"
+        # Stop logging
+        logging:
+            driver: none
+
+    proxy:
+        build: ./node-proxy
+        ports:
+            - 8000:8000
+        volumes:
+            - ./node-proxy:/app
+
+# Services
+    service-auth:
+        build: ./node-service-auth
+        depends_on:
+            - db-sqlserver
+        volumes:
+            - ./node-service-auth:/app
+
 #    service-test:
 #        build: ./node-service
 #        depends_on:

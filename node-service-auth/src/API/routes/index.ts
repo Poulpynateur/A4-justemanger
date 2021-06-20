@@ -7,6 +7,6 @@ import authRoutes from './authRoutes';
 let router = express.Router();
 
 /**** setup app routes ****/
-router.use('/auth', authRoutes);
+router.use('/', authRoutes);
 
 export default router;

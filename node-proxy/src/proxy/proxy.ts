@@ -15,7 +15,7 @@ export class ServiceProxy {
 
 export const services = {
     'auth': new ServiceProxy('http://service-auth:3000', [
-        new ProxyRoute('/auth')
+        new ProxyRoute('/auth', '/auth')
     ]),
     'test': new ServiceProxy('http://service-test:3000', [
         new ProxyRoute('/test'),

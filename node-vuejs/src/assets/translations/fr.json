@@ -1,5 +1,9 @@
 {
+    "welcome": "Bienvenue",
     "auth": {
-        "login": "Se connecter"
+        "disconnect": "Déconnexion",
+        "login": "Se connecter",
+        "username": "Nom d'utilisateur",
+        "password": "Mot de passe"
     }
 }

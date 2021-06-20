@@ -1,5 +1,9 @@
 {
+    "welcome": "Welcome",
     "auth": {
-        "login": "Login"
+        "disconnect": "Disconnect",
+        "login": "Login",
+        "username": "Username",
+        "password": "Password"
     }
 }
