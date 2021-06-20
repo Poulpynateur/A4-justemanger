@@ -40,10 +40,12 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+
 import { Locales } from "../plugins/i18n";
 import authService from "../services/authService";
 
-export default {
+export default Vue.extend({
   name: "nav-menu",
   data() {
     return {
@@ -51,7 +53,7 @@ export default {
     };
   },
   methods: {
-    changLang: function(lang) {
+    changLang: function(lang: string) {
       this.$i18n.locale = lang;
     },
     disconnect: function() {
@@ -59,9 +61,9 @@ export default {
     }
   },
   computed: {
-    isConnected: function() {
+    isConnected: function(): boolean {
       return !!this.$store.state.currentUser;
     }
   }
-};
+});
 </script>

@@ -43,9 +43,10 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import authService from "../services/authService";
 
-export default {
+export default Vue.extend({
   name: "app-auth",
   data() {
     return {
@@ -66,5 +67,5 @@ export default {
       });
     }
   }
-};
+});
 </script>

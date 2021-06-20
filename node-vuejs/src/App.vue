@@ -8,16 +8,17 @@
 </template>
 
 <style lang="scss">
-@import "@/sass/styles.scss";
+@import "@/assets/scss/styles.scss";
 </style>
 
 <script lang="ts">
+import Vue from 'vue';
 import NavMenu from './components/NavMenu.vue'
 
-export default {
+export default Vue.extend({
   name: 'app',
   components: {
     NavMenu
   }
-}
+});
 </script>
