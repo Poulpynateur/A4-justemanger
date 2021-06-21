@@ -3,10 +3,8 @@ import {Request, Response} from 'express';
 import { UserDTO } from '../../core/models/user';
 import authService from '../../core/services/authService';
 
-// TODO : use validator
-
 function login(req: Request, res: Response)
-{
+{ 
     authService.createTokens(req.body.username, req.body.password)
     .then((user: UserDTO) => {
         res.status(200).json(user);

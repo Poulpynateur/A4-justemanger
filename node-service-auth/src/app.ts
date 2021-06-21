@@ -22,15 +22,15 @@ app.use(morgan('tiny', { stream: {
     }
 }}));
 app.use((err: any, req: any, res: any, next: any) => {
-    logger.error(err.stack);
-    res.status(500).json({message: 'An error occured'});
+    logger.error(err);
+    return res.status(err.statusCode).json(err);
 });
 
 /**** routes setup *****/
 app.use('/', router);
 
 app.use((req: any, res: any, next: any) => {
-    res.status(404).json({message: 'Unable to find the requested resource.'});
+    return res.status(404).json({message: 'Unable to find the requested resource.'});
 });
 
 /**** starting ****/
