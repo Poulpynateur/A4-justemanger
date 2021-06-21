@@ -1,7 +1,9 @@
 {
     "welcome": "Bienvenue",
+    "welcomeSubtitle": "C'est JusteManger !",
     "auth": {
         "disconnect": "Déconnexion",
+        "register": "S'inscrire",
         "login": "Se connecter",
         "username": "Nom d'utilisateur",
         "password": "Mot de passe"

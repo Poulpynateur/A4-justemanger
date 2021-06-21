@@ -1,69 +1,58 @@
 <template>
-  <header class="navbar">
-    <section class="navbar-section">
-      <router-link to="/">
-        <a class="navbar-brand text-bold mr-2">{{ $appName }}</a>
-      </router-link>
-    </section>
-    <section class="navbar-center">
-      <!-- centered logo or brand -->
-    </section>
-    <section class="navbar-section">
-
-      <div v-if="isConnected" class="dropdown dropdown-right">
-        <a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-          <i class="icon icon-people mr-2"></i>{{ $store.state.currentUser.username }}
-        </a>
-        <!-- menu component -->
-        <ul class="menu" style="min-width: 50px">
-          <li class="divider"></li>
-          <li class="menu-item">
-            <a class="btn btn-link" @click="disconnect">{{ $t('auth.disconnect') }}</a>
-          </li>
-        </ul>
-      </div>
-      <router-link v-else to="/login">{{ $t("auth.login") }}</router-link>
-
-      <div class="dropdown dropdown-right">
-        <a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-          {{ $i18n.locale }} <i class="icon icon-caret"></i>
-        </a>
-        <!-- menu component -->
-        <ul class="menu" style="min-width: 50px">
-          <li class="menu-item" v-for="(o, i) in langs" :key="i">
-            <a class="btn btn-link" @click="changLang(o)">{{ o }}</a>
-          </li>
-        </ul>
-      </div>
-    </section>
-  </header>
+  <b-navbar class="container">
+    <template #brand>
+      <b-navbar-item class="p-0" tag="router-link" :to="{ path: '/' }">
+        <img src="@/assets/images/logo - large.png" class="image" />
+      </b-navbar-item>
+    </template>
+    <template #end>
+      <b-navbar-item tag="div">
+        <b-navbar-dropdown :label="$i18n.locale">
+          <b-navbar-item href="#" v-for="(lang, i) in langs" :key="i" @click="changLang(lang.value)">
+            {{lang.caption}}
+          </b-navbar-item>
+        </b-navbar-dropdown>
+        <div v-if="!isConnected" class="buttons">
+          <a class="button is-primary">
+            <router-link to="/register">
+              <strong>{{ $t('auth.register') }}</strong>
+            </router-link>
+          </a>
+          <a class="button is-light">
+            <router-link to="/login">{{ $t('auth.login') }}</router-link>
+          </a>
+        </div>
+      </b-navbar-item>
+    </template>
+  </b-navbar>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from "vue";
 
-import { Locales } from "../plugins/i18n";
+import { LOCALES } from "../plugins/i18n";
 import authService from "../services/authService";
 
 export default Vue.extend({
   name: "nav-menu",
   data() {
     return {
-      langs: Locales,
+      langs: LOCALES,
     };
   },
   methods: {
-    changLang: function(lang: string) {
+    changLang: function (lang: string) {
       this.$i18n.locale = lang;
+      this.$store.commit("setLanguage", lang);
     },
-    disconnect: function() {
+    disconnect: function () {
       authService.disconnect();
-    }
+    },
   },
   computed: {
-    isConnected: function(): boolean {
+    isConnected: function (): boolean {
       return !!this.$store.state.currentUser;
-    }
-  }
+    },
+  },
 });
 </script>

@@ -1,8 +1,10 @@
 {
     "welcome": "Welcome",
+    "welcomeSubtitle": "This is JusteManger !",
     "auth": {
         "disconnect": "Disconnect",
-        "login": "Login",
+        "register": "Sign up",
+        "login": "Log in",
         "username": "Username",
         "password": "Password"
     }

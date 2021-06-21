@@ -1,14 +1,21 @@
 <template>
   <div id="app" class="container">
-    <nav-menu />
-    <main>
+    <header>
+      <nav-menu />
+    </header>
+    <main class="px-2">
       <router-view />
     </main>
   </div>
 </template>
 
 <style lang="scss">
+@import "~bulma/sass/utilities/_all";
+
 @import "@/assets/scss/styles.scss";
+
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
 </style>
 
 <script lang="ts">
