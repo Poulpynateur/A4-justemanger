@@ -1,6 +1,9 @@
 {
     "welcome": "Welcome",
     "welcomeSubtitle": "This is JusteManger !",
+    "errors": {
+        "404": "Page not found."
+    },
     "auth": {
         "disconnect": "Disconnect",
         "register": "Sign up",

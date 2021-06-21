@@ -1,6 +1,9 @@
 {
     "welcome": "Bienvenue",
     "welcomeSubtitle": "C'est JusteManger !",
+    "errors": {
+        "404": "Page introuvable."
+    },
     "auth": {
         "disconnect": "Déconnexion",
         "register": "S'inscrire",

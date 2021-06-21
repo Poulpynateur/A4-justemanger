@@ -3,11 +3,13 @@ import VueRouter, { RouteConfig } from 'vue-router';
 
 import AppWelcome from '../views/AppWelcome.vue';
 import AppAuth from '../views/AppAuth.vue';
+import NotFound from '../views/NotFound.vue';
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   { path: '/', component: AppWelcome },
+  { path: "*", component: NotFound },
   { path: '/login', component: AppAuth },
 ]
 
