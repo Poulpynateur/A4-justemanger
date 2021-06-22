@@ -2,12 +2,13 @@ import express from "express";
 import cors from "cors";
 import morgan from 'morgan';
 
+import swaggerUi from 'swagger-ui-express';
+import {openapiSpecification} from './config/doc';
+
 import config from './config/config'
 import logger from './config/logger';
 
 import router from './proxy/routes/routes';
-
-// database.connect();
 
 /**** app setup ****/
 const app = express();
@@ -26,7 +27,13 @@ app.use((err: any, req: any, res: any, next: any) => {
 });
 
 /**** routes setup *****/
+
 app.use('/', router);
+
+app.use('/api-docs',
+    swaggerUi.serve, 
+    swaggerUi.setup(openapiSpecification)
+);
 
 app.use((req: any, res: any, next: any) => {
     res.status(404).json({message: 'Unable to find the requested resource.'});
