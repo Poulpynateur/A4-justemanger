@@ -21,7 +21,7 @@ function connect() {
         logger.info(`Connected to DB ${config.db.name}`);
         tries = 0;
 
-        migration.createDefault();
+        migration.migrateDB();
     })
     .catch((err: any) => {
         logger.error(err);

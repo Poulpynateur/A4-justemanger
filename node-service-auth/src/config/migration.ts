@@ -1,16 +1,31 @@
 import crypto from "crypto-extra";
 import logger from "./logger";
 
-// Create default user
-async function createDefault()
+async function createRoles()
 {
-    // Need to import dynamically because we have to be sure the DB is connected
-    // Also await since it is not possible to get previous return with then chaining
-    const userModel = await import('../core/models/user');
-    await global.db.sync({force: true});
-
-    const testUser = userModel.User.build({username: 'test', password: crypto.hash('test', {algorithm: 'SHA256'})});
-    testUser.save().catch((err: any) => logger.error(err));
+    const roleModel = await import('../core/models/role');
+    roleModel.Role.bulkCreate([
+        {name: "admin"},
+        {name: "endusers.consumer"},
+        {name: "endusers.restorer"},
+        {name: "endusers.delivery"},
+        {name: "management.commercial"},
+        {name: "management.technical"},
+        {name: "developper"}
+    ]);
 }
 
-export default {createDefault};
+// Need to import dynamically because we have to be sure the DB is connected
+// Also await since it is not possible to get previous return with then chaining
+async function migrateDB()
+{    
+    await global.db.sync({force: true});
+
+    await createRoles();
+
+    // Default user
+    const userModel = await import('../core/models/user');
+    userModel.User.create({username: 'test', password: crypto.hash('test', {algorithm: 'SHA256'})});
+}
+
+export default {migrateDB};

@@ -4,6 +4,8 @@ import crypto from "crypto-extra";
 import logger from "../../config/logger";
 import config from "../../config/config";
 
+import {Role} from "./role";
+
 /**** ORM ****/
 export const User = global.db.define('users', {
     id: {
@@ -17,6 +19,18 @@ export const User = global.db.define('users', {
     password: {
         type: Sequelize.STRING
     },
+    first_name: {
+        type: Sequelize.STRING
+    },
+    last_name: {
+        type: Sequelize.STRING
+    },
+    email: {
+        type: Sequelize.STRING
+    },
+    state: {
+        type: Sequelize.STRING
+    },
     refresh_token: {
         type: Sequelize.STRING(300)
     },
@@ -26,7 +40,7 @@ export const User = global.db.define('users', {
 },{
     timestamps: false
 });
-
+User.belongsTo(Role);
 
 /**** DTO ****/
 export class UserDTO {
