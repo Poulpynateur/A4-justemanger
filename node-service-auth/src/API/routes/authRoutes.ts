@@ -5,6 +5,14 @@ import validators from '../middleware/validators';
 
 let router = express.Router();
 
+router.post('/register', [
+    body('username').notEmpty(),
+    body('password').notEmpty(),
+    body('firstName').notEmpty(),
+    body('lastName').notEmpty(),
+    body('role').notEmpty(),
+    validators.check
+], authWS.register);
 router.post('/login', [
     body('username').notEmpty(),
     body('password').notEmpty(),

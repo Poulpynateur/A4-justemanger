@@ -1,17 +1,18 @@
 import crypto from "crypto-extra";
 import logger from "./logger";
 
+// TODO : use enum
 async function createRoles()
 {
     const roleModel = await import('../core/models/role');
     roleModel.Role.bulkCreate([
-        {name: "admin"},
-        {name: "endusers.consumer"},
-        {name: "endusers.restorer"},
-        {name: "endusers.delivery"},
-        {name: "management.commercial"},
-        {name: "management.technical"},
-        {name: "developper"}
+        {name: roleModel.RoleEnum.ADMIN},
+        {name: roleModel.RoleEnum.ENDUSER.CONSUMER},
+        {name: roleModel.RoleEnum.ENDUSER.RESTORER},
+        {name: roleModel.RoleEnum.ENDUSER.DELIVERY},
+        {name: roleModel.RoleEnum.MANAGEMENT.COMMERCIAL},
+        {name: roleModel.RoleEnum.MANAGEMENT.TECHNICAL},
+        {name: roleModel.RoleEnum.DEVELOPPER}
     ]);
 }
 
@@ -25,7 +26,13 @@ async function migrateDB()
 
     // Default user
     const userModel = await import('../core/models/user');
-    userModel.User.create({username: 'test', password: crypto.hash('test', {algorithm: 'SHA256'})});
+    userModel.User.create({
+        username: 'admin',
+        password: crypto.hash('admin', {algorithm: 'SHA256'}),
+        first_name: 'Admin',
+        last_name: 'ADMIN',
+        role: 'admin'
+    });
 }
 
 export default {migrateDB};

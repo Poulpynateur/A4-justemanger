@@ -14,7 +14,8 @@ export const User = global.db.define('users', {
         type: Sequelize.INTEGER
     },
     username: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
     },
     password: {
         type: Sequelize.STRING
@@ -44,33 +45,64 @@ User.belongsTo(Role);
 
 /**** DTO ****/
 export class UserDTO {
-    public username: string = '';
+    public username?: string;
+    public firstName?: string;
+    public lastName?: string;
     public role?: string;
     public accessToken?: string;
     public refreshToken?: string;
 
-    constructor(username: string)
-    {this.username = username}
+    constructor(user?: any)
+    {
+        if (user)
+        {
+            // Convert database model to DTO
+            this.username = user.username;
+            this.firstName = user.first_name;
+            this.lastName = user.last_name;
+            this.refreshToken = user.refresh_token;
+            this.role = user.role.name;
+        }
+    }
 }
 
 /**** repository ****/
 export namespace UserRepository {
 
+    export function createNewUser(userDTO: UserDTO, password: string)
+    {
+        return User.create({
+            username: userDTO.username,
+            password: crypto.hash(password),
+            first_name: userDTO.firstName,
+            last_name: userDTO.lastName,
+            role: {
+                name: userDTO.role
+            }
+        }, {include: [ Role ]})
+        .then((user: any) => {
+            return new Promise((resolve) => {
+                resolve({username: user.username, password});
+            });
+        });
+    }
+
     export function updateRefreshToken(userDTO: UserDTO)
     {
-        return User.findOne({ where: { username: userDTO.username } })
+        return User.findOne({ where: { username: userDTO.username }, include: [Role]})
         .then((user: any) => {
-            // TODO : add refresh_token_created_at
             return user.update({ refresh_token: crypto.hash(userDTO.refreshToken, {algorithm: 'SHA256'}), refresh_token_created_at: Date.now()})
         })
         .then((user: any) => {
-            return userDTO;
+            const loggedUser = new UserDTO(user);
+            loggedUser.accessToken = userDTO.accessToken;
+            return loggedUser;
         });
     }
 
     export function getUser(username: string)
     {
-        return User.findOne({ where: { username: username } })
+        return User.findOne({ where: { username: username }, include: [Role] })
         .then((user: any) => {
             return new Promise((resolve, reject) => {
                 if (user === null)
@@ -78,14 +110,14 @@ export namespace UserRepository {
                     reject(new Error("Username not found."));
                     return;
                 }
-                resolve(new UserDTO(user.username));
+                resolve(new UserDTO(user));
             });
         });
     }
 
     export function checkCredentials(username: string, password: string)
     {
-        return User.findOne({ where: { username: username, password: crypto.hash(password, {algorithm: 'SHA256'})}})
+        return User.findOne({ where: { username: username, password: crypto.hash(password, {algorithm: 'SHA256'})}, include: [Role]})
         .then((user : any) => {
             return new Promise((resolve, reject) => {
                 if (user === null)
@@ -93,7 +125,7 @@ export namespace UserRepository {
                     reject(new Error("Wrong credentials."));
                     return;
                 }
-                resolve(new UserDTO(user.username));
+                resolve(new UserDTO(user));
             });
         });
     }
@@ -115,7 +147,7 @@ export namespace UserRepository {
                     reject(new Error("Refresh token expired.")); return;
                 }
 
-                resolve(new UserDTO(user.username));
+                resolve(new UserDTO(user));
             });
         });
     }

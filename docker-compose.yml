@@ -41,27 +41,27 @@ services:
         volumes:
             - ./node-service-auth:/app
         
-    service-users:
-        build: ./node-service-users
-        depends_on:
-             - db-sqlserver
-             - db-mongo
-        volumes:
-            - ./node-service-users:/app
-
-    service-orders:
-        build: ./node-service-orders
-        depends_on:
-             - db-mongo
-        volumes:
-            - ./node-service-orders:/app
-
-    service-restaurants:
-        build: ./node-service-restaurants
-        depends_on:
-             - db-mongo
-        volumes:
-            - ./node-service-restaurants:/app
+#    service-users:
+#        build: ./node-service-users
+#        depends_on:
+#             - db-sqlserver
+#             - db-mongo
+#        volumes:
+#            - ./node-service-users:/app
+#
+#    service-orders:
+#        build: ./node-service-orders
+#        depends_on:
+#             - db-mongo
+#        volumes:
+#            - ./node-service-orders:/app
+#
+#    service-restaurants:
+#        build: ./node-service-restaurants
+#        depends_on:
+#             - db-mongo
+#        volumes:
+#            - ./node-service-restaurants:/app
 
 #    service-test:
 #        build: ./node-service
