@@ -2,8 +2,7 @@ import * as express from "express";
 import httpProxy from 'express-http-proxy';
 
 import authMiddleware from '../middleware/authMiddleware';
-
-const serviceUrl: string = 'http://service-auth:3000';
+import config from '../../config/config';
 
 let router = express.Router();
 
@@ -27,7 +26,7 @@ let router = express.Router();
  *       200:
  *         description: Returns user info as well as refresh and access token.
  */
-router.post('/auth/login', httpProxy(serviceUrl + '/login'));
+router.post('/auth/login', httpProxy(config.services.auth + '/login'));
 
 /**
  * @swagger
@@ -49,7 +48,7 @@ router.post('/auth/login', httpProxy(serviceUrl + '/login'));
  *       200:
  *         description: Return the new access token.
  */
-router.post('/auth/refresh', httpProxy(serviceUrl + '/refresh'));
+router.post('/auth/refresh', httpProxy(config.services.auth + '/refresh'));
 
 /**
  * @swagger
@@ -66,6 +65,6 @@ router.post('/auth/refresh', httpProxy(serviceUrl + '/refresh'));
  *         200:
  *            description: If the token is valide.
  */
-router.post('/auth/verify', httpProxy(serviceUrl + '/verify'));
+router.post('/auth/verify', httpProxy(config.services.auth + '/verify'));
 
 export default router;
