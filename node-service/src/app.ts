@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import morgan from 'morgan';
+import helmet from 'helmet';
 
 import config from './config/config'
 import database from './config/database';
@@ -14,6 +15,7 @@ import router from './API/routes/index';
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(helmet());
 
 /**** error management and logging ****/
 app.use(morgan('tiny', { stream: {
