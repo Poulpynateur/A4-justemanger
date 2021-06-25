@@ -9,6 +9,23 @@
         "register": "Sign up",
         "login": "Log in",
         "username": "Username",
-        "password": "Password"
+        "password": "Password",
+        "rememberMe": "Remember me",
+        "wannaRegister": "Doesn't have an account yet ?",
+        "registerLink": "register there"
+    },
+    "form": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "role": "You are a",
+        "roleDisclaimer": "Restaurateurs and deliverers must provide documents to justify their activity and activate their account."
+    },
+    "action": {
+        "cancel": "Cancel"
+    },
+    "roles": {
+        "enduser.consumer": "Consumer",
+        "enduser.restorer": "Restorer",
+        "enduser.delivery": "Delivery boy"
     }
 }

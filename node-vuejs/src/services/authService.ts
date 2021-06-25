@@ -6,7 +6,7 @@ import {User} from '../store/models/user';
 // TODO : create a class that regroup requests
 const apiUrl = 'http://localhost:8000';
 
-function login(username: string, password: string) {
+function login(username: string, password: string): Promise<void> {
     return http.post(apiUrl + '/auth/login', {
         username: username,
         password: password
@@ -22,7 +22,7 @@ function login(username: string, password: string) {
     });
 }
 
-function disconnect()
+function disconnect(): void
 {
     store.commit('deleteUser');
 }

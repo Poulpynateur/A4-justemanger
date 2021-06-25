@@ -9,6 +9,25 @@
         "register": "S'inscrire",
         "login": "Se connecter",
         "username": "Nom d'utilisateur",
-        "password": "Mot de passe"
+        "password": "Mot de passe",
+        "rememberMe": "Se souvenir de moi",
+        "wannaRegister": "Pas encore de compte ?",
+        "registerLink": "inscrivez-vous ici"
+    },
+    "form": {
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "role": "Vous êtes un",
+        "roleDisclaimer": "Les restaurateurs et livreurs doivent fournir des documents afin de justifier leur activité et activé leur compte."
+    },
+    "action": {
+        "cancel": "Annuler"
+    },
+    "roles": {
+        "enduser": {
+            "consumer": "Consomateur",
+            "restorer": "Restaurateur",
+            "delivery": "Livreur"
+        }
     }
 }

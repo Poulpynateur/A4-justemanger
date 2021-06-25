@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueI18n, { LocaleMessageObject, LocaleMessages } from 'vue-i18n';
+import VueI18n, { LocaleMessageObject } from 'vue-i18n';
 
 import en from "../assets/translations/en.json";
 import fr from "../assets/translations/fr.json";

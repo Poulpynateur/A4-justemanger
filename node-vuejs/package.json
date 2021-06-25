@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@types/axios": "^0.14.0",
+    "@types/node": "^15.12.4",
     "@types/vue-i18n": "^7.0.0",
     "axios": "^0.21.1",
     "buefy": "^0.9.8",
