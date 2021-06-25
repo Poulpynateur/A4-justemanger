@@ -3,8 +3,10 @@ import cors from "cors";
 import morgan from 'morgan';
 import helmet from 'helmet';
 
-import config from './config/config'
 import database from './config/database';
+global.db_msql = database.connect();
+
+import config from './config/config'
 import logger from './config/logger';
 
 import router from './API/routes/index';

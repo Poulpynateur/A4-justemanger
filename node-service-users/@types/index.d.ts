@@ -6,4 +6,10 @@ declare global {
             currentUser?: UserDTO
         }
     }
+
+    namespace NodeJS {
+        interface Global {
+            db_msql: Sequelize;
+        }
+    }
 }
