@@ -19,7 +19,7 @@ let router = express.Router();
 
 /**
  * @swagger
- * /auth/login:
+ * /auth/register:
  *   post:
  *     description: Register a new user.
  *     tags:

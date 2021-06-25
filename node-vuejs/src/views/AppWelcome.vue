@@ -10,7 +10,6 @@
       :pause-info-type="pauseType"
       :interval="interval"
       :repeat="repeat"
-      @change="info($event)"
     >
       <b-carousel-item v-for="(carousel, i) in carousels" :key="i">
         <b-image

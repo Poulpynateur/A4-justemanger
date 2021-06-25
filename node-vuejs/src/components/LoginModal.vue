@@ -44,7 +44,7 @@
       </section>
       <footer class="modal-card-foot">
         <b-button :label="$t('action.cancel')" @click="$emit('close')" />
-        <b-button :label="$t('auth.login')" type="is-primary" />
+        <b-button :label="$t('auth.login')" @click="sendLogin" type="is-primary" />
       </footer>
     </div>
   </form>
@@ -54,6 +54,7 @@
 <script lang="ts">
 import Vue from "vue";
 import RegisterModal from "./RegisterModal.vue";
+import authService from "../services/authService";
 
 export default Vue.extend({
   name: "login-modal",
@@ -74,6 +75,11 @@ export default Vue.extend({
         component: RegisterModal,
         hasModalCard: true,
         trapFocus: true,
+      });
+    },
+    sendLogin: function () {
+      authService.login(this.loginForm.username, this.loginForm.password).then(() => {
+        this.$emit('close');
       });
     },
   },
