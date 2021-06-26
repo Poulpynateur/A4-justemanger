@@ -19,7 +19,7 @@ let router = express.Router();
  *       200:
  *         description: List of all the orders.
  */
-router.get('/orders', httpProxy(config.services.orders + '/orders'));
+router.get('/orders', httpProxy(config.services.orders + '/'));
 
 /**
  * @swagger
@@ -36,6 +36,6 @@ router.get('/orders', httpProxy(config.services.orders + '/orders'));
  *       200:
  *         description: Specific order.
  */
-router.get('/orders/:id', httpProxy(config.services.orders + '/login'));
+router.get('/orders/:id', httpProxy(config.services.orders + '/'));
 
 export default router;
