@@ -26,6 +26,7 @@ export default Vue.extend({
   name: 'app',
   components: {
     NavMenu
-  }
+  },
+  beforeCreate() { this.$store.commit('initialiseStore');}
 });
 </script>

@@ -6,7 +6,11 @@
         <button type="button" class="delete" @click="$emit('close')" />
       </header>
       <section class="modal-card-body">
-        <b-field :label="$t('auth.username')">
+        <b-field
+          :label="$t('auth.username')"
+          :type="errors.username ? 'is-danger' : ''"
+          :message="errors.username"
+        >
           <b-input
             type="text"
             v-model="newUser.username"
@@ -17,7 +21,11 @@
           </b-input>
         </b-field>
 
-        <b-field :label="$t('auth.password')">
+        <b-field
+          :label="$t('auth.password')"
+          :type="errors.password ? 'is-danger' : ''"
+          :message="errors.password"
+        >
           <b-input
             type="password"
             v-model="newUser.password"
@@ -29,14 +37,24 @@
         </b-field>
 
         <b-field grouped>
-          <b-field :label="$t('form.firstName')" expanded>
+          <b-field
+            :label="$t('form.firstName')"
+            :type="errors.firstName ? 'is-danger' : ''"
+            :message="errors.firstName"
+            expanded
+          >
             <b-input
               v-model="newUser.firstName"
               :placeholder="$t('form.firstName')"
               required
             ></b-input>
           </b-field>
-          <b-field :label="$t('form.lastName')" expanded>
+          <b-field
+            :label="$t('form.lastName')"
+            :type="errors.lastName ? 'is-danger' : ''"
+            :message="errors.lastName"
+            expanded
+          >
             <b-input
               v-model="newUser.lastName"
               :placeholder="$t('form.lastName')"
@@ -67,7 +85,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { UserDTO } from "../store/models/user";
 import authService from "../services/authService";
 
 export default Vue.extend({
@@ -77,13 +94,18 @@ export default Vue.extend({
       // TODO : fetch data from user service
       roles: ["enduser.consumer", "enduser.restorer", "enduser.delivery"],
       newUser: {
-            username: "",
-            password: "",
-            firstName: "",
-            lastName: "",
-            role: "enduser.consumer",
+        username: "",
+        password: "",
+        firstName: "",
+        lastName: "",
+        role: "enduser.consumer",
       },
-      hasError: false,
+      errors: {
+        username: "",
+        password: "",
+        firstName: "",
+        lastName: "",
+      },
     };
   },
   created: function () {
@@ -91,17 +113,33 @@ export default Vue.extend({
   },
   methods: {
     sendNewUser() {
-      authService.register(this.newUser).then(() => {
-        this.$emit("close");
-      });
-    }
+      authService
+        .register(this.newUser)
+        .then(() => {
+          this.$emit("close");
+        })
+        .catch((data) => {
+          // Reset messages
+          for (const err in this.errors) {
+            this.errors[err] = "";
+          }
+
+          if (data.errors) {
+            data.errors.forEach((element) => {
+              this.errors[element.param] = this.$t(
+                "form.error." + element.param
+              );
+            });
+          }
+        });
+    },
   },
   computed: {
     roleDisclaimer: function () {
       if (this.newUser.role != "enduser.consumer")
         return this.$t("form.roleDisclaimer");
       else return "";
-    }
-  }
+    },
+  },
 });
 </script>

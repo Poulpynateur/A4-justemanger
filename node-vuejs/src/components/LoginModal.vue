@@ -6,20 +6,28 @@
         <button type="button" class="delete" @click="$emit('close')" />
       </header>
       <section class="modal-card-body">
-        <b-field :label="$t('auth.username')">
+        <b-field
+          :label="$t('auth.username')"
+          :type="errors.username ? 'is-danger' : ''"
+          :message="errors.username"
+        >
           <b-input
             type="text"
-            :v-model="loginForm.username"
+            v-model="loginForm.username"
             :placeholder="$t('auth.username')"
             required
           >
           </b-input>
         </b-field>
 
-        <b-field :label="$t('auth.password')">
+        <b-field
+          :label="$t('auth.password')"
+          :type="errors.password ? 'is-danger' : ''"
+          :message="errors.password"
+        >
           <b-input
             type="password"
-            :v-model="loginForm.password"
+            v-model="loginForm.password"
             password-reveal
             :placeholder="$t('auth.password')"
             required
@@ -27,7 +35,7 @@
           </b-input>
         </b-field>
 
-        <b-checkbox>{{ $t("auth.rememberMe") }}</b-checkbox>
+        <b-checkbox v-model="loginForm.remember">{{ $t("auth.rememberMe") }}</b-checkbox>
 
         <hr class="mt-4 mb-2" />
 
@@ -44,7 +52,11 @@
       </section>
       <footer class="modal-card-foot">
         <b-button :label="$t('action.cancel')" @click="$emit('close')" />
-        <b-button :label="$t('auth.login')" @click="sendLogin" type="is-primary" />
+        <b-button
+          :label="$t('auth.login')"
+          @click="sendLogin"
+          type="is-primary"
+        />
       </footer>
     </div>
   </form>
@@ -63,13 +75,17 @@ export default Vue.extend({
       loginForm: {
         username: "",
         password: "",
+        remember: false
       },
-      hasError: false,
+      errors: {
+        username: "",
+        password: ""
+      },
     };
   },
   methods: {
     openRegisterModal: function () {
-      this.$emit('close');
+      this.$emit("close");
       this.$buefy.modal.open({
         parent: this,
         component: RegisterModal,
@@ -78,9 +94,15 @@ export default Vue.extend({
       });
     },
     sendLogin: function () {
-      authService.login(this.loginForm.username, this.loginForm.password).then(() => {
-        this.$emit('close');
-      });
+      authService
+        .login(this.loginForm.username, this.loginForm.password, this.loginForm.remember)
+        .then(() => {
+          this.$emit("close");
+        })
+        .catch((error) => {
+          this.errors.username = this.$t("auth.error.username");
+          this.errors.password = this.$t("auth.error.password");
+        });
     },
   },
 });

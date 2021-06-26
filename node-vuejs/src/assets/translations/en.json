@@ -1,6 +1,7 @@
 {
     "welcome": "Welcome",
     "welcomeSubtitle": "This is JusteManger !",
+    "account": "My account",
     "errors": {
         "404": "Page not found."
     },
@@ -12,16 +13,27 @@
         "password": "Password",
         "rememberMe": "Remember me",
         "wannaRegister": "Doesn't have an account yet ?",
-        "registerLink": "register there"
+        "registerLink": "register there",
+        "error": {
+            "username": "Invalid password",
+            "password": "Invalid password"
+        }
     },
     "form": {
         "firstName": "First name",
         "lastName": "Last name",
         "role": "You are a",
-        "roleDisclaimer": "Restaurateurs and deliverers must provide documents to justify their activity and activate their account."
+        "roleDisclaimer": "Restaurateurs and deliverers must provide documents to justify their activity and activate their account.",
+        "error": {
+            "username": "Username is already used",
+            "password": "Password must contain at least 8 characters",
+            "firstName": "First name is required",
+            "lastName": "Last name is required"
+        }
     },
     "action": {
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "disconnect": "Disconnect"
     },
     "roles": {
         "enduser.consumer": "Consumer",

@@ -14,6 +14,7 @@ async function createRoles()
         {name: roleModel.RoleEnum.MANAGEMENT.TECHNICAL},
         {name: roleModel.RoleEnum.DEVELOPPER}
     ]);
+    return roleModel;
 }
 
 // Need to import dynamically because we have to be sure the DB is connected
@@ -22,16 +23,17 @@ async function migrateDB()
 {    
     await global.db.sync({force: true});
 
-    await createRoles();
+    const roleModel = await createRoles();
 
     // Default user
+    const adminRole = await roleModel.Role.findOne({ where: { name: roleModel.RoleEnum.ADMIN } });
     const userModel = await import('../core/models/user');
     userModel.User.create({
         username: 'admin',
         password: crypto.hash('admin', {algorithm: 'SHA256'}),
         first_name: 'Admin',
         last_name: 'ADMIN',
-        role: 'admin'
+        roleId: adminRole.get('id')
     });
 }
 

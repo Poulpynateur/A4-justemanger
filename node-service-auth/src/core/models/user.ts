@@ -15,7 +15,7 @@ export const User = global.db.define('users', {
     },
     username: {
         type: Sequelize.STRING,
-        unique: true
+        unique: true,
     },
     password: {
         type: Sequelize.STRING
@@ -71,19 +71,17 @@ export namespace UserRepository {
 
     export function createNewUser(userDTO: UserDTO, password: string)
     {
-        return User.create({
-            username: userDTO.username,
-            password: crypto.hash(password),
-            first_name: userDTO.firstName,
-            last_name: userDTO.lastName,
-            role: {
-                name: userDTO.role
-            }
-        }, {include: [ Role ]})
-        .then((user: any) => {
-            return new Promise((resolve) => {
-                resolve({username: user.username, password});
+        return Role.findOne({where: {name: userDTO.role}}).then((role:any) => {
+            return User.create({
+                username: userDTO.username,
+                password: crypto.hash(password),
+                first_name: userDTO.firstName,
+                last_name: userDTO.lastName,
+                roleId: role.get('id')
             });
+        })
+        .then((user: any) => {
+            return Promise.resolve({username: user.username, password});
         });
     }
 

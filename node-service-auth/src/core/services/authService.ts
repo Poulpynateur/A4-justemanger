@@ -10,6 +10,16 @@ import {UserDTO, UserRepository} from '../models/user';
 import roleService from './roleService';
 import {RoleEnum} from '../models/role';
 
+function isUsernameUnique(username: string) {
+    return UserRepository.getUser(username)
+    .then((user: UserDTO) => {
+        return false;
+    })
+    .catch((error: any) => {
+        return true;
+    });
+}
+
 function createUser(user: UserDTO, password: string)
 {
     return new Promise((resolve: (val: any) => void, reject) => {
@@ -85,6 +95,7 @@ function getTokenFromRequest(req: Request) : string
 }
 
 export default {
+    isUsernameUnique,
     getTokenFromRequest,
     createTokens,
     refreshAccessToken,
