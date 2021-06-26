@@ -14,11 +14,20 @@ export default new Vuex.Store({
     setLanguage(state, lang: Locales) {
       state.language = lang;
     },
-    setCurrentUser(state, user) {
-      state.currentUser = user;
+    setCurrentUser(state, payload) {
+      state.currentUser = payload.user;
+
+      if (payload.remember)
+        localStorage.setItem('currentUser', JSON.stringify(payload.user));
     },
     deleteUser(state) {
       state.currentUser = null;
+      if (localStorage.getItem('currentUser'))
+        localStorage.removeItem('currentUser');
+    },
+    initialiseStore(state) {
+      if (localStorage.getItem('currentUser'))
+        state.currentUser = JSON.parse(localStorage.getItem('currentUser') || "");
     }
   },
   actions: {

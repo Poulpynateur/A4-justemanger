@@ -2,17 +2,19 @@ version: "3.8"
 services:
 
 # DB
-#    db-mongo:
-#        image: mongo:latest
-#        restart: always
-#        ports:
-#            - 27017:27017
-#        environment:
-#            - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
-#            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
-#        volumes:
-#            - ./db-mongodb/:/docker-entrypoint-initdb.d/entrypoint.js:ro
-#        command: mongod --quiet --logpath /dev/null 
+    db-mongo:
+        image: mongo:latest
+        restart: always
+        ports:
+            - 27017:27017
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+        volumes:
+            - ./db-mongodb/:/docker-entrypoint-initdb.d/entrypoint.js:ro
+        # Stop logging
+        logging:
+            driver: none
 
     db-sqlserver:
         build:
@@ -41,13 +43,13 @@ services:
         volumes:
             - ./node-service-auth:/app
         
-#    service-users:
-#        build: ./node-service-users
-#        depends_on:
-#             - db-sqlserver
-#             - db-mongo
-#        volumes:
-#            - ./node-service-users:/app
+    service-users:
+        build: ./node-service-users
+        depends_on:
+             - db-sqlserver
+             - db-mongo
+        volumes:
+            - ./node-service-users:/app
 #
 #    service-orders:
 #        build: ./node-service-orders
@@ -62,7 +64,6 @@ services:
 #             - db-mongo
 #        volumes:
 #            - ./node-service-restaurants:/app
-#
 #    service-test:
 #        build: ./node-service
 #        depends_on:

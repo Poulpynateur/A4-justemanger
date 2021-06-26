@@ -7,6 +7,36 @@ import logger from "../../config/logger";
 
 import {UserDTO, UserRepository} from '../models/user';
 
+import roleService from './roleService';
+import {RoleEnum} from '../models/role';
+
+function isUsernameUnique(username: string) {
+    return UserRepository.getUser(username)
+    .then((user: UserDTO) => {
+        return false;
+    })
+    .catch((error: any) => {
+        return true;
+    });
+}
+
+function createUser(user: UserDTO, password: string)
+{
+    return new Promise((resolve: (val: any) => void, reject) => {
+        if (!roleService.isMemberOf(user.role, RoleEnum.ENDUSER))
+            reject(new Error("The role provided cannot be registered."));
+        else
+            resolve({user, password});
+    })
+    .then((val: {user: UserDTO, password: string}) => {
+        return UserRepository.createNewUser(val.user, val.password)
+        .then((res: any) => {
+            return createTokens(res.username, res.password);
+        })
+    });
+    
+}
+
 function createTokens(username: string, password: string)
 {
     return UserRepository.checkCredentials(username, password)
@@ -19,7 +49,6 @@ function createTokens(username: string, password: string)
     .then((user: UserDTO) => {
         return user;
     });
-
 }
 
 function refreshAccessToken(username: string, refreshToken: string)
@@ -66,8 +95,10 @@ function getTokenFromRequest(req: Request) : string
 }
 
 export default {
+    isUsernameUnique,
     getTokenFromRequest,
     createTokens,
     refreshAccessToken,
-    checkJwtToken
+    checkJwtToken,
+    createUser
 };

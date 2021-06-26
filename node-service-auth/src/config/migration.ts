@@ -1,18 +1,20 @@
 import crypto from "crypto-extra";
 import logger from "./logger";
 
+// TODO : use enum
 async function createRoles()
 {
     const roleModel = await import('../core/models/role');
     roleModel.Role.bulkCreate([
-        {name: "admin"},
-        {name: "endusers.consumer"},
-        {name: "endusers.restorer"},
-        {name: "endusers.delivery"},
-        {name: "management.commercial"},
-        {name: "management.technical"},
-        {name: "developper"}
+        {name: roleModel.RoleEnum.ADMIN},
+        {name: roleModel.RoleEnum.ENDUSER.CONSUMER},
+        {name: roleModel.RoleEnum.ENDUSER.RESTORER},
+        {name: roleModel.RoleEnum.ENDUSER.DELIVERY},
+        {name: roleModel.RoleEnum.MANAGEMENT.COMMERCIAL},
+        {name: roleModel.RoleEnum.MANAGEMENT.TECHNICAL},
+        {name: roleModel.RoleEnum.DEVELOPPER}
     ]);
+    return roleModel;
 }
 
 // Need to import dynamically because we have to be sure the DB is connected
@@ -21,11 +23,18 @@ async function migrateDB()
 {    
     await global.db.sync({force: true});
 
-    await createRoles();
+    const roleModel = await createRoles();
 
     // Default user
+    const adminRole = await roleModel.Role.findOne({ where: { name: roleModel.RoleEnum.ADMIN } });
     const userModel = await import('../core/models/user');
-    userModel.User.create({username: 'test', password: crypto.hash('test', {algorithm: 'SHA256'})});
+    userModel.User.create({
+        username: 'admin',
+        password: crypto.hash('admin', {algorithm: 'SHA256'}),
+        first_name: 'Admin',
+        last_name: 'ADMIN',
+        roleId: adminRole.get('id')
+    });
 }
 
 export default {migrateDB};

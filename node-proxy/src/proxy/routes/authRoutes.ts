@@ -1,10 +1,52 @@
 import * as express from "express";
 import httpProxy from 'express-http-proxy';
+import { ParamsDictionary } from "express-serve-static-core";
+import QueryString from "qs";
 
 import authMiddleware from '../middleware/authMiddleware';
 import config from '../../config/config';
 
+function proxy(to: string)
+{
+    return httpProxy(config.services.auth, {
+        proxyReqPathResolver: function(req: express.Request<ParamsDictionary, any, any, QueryString.ParsedQs, Record<string, any>>) {
+            return req.baseUrl + to;
+        }
+    });
+}
+
 let router = express.Router();
+
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     description: Register a new user.
+ *     tags:
+ *       - Authentification
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: username
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         required: true
+ *         type: string
+ *       - name: firstName
+ *         required: true
+ *         type: string
+ *       - name: lastName
+ *         required: true
+ *         type: string
+ *       - name: role
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Returns a logged in user (including valide tokens).
+ */
+ router.post('/auth/register', proxy('/register'));
 
 /**
  * @swagger
@@ -26,7 +68,7 @@ let router = express.Router();
  *       200:
  *         description: Returns user info as well as refresh and access token.
  */
-router.post('/auth/login', httpProxy(config.services.auth + '/login'));
+router.post('/auth/login', proxy('/login'));
 
 /**
  * @swagger
@@ -48,7 +90,7 @@ router.post('/auth/login', httpProxy(config.services.auth + '/login'));
  *       200:
  *         description: Return the new access token.
  */
-router.post('/auth/refresh', httpProxy(config.services.auth + '/refresh'));
+router.post('/auth/refresh', proxy('/refresh'));
 
 /**
  * @swagger
@@ -65,6 +107,6 @@ router.post('/auth/refresh', httpProxy(config.services.auth + '/refresh'));
  *         200:
  *            description: If the token is valide.
  */
-router.post('/auth/verify', httpProxy(config.services.auth + '/verify'));
+router.post('/auth/verify', proxy('/verify'));
 
 export default router;

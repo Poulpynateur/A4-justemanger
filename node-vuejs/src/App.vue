@@ -1,9 +1,9 @@
 <template>
-  <div id="app" class="container">
+  <div id="app">
     <header>
       <nav-menu />
     </header>
-    <main class="px-2">
+    <main>
       <router-view />
     </main>
   </div>
@@ -26,6 +26,7 @@ export default Vue.extend({
   name: 'app',
   components: {
     NavMenu
-  }
+  },
+  beforeCreate() { this.$store.commit('initialiseStore');}
 });
 </script>

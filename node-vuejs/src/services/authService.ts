@@ -1,30 +1,37 @@
 import http from './api';
 
 import store from '../store/index';
-import {User} from '../store/models/user';
+import {UserDTO} from '../store/models/user';
 
 // TODO : create a class that regroup requests
 const apiUrl = 'http://localhost:8000';
 
-function login(username: string, password: string) {
+function register(user: any): Promise<void> {
+    return http.post(apiUrl + '/auth/register', user)
+    .then((response) => {
+        const user: UserDTO = response.data as UserDTO;
+        store.commit('setCurrentUser', user);
+    }).catch((error) => {
+        return new Promise((resolve, reject) => {
+            reject(error.response.data);
+        });
+    });
+}
+
+function login(username: string, password: string, remember: boolean): Promise<void> {
     return http.post(apiUrl + '/auth/login', {
         username: username,
         password: password
     })
     .then((response) => {
-        const user: User = new User();
-
-        user.username = response.data.username;
-        user.refreshToken = response.data.refreshToken;
-        user.accessToken = response.data.accessToken;
-
-        store.commit('setCurrentUser', user);
+        const user: UserDTO = response.data as UserDTO;
+        store.commit('setCurrentUser', {remember, user});
     });
 }
 
-function disconnect()
+function disconnect(): void
 {
     store.commit('deleteUser');
 }
 
-export default { login, disconnect };
+export default { register, login, disconnect };
