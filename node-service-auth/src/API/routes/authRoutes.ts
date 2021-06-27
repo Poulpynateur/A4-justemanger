@@ -15,6 +15,7 @@ router.post('/register', [
         })
     }),
     body('password').notEmpty(),
+    body('email').notEmpty().isEmail(),
     body('firstName').notEmpty(),
     body('lastName').notEmpty(),
     body('role').notEmpty(),

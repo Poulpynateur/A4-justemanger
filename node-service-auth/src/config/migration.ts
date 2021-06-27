@@ -31,6 +31,7 @@ async function migrateDB()
     userModel.User.create({
         username: 'admin',
         password: crypto.hash('admin', {algorithm: 'SHA256'}),
+        email: 'admin@justemanger.fr',
         first_name: 'Admin',
         last_name: 'ADMIN',
         roleId: adminRole.get('id')

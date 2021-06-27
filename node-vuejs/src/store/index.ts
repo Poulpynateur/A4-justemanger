@@ -7,6 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    rememberMe: false,
     currentUser: null,
     language: defaultLocale
   },
@@ -14,11 +15,14 @@ export default new Vuex.Store({
     setLanguage(state, lang: Locales) {
       state.language = lang;
     },
+    setRememberMe(state, payload) {
+      state.rememberMe = payload;
+    },
     setCurrentUser(state, payload) {
-      state.currentUser = payload.user;
+      state.currentUser = payload;
 
-      if (payload.remember)
-        localStorage.setItem('currentUser', JSON.stringify(payload.user));
+      if (state.rememberMe)
+        localStorage.setItem('currentUser', JSON.stringify(payload));
     },
     deleteUser(state) {
       state.currentUser = null;

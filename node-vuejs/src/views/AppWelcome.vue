@@ -61,9 +61,11 @@
 
 <script lang="ts">
 import Vue from "vue";
+import LoginModal from "../components/LoginModal.vue";
 
 export default Vue.extend({
   name: "app-welcome",
+  props: ["login"],
   data() {
     return {
       media: 3,
@@ -91,6 +93,17 @@ export default Vue.extend({
         },
       ],
     };
+  },
+  mounted() {
+    if (this.$route.query.login) {
+      this.$router.replace({'login': null});
+      this.$buefy.modal.open({
+        parent: this,
+        component: LoginModal,
+        hasModalCard: true,
+        trapFocus: true,
+      });
+    }
   },
 });
 </script>

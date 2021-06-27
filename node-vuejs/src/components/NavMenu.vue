@@ -10,7 +10,9 @@
         <b-navbar-item tag="div">
 
           <b-navbar-dropdown v-if="isConnected" :arrowless="true" :label="$t('account')">
-            <b-navbar-item>{{ getUserFullName }}</b-navbar-item>
+            <b-navbar-item>
+              <router-link :to="{ name: 'user-profile'}">{{ getUserFullName }}</router-link>
+            </b-navbar-item>
             <b-navbar-item href="#" @click="disconnect()">{{ $t('action.disconnect') }}</b-navbar-item>
           </b-navbar-dropdown>
 
@@ -77,6 +79,7 @@ export default Vue.extend({
     },
     disconnect: function () {
       authService.disconnect();
+      this.$router.push({name: 'home'});
     },
     openLoginModal: function () {
       this.$buefy.modal.open({

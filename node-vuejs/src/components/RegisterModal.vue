@@ -16,7 +16,6 @@
             v-model="newUser.username"
             :placeholder="$t('auth.username')"
             required
-            maxlength="30"
           >
           </b-input>
         </b-field>
@@ -34,6 +33,14 @@
             required
           >
           </b-input>
+        </b-field>
+
+        <b-field
+          :label="$t('form.email')"
+          :type="errors.email ? 'is-danger' : ''"
+          :message="errors.email"
+        >
+          <b-input v-model="newUser.email" type="email" required> </b-input>
         </b-field>
 
         <b-field grouped>
@@ -96,6 +103,7 @@ export default Vue.extend({
       newUser: {
         username: "",
         password: "",
+        email: "",
         firstName: "",
         lastName: "",
         role: "enduser.consumer",
@@ -103,6 +111,7 @@ export default Vue.extend({
       errors: {
         username: "",
         password: "",
+        email: "",
         firstName: "",
         lastName: "",
       },

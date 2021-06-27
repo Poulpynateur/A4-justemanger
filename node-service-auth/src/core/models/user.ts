@@ -45,8 +45,11 @@ User.belongsTo(Role);
 
 /**** DTO ****/
 export class UserDTO {
+    
+    public id?: number;
     public username?: string;
     public firstName?: string;
+    public email?: string;
     public lastName?: string;
     public role?: string;
     public accessToken?: string;
@@ -57,7 +60,9 @@ export class UserDTO {
         if (user)
         {
             // Convert database model to DTO
+            this.id = user.id;
             this.username = user.username;
+            this.email = user.email;
             this.firstName = user.first_name;
             this.lastName = user.last_name;
             this.refreshToken = user.refresh_token;
@@ -75,6 +80,7 @@ export namespace UserRepository {
             return User.create({
                 username: userDTO.username,
                 password: crypto.hash(password),
+                email: userDTO.email,
                 first_name: userDTO.firstName,
                 last_name: userDTO.lastName,
                 roleId: role.get('id')

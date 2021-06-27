@@ -3,7 +3,7 @@
     <header>
       <nav-menu />
     </header>
-    <main>
+    <main style="padding-top: 4rem">
       <router-view />
     </main>
   </div>

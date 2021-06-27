@@ -17,23 +17,30 @@
         "error": {
             "username": "Invalid password",
             "password": "Invalid password"
-        }
+        },
+        "deleteAccount": "Delete my account",
+        "deleteAccountDisclaimer": "Deleting your account is an irreversible action, do you want to continue?"
     },
     "form": {
         "firstName": "First name",
         "lastName": "Last name",
+        "email": "E-mail",
         "role": "You are a",
         "roleDisclaimer": "Restaurateurs and deliverers must provide documents to justify their activity and activate their account.",
         "error": {
             "username": "Username is already used",
             "password": "Password must contain at least 8 characters",
             "firstName": "First name is required",
-            "lastName": "Last name is required"
+            "lastName": "Last name is required",
+            "email": "E-mail address is invalid"
         }
     },
     "action": {
         "cancel": "Cancel",
-        "disconnect": "Disconnect"
+        "disconnect": "Disconnect",
+        "update": "Update",
+        "success": "Operation successfully completed!",
+        "failed": "An error has occurred."
     },
     "roles": {
         "enduser.consumer": "Consumer",

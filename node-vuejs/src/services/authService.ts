@@ -4,31 +4,30 @@ import store from '../store/index';
 import {UserDTO} from '../store/models/user';
 
 // TODO : create a class that regroup requests
-const apiUrl = 'http://localhost:8000';
+const apiUrl = '/auth';
 
 function register(user: any): Promise<void> {
-    return http.post(apiUrl + '/auth/register', user)
+    return http.post(apiUrl + '/register', user)
     .then((response) => {
         const user: UserDTO = response.data as UserDTO;
         store.commit('setCurrentUser', user);
     }).catch((error) => {
-        return new Promise((resolve, reject) => {
-            reject(error.response.data);
-        });
+        return Promise.reject(error.response.data);
     });
 }
 
 function login(username: string, password: string, remember: boolean): Promise<void> {
-    return http.post(apiUrl + '/auth/login', {
+    return http.post(apiUrl + '/login', {
         username: username,
         password: password
     })
     .then((response) => {
-        const user: UserDTO = response.data as UserDTO;
-        store.commit('setCurrentUser', {remember, user});
+        store.commit('setRememberMe', remember);
+        store.commit('setCurrentUser', response.data as UserDTO);
     });
 }
 
+// TODO : server delete refresh token
 function disconnect(): void
 {
     store.commit('deleteUser');
