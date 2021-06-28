@@ -10,7 +10,7 @@ export class ArticleDTO {
     public price?: number;
     public name?: string;
 
-    public subArticles?: ArticleDTO[];
+    public subArticles?: ArticleDTO[] = [];
 
     public toString() {
         return this.name;

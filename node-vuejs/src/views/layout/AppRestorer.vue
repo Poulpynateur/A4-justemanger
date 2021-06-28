@@ -28,19 +28,54 @@
       <b-tabs>
         <b-tab-item :label="$t('restorer.orders')"> </b-tab-item>
         <b-tab-item :label="$t('restorer.articles')">
-          <b-button type="is-light" @click="createArticle()" expanded>{{
-            $t("restorer.createArticle")
-          }}</b-button>
-          <b-table :data="restaurant.menus" :columns="columns.menus"></b-table>
+          <div class="buttons mb-0">
+            <b-button type="is-primary" @click="createArticle()">{{
+              $t("restorer.createArticle")
+            }}</b-button>
+            <b-button
+              type="is-warning"
+              :disabled="!selectedArticle"
+              @click="updateSelectedArticle()"
+              >{{ $t("action.update") }}</b-button
+            >
+            <b-button
+              type="is-danger"
+              :disabled="!selectedArticle"
+              @click="deleteSelectedArticle()"
+              >{{ $t("action.delete") }}</b-button
+            >
+          </div>
+
+          <b-table
+            :selected.sync="selectedArticle"
+            :data="restaurant.articles"
+            :columns="columns.articles"
+          ></b-table>
         </b-tab-item>
 
         <b-tab-item :label="$t('restorer.menus')">
-          <b-button type="is-light" @click="createMenu()" expanded>{{
-            $t("restorer.createMenu")
-          }}</b-button>
+          <div class="buttons mb-0">
+            <b-button type="is-primary" @click="createMenu()">{{
+              $t("restorer.createMenu")
+            }}</b-button>
+            <b-button
+              type="is-warning"
+              :disabled="!selectedMenu"
+              @click="updateSelectedMenu()"
+              >{{ $t("action.update") }}</b-button
+            >
+            <b-button
+              type="is-danger"
+              :disabled="!selectedMenu"
+              @click="deleteSelectedMenu()"
+              >{{ $t("action.delete") }}</b-button
+            >
+          </div>
+
           <b-table
-            :data="restaurant.articles"
-            :columns="columns.articles"
+            :selected.sync="selectedMenu"
+            :data="restaurant.menus"
+            :columns="columns.menus"
           ></b-table>
         </b-tab-item>
       </b-tabs>
@@ -50,8 +85,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ArticleModal from "../../components/ArticleModal.vue";
-import MenuModal from "../../components/MenuModal.vue";
+import ArticleModal from "../../components/restorer/ArticleModal.vue";
+import MenuModal from "../../components/restorer/MenuModal.vue";
 
 import restorerService from "../../services/restorerService";
 
@@ -60,6 +95,8 @@ export default Vue.extend({
   data() {
     return {
       restaurant: null,
+      selectedMenu: null,
+      selectedArticle: null,
       form: {
         name: "",
       },
@@ -111,8 +148,12 @@ export default Vue.extend({
         component: ArticleModal,
         hasModalCard: true,
         trapFocus: true,
+        props: {
+          modalType: this.$t("action.create"),
+          finishButton: this.$t("action.create"),
+        },
         events: {
-          articleCreated: (article) => {
+          modalFinished: (article) => {
             restorerService
               .sendNewArticle(article)
               .then((article) => {
@@ -135,17 +176,112 @@ export default Vue.extend({
         hasModalCard: true,
         trapFocus: true,
         props: {
+          modalType: this.$t("action.create"),
           articles: this.restaurant.articles,
           articlesCols: this.columns.articles,
         },
         events: {
-          menuCreated: (menu) => {
+          modalFinished: (menu) => {
             restorerService
               .sendNewMenu(menu)
               .then((menu) => {
                 this.restaurant.menus.push(menu);
               })
               .catch(() => {
+                this.$buefy.toast.open({
+                  message: this.$t("action.failed"),
+                  type: "is-danger",
+                });
+              });
+          },
+        },
+      });
+    },
+    deleteSelectedArticle() {
+      restorerService.deleteArticle(this.selectedArticle)
+      .then(() => {
+        const index = this.restaurant.articles.findIndex(
+                  (a) => a.id == this.selectedArticle.id
+                );
+        this.restaurant.articles.splice(index, 1);
+        this.selectedArticle = null;
+      })
+      .catch((error) => {
+        this.$buefy.toast.open({
+          message: this.$t("action.failed"),
+          type: "is-danger",
+        });
+      });
+    },
+    deleteSelectedMenu() {
+      restorerService.deleteMenu(this.selectedMenu)
+      .then(() => {
+        const index = this.restaurant.menus.findIndex(
+                  (a) => a.id == this.selectedMenu.id
+                );
+        this.restaurant.menus.splice(index, 1);
+        this.selectedMenu = null;
+      })
+      .catch((error) => {
+        this.$buefy.toast.open({
+          message: this.$t("action.failed"),
+          type: "is-danger",
+        });
+      });
+    },
+    updateSelectedArticle() {
+      this.$buefy.modal.open({
+        parent: this,
+        component: ArticleModal,
+        hasModalCard: true,
+        trapFocus: true,
+        props: {
+          modalType: this.$t("action.update"),
+          article: this.selectedArticle,
+        },
+        events: {
+          modalFinished: (article) => {
+            restorerService
+              .updateArticle(article)
+              .then((article) => {
+                const index = this.restaurant.articles.findIndex(
+                  (a) => a.id == article.id
+                );
+                this.restaurant.articles[index] = article;
+              })
+              .catch((error) => {
+                this.$buefy.toast.open({
+                  message: this.$t("action.failed"),
+                  type: "is-danger",
+                });
+              });
+          },
+        },
+      });
+    },
+    updateSelectedMenu() {
+      this.$buefy.modal.open({
+        parent: this,
+        component: MenuModal,
+        hasModalCard: true,
+        trapFocus: true,
+        props: {
+          modalType: this.$t("action.update"),
+          menu: this.selectedMenu,
+          articles: this.restaurant.articles,
+          articlesCols: this.columns.articles,
+        },
+        events: {
+          modalFinished: (menu) => {
+            restorerService
+              .updateMenu(menu)
+              .then((menu) => {
+                const index = this.restaurant.menus.findIndex(
+                  (a) => a.id == menu.id
+                );
+                this.restaurant.menus[index] = menu;
+              })
+              .catch((error) => {
                 this.$buefy.toast.open({
                   message: this.$t("action.failed"),
                   type: "is-danger",

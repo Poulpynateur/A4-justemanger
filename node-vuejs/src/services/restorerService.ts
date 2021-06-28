@@ -1,13 +1,16 @@
 import http from './api';
 
 import store from '../store/index';
-import {ArticleDTO, RestaurantDTO} from '../store/models/restaurant';
+import { ArticleDTO, RestaurantDTO } from '../store/models/restaurant';
 
 const apiUrl = '/restaurants';
 
-function getUserRestaurant()
-{
-    return Promise.reject();
+function getUserRestaurant() {
+    const restaurant = new RestaurantDTO();
+    restaurant.name = "Placeholder";
+    restaurant.articles = [];
+    restaurant.menus = [];
+    return Promise.resolve(restaurant);
 }
 
 function sendNewRestaurant(restaurantInfo) {
@@ -29,4 +32,18 @@ function sendNewMenu(menu) {
     return Promise.resolve(me);
 }
 
-export default { getUserRestaurant, sendNewRestaurant, sendNewArticle, sendNewMenu };
+function updateArticle(article) {
+    return Promise.resolve(article);
+}
+function updateMenu(menu) {
+    return Promise.resolve(menu);
+}
+
+function deleteArticle(article) {
+    return Promise.resolve();
+}
+function deleteMenu(menu) {
+    return Promise.resolve();
+}
+
+export default { getUserRestaurant, sendNewRestaurant, sendNewArticle, sendNewMenu, updateArticle, updateMenu, deleteArticle, deleteMenu };

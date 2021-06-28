@@ -38,10 +38,11 @@
     "action": {
         "cancel": "Annuler",
         "disconnect": "Déconnexion",
-        "update": "Mettre à jour",
+        "update": "Éditer",
         "success": "Opération effectuer avec succés !",
         "failed": "Une erreur est survenue.",
-        "create": "Créer"
+        "create": "Créer",
+        "delete": "Supprimer"
     },
     "roles": {
         "enduser": {

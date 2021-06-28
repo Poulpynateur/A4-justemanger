@@ -2,7 +2,7 @@
   <form action="">
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title"> {{ $t('restorer.createArticle') }}</p>
+        <p class="modal-card-title">{{ modalType }}</p>
         <button type="button" class="delete" @click="$emit('close')" />
       </header>
       <section class="modal-card-body">
@@ -10,7 +10,7 @@
         <b-field :label="$t('restorer.columns.articles.name')">
           <b-input
             type="text"
-            v-model="newArticle.name"
+            v-model="article.name"
             :placeholder="$t('restorer.columns.articles.name')"
             required
           >
@@ -20,7 +20,7 @@
         <b-field :label="$t('restorer.columns.articles.price')">
           <b-input
             type="text"
-            v-model="newArticle.price"
+            v-model="article.price"
             :placeholder="$t('restorer.columns.articles.price')"
             required
           >
@@ -30,7 +30,7 @@
       </section>
       <footer class="modal-card-foot">
         <b-button :label="$t('action.cancel')" @click="$emit('close')" />
-        <b-button :label="$t('action.create')" @click="createNewArticle()" type="is-primary" />
+        <b-button :label="modalType" @click="createNewArticle()" type="is-primary" />
       </footer>
     </div>
   </form>
@@ -38,18 +38,17 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {ArticleDTO} from "../store/models/restaurant";
+import {ArticleDTO} from "../../store/models/restaurant";
 
 export default Vue.extend({
   name: "article-modal",
-  data() {
-      return {
-          newArticle: new ArticleDTO()
-      }
+  props: {
+    modalType: {type: String},
+    article: {type: ArticleDTO, default: () => new ArticleDTO()}
   },
   methods: {
       createNewArticle() {
-          this.$emit('articleCreated', this.newArticle);
+          this.$emit('modalFinished', this.article);
           this.$emit('close');
       }
   }
