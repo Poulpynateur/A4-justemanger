@@ -71,7 +71,7 @@ export default Vue.extend({
             width: "300",
           },
           {
-            field: "articles",
+            field: "subArticles",
             label: this.$t("restorer.columns.menus.articles"),
           },
           {

@@ -1,7 +1,7 @@
 import http from './api';
 
 import store from '../store/index';
-import {MenuDTO, ArticleDTO, RestaurantDTO} from '../store/models/restaurant';
+import {ArticleDTO, RestaurantDTO} from '../store/models/restaurant';
 
 const apiUrl = '/restaurants';
 
@@ -24,7 +24,7 @@ function sendNewArticle(article) {
 }
 
 function sendNewMenu(menu) {
-    const me = menu as MenuDTO;
+    const me = menu as ArticleDTO;
     me.id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     return Promise.resolve(me);
 }

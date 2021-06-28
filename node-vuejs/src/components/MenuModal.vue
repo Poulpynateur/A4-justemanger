@@ -55,20 +55,20 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { MenuDTO } from "../store/models/restaurant";
+import { ArticleDTO } from "../store/models/restaurant";
 
 export default Vue.extend({
   name: "menu-modal",
   props: ["articles", "articlesCols"],
   data() {
     return {
-      newMenu: new MenuDTO(),
+      newMenu: new ArticleDTO(),
       checkedArticles: [],
     };
   },
   methods: {
     createNewMenu() {
-      this.newMenu.articles = this.checkedArticles;
+      this.newMenu.subArticles = this.checkedArticles;
       this.$emit("menuCreated", this.newMenu);
       this.$emit("close");
     },

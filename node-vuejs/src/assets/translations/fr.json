@@ -50,6 +50,12 @@
             "delivery": "Livreur"
         }
     },
+    "delivery": {
+        "accepted": "Commande en cours",
+        "availables": "Commande disponibles",
+        "noAccepted": "Aucune commande en cours",
+        "noAcceptedDisclaimer": "Vous n'avez pas de commande en cours, allez dans l'onglet 'disponibles'."
+    },
     "restorer": {
         "noRestaurant": "Commencé par créer votre restaurant :",
         "name": "Nom restaurant",
