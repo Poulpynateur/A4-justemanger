@@ -19,37 +19,15 @@
         ></b-image>
       </b-carousel-item>
     </b-carousel>
-    <section class="container mt-6">
-      <article class="media" v-for="i in media" :key="i">
-        <figure class="media-left">
-          <p class="image is-64x64">
-            <b-skeleton circle width="64px" height="64px"></b-skeleton>
-          </p>
-        </figure>
-        <div class="media-content">
-          <div class="content">
-            <p>
-              <b-skeleton active></b-skeleton>
-              <b-skeleton height="80px"></b-skeleton>
-            </p>
-          </div>
-          <nav class="level is-mobile">
-            <div class="level-left">
-              <a class="level-item">
-                <span class="icon is-small">
-                  <b-skeleton></b-skeleton>
-                </span>
-              </a>
-              <a class="level-item">
-                <span class="icon is-small">
-                  <b-skeleton></b-skeleton>
-                </span>
-              </a>
-            </div>
-          </nav>
+
+    <div class="container box mt-6">
+      <section class="hero">
+        <div class="hero-body">
+          <p class="title">Lorem ipsum dolor sit amet</p>
+          <p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
         </div>
-      </article>
-    </section>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -66,7 +44,6 @@ export default Vue.extend({
   name: "app-welcome",
   data() {
     return {
-      media: 3,
       carousel: 0,
       animated: "fade",
       drag: false,
