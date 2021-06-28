@@ -7,4 +7,9 @@ export class UserDTO {
     public role?: string;
     public accessToken?: string;
     public refreshToken?: string;
+
+    public toString() {
+        const fullName: string = this.firstName + " " + this.lastName;
+        return fullName;
+    }
 }

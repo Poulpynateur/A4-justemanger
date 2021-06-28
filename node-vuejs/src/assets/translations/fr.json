@@ -55,11 +55,21 @@
         "accepted": "Commande en cours",
         "availables": "Commande disponibles",
         "noAccepted": "Aucune commande en cours",
-        "noAcceptedDisclaimer": "Vous n'avez pas de commande en cours, allez dans l'onglet 'disponibles'."
+        "noAcceptedDisclaimer": "Vous n'avez pas de commande en cours, allez dans l'onglet 'disponibles'.",
+        "accept": "Accepter la commande sélectionné",
+        "abort": "Annuler la livraison",
+        "finish": "Livraison terminer",
+        "columns": {
+            "restaurant": "Restaurant",
+            "customer": "Client",
+            "address": "Adresse de livraison",
+            "date": "Fait le"
+        }
     },
     "restorer": {
         "noRestaurant": "Commencé par créer votre restaurant :",
-        "name": "Nom restaurant",
+        "name": "Nom du restaurant",
+        "address": "Adresse du restaurant",
         "manage": "Gestion",
         "createArticle": "Ajouté un article",
         "createMenu": "Ajouté un menu",

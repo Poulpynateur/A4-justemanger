@@ -13,6 +13,16 @@
           </b-input>
         </b-field>
 
+        <b-field :label="$t('restorer.name')">
+          <b-input
+            type="text"
+            v-model="form.address"
+            :placeholder="$t('restorer.address')"
+            required
+          >
+          </b-input>
+        </b-field>
+
         <b-button
           :label="$t('action.create')"
           @click="createRestaurant()"
@@ -99,6 +109,7 @@ export default Vue.extend({
       selectedArticle: null,
       form: {
         name: "",
+        address: "",
       },
       columns: {
         menus: [
@@ -198,36 +209,38 @@ export default Vue.extend({
       });
     },
     deleteSelectedArticle() {
-      restorerService.deleteArticle(this.selectedArticle)
-      .then(() => {
-        const index = this.restaurant.articles.findIndex(
-                  (a) => a.id == this.selectedArticle.id
-                );
-        this.restaurant.articles.splice(index, 1);
-        this.selectedArticle = null;
-      })
-      .catch((error) => {
-        this.$buefy.toast.open({
-          message: this.$t("action.failed"),
-          type: "is-danger",
+      restorerService
+        .deleteArticle(this.selectedArticle)
+        .then(() => {
+          const index = this.restaurant.articles.findIndex(
+            (a) => a.id == this.selectedArticle.id
+          );
+          this.restaurant.articles.splice(index, 1);
+          this.selectedArticle = null;
+        })
+        .catch((error) => {
+          this.$buefy.toast.open({
+            message: this.$t("action.failed"),
+            type: "is-danger",
+          });
         });
-      });
     },
     deleteSelectedMenu() {
-      restorerService.deleteMenu(this.selectedMenu)
-      .then(() => {
-        const index = this.restaurant.menus.findIndex(
-                  (a) => a.id == this.selectedMenu.id
-                );
-        this.restaurant.menus.splice(index, 1);
-        this.selectedMenu = null;
-      })
-      .catch((error) => {
-        this.$buefy.toast.open({
-          message: this.$t("action.failed"),
-          type: "is-danger",
+      restorerService
+        .deleteMenu(this.selectedMenu)
+        .then(() => {
+          const index = this.restaurant.menus.findIndex(
+            (a) => a.id == this.selectedMenu.id
+          );
+          this.restaurant.menus.splice(index, 1);
+          this.selectedMenu = null;
+        })
+        .catch((error) => {
+          this.$buefy.toast.open({
+            message: this.$t("action.failed"),
+            type: "is-danger",
+          });
         });
-      });
     },
     updateSelectedArticle() {
       this.$buefy.modal.open({
