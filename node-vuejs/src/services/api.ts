@@ -24,8 +24,13 @@ customAxios.interceptors.request.use(
     (error) => errorHandler(error)
 );
 
-const refreshAuthLogic = failedRequest => customAxios.post('/auth/refresh').then(response => {
-    store.commit('setCurrentUser', response.data as UserDTO);
+const refreshAuthLogic = failedRequest => customAxios.post('/auth/refresh', {
+    username: store.state.currentUser.username,
+    refreshToken: store.state.currentUser.refreshToken
+}).then(response => {
+    const user: UserDTO = store.state.currentUser;
+    user.accessToken = response.data.accessToken;
+    store.commit('setCurrentUser', user);
     return Promise.resolve();
 });
 createAuthRefreshInterceptor(customAxios, refreshAuthLogic);

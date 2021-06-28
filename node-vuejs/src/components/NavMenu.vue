@@ -8,14 +8,24 @@
       </template>
       <template #end>
         <b-navbar-item tag="div">
-
-          <b-navbar-dropdown v-if="isConnected" :arrowless="true" :label="$t('account')">
+          <a
+            v-if="!isConnected"
+            class="button is-light"
+            @click="openLoginModal"
+            >{{ $t("auth.login") + " / " + $t("auth.register") }}</a
+          >
+          <b-navbar-dropdown v-else :arrowless="true" :label="$t('account')">
             <b-navbar-item>
-              <router-link :to="{ name: 'user-profile'}">{{ getUserFullName }}</router-link>
+              <router-link :to="{ name: 'user-profile' }">{{
+                getUserFullName
+              }}</router-link>
             </b-navbar-item>
-            <b-navbar-item href="#" @click="disconnect()">{{ $t('action.disconnect') }}</b-navbar-item>
+            <b-navbar-item href="#" @click="disconnect()">{{
+              $t("action.disconnect")
+            }}</b-navbar-item>
           </b-navbar-dropdown>
-
+        </b-navbar-item>
+        <b-navbar-item tag="div">
           <b-navbar-dropdown label="Lang">
             <b-navbar-item
               href="#"
@@ -26,13 +36,6 @@
               {{ lang.caption }}
             </b-navbar-item>
           </b-navbar-dropdown>
-
-          <div v-if="!isConnected" class="buttons">
-            <a class="button is-light" @click="openLoginModal">{{
-              $t("auth.login") + " / " + $t("auth.register")
-            }}</a>
-          </div>
-
         </b-navbar-item>
       </template>
     </b-navbar>
@@ -79,7 +82,7 @@ export default Vue.extend({
     },
     disconnect: function () {
       authService.disconnect();
-      this.$router.push({name: 'home'});
+      this.$router.push({ name: "home" });
     },
     openLoginModal: function () {
       this.$buefy.modal.open({
@@ -98,7 +101,11 @@ export default Vue.extend({
       return !!this.$store.state.currentUser;
     },
     getUserFullName: function (): string {
-      return this.$store.state.currentUser.firstName + " " + this.$store.state.currentUser.lastName;
+      return (
+        this.$store.state.currentUser.firstName +
+        " " +
+        this.$store.state.currentUser.lastName
+      );
     },
   },
   mounted() {

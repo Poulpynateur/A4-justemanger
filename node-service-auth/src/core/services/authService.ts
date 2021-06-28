@@ -59,13 +59,6 @@ function refreshAccessToken(username: string, refreshToken: string)
     });
 }
 
-/**
- * /!\ auth check need to be done before that
- * @param user 
- * @param secret 
- * @param expires 
- * @returns 
- */
 function generateJwtToken(user: UserDTO)
 {
     // don't include whole user to payload

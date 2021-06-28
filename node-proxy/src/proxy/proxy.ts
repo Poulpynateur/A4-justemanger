@@ -1,24 +1,15 @@
-export class ProxyRoute {
-    constructor(
-        public from: string,
-        public to: string = '/',
-        public auth: boolean = false,
-    ) {};
-}
+import * as express from "express";
+import httpProxy from 'express-http-proxy';
+import { ParamsDictionary } from "express-serve-static-core";
+import QueryString from "qs";
 
-export class ServiceProxy {
-    constructor(
-        public uri: string,
-        public routes: Array<ProxyRoute>
-    ) {};
-}
-
-export const services = {
-    'auth': new ServiceProxy('http://service-auth:3000', [
-        new ProxyRoute('/auth', '/auth')
-    ]),
-    'test': new ServiceProxy('http://service-test:3000', [
-        new ProxyRoute('/test'),
-        new ProxyRoute('/test/secured', '/secured', true)
-    ])
+export function customProxy(serviceUrl: string)
+{
+    return function(to: string) {
+        return httpProxy(serviceUrl, {
+            proxyReqPathResolver: function(req: express.Request<ParamsDictionary, any, any, QueryString.ParsedQs, Record<string, any>>) {
+                return req.baseUrl + to;
+            }
+        });
+    }
 }

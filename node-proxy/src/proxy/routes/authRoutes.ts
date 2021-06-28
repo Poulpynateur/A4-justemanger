@@ -1,20 +1,10 @@
 import * as express from "express";
-import httpProxy from 'express-http-proxy';
-import { ParamsDictionary } from "express-serve-static-core";
-import QueryString from "qs";
 
 import authMiddleware from '../middleware/authMiddleware';
 import config from '../../config/config';
+import {customProxy} from '../proxy';
 
-function proxy(to: string)
-{
-    return httpProxy(config.services.auth, {
-        proxyReqPathResolver: function(req: express.Request<ParamsDictionary, any, any, QueryString.ParsedQs, Record<string, any>>) {
-            return req.baseUrl + to;
-        }
-    });
-}
-
+const proxy = customProxy(config.services.auth);
 let router = express.Router();
 
 /**
@@ -107,6 +97,6 @@ router.post('/auth/refresh', proxy('/refresh'));
  *         200:
  *            description: If the token is valide.
  */
-router.post('/auth/verify', proxy('/verify'));
+router.get('/auth/verify', proxy('/verify'));
 
 export default router;

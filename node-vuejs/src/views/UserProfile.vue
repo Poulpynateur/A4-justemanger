@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container box mt-6">
     <form action="">
       <b-field
         :label="$t('auth.username')"

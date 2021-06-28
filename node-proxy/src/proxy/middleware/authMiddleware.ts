@@ -7,7 +7,7 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
         next();
     })
     .catch((error) => {
-        res.status(401).json({message: error});
+        res.status(401).json({message: "Access forbiden."});
     });
 }
 

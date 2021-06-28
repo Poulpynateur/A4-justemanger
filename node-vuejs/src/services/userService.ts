@@ -7,11 +7,11 @@ const apiUrl = '/users';
 
 function updateUserInfo(user: UserDTO)
 {
-    return http.delete(apiUrl + '/' + user.id)
+    return http.put(apiUrl + '/' + user.id, user)
     .then((response) => {
-        store.commit('setCurrentUser', {remember: false, user: null});
+        store.commit('setCurrentUser', response.data as UserDTO);
     }).catch((error) => {
-        return Promise.reject(error.response.data);
+        return Promise.reject(error.response.data.message);
     });
 }
 
@@ -19,7 +19,7 @@ function deleteUser(userId: number)
 {
     return http.delete(apiUrl + '/' + userId)
     .then((response) => {
-        store.commit('setCurrentUser', {remember: false, user: null});
+        store.commit('deleteUser');
     }).catch((error) => {
         return Promise.reject(error.response.data.message);
     });

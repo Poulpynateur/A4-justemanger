@@ -3,7 +3,7 @@ import fs from 'fs';
 
 dotenv.config();
 export default {
-    refresh_token_validity: 7, // days
+    refresh_token_validity: 1, // days
     jwt: {
         validity: '1800s',
         private: fs.readFileSync('./ressources/private.key', 'utf-8'),

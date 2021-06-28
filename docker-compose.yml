@@ -64,12 +64,12 @@ services:
 #             - db-mongo
 #        volumes:
 #            - ./node-service-restaurants:/app
-#    service-test:
-#        build: ./node-service
-#        depends_on:
-#             - db-mongo
-#        volumes:
-#            - ./node-service:/app
+    service-test:
+        build: ./node-service
+        depends_on:
+             - db-mongo
+        volumes:
+            - ./node-service:/app
 # /!\ Only for production, for test use `npm run serve` on the host inside the ./node-vuejs
 #    prod-vuejs:
 #        build:

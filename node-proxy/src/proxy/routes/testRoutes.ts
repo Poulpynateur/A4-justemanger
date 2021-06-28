@@ -1,12 +1,14 @@
 import * as express from "express";
-import httpProxy from 'express-http-proxy';
 
 import authMiddleware from '../middleware/authMiddleware';
 import config from '../../config/config';
+import {customProxy} from '../proxy';
+
+const proxy = customProxy(config.services.test);
 
 let router = express.Router();
 
-router.post('/test', httpProxy(config.services.test + '/'));
-router.post('/test/secured', authMiddleware.authenticateToken, httpProxy(config.services.test + '/secured'));
+router.get('/test', proxy('/'));
+router.get('/test/secured', authMiddleware.authenticateToken, proxy('/secured'));
 
 export default router;

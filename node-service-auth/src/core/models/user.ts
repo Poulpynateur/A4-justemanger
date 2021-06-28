@@ -99,7 +99,9 @@ export namespace UserRepository {
         })
         .then((user: any) => {
             const loggedUser = new UserDTO(user);
+            // Because these values are hashed in database
             loggedUser.accessToken = userDTO.accessToken;
+            loggedUser.refreshToken = userDTO.refreshToken;
             return loggedUser;
         });
     }
@@ -136,18 +138,18 @@ export namespace UserRepository {
 
     export function checkRefreshToken(username: string, refreshToken: string)
     {
-        return User.findOne({ where: { username: username, refresh_token: crypto.hash(refreshToken, {algorithm: 'SHA256'})}})
+        return User.findOne({ where: { username: username, refresh_token: crypto.hash(refreshToken, {algorithm: 'SHA256'})}, include: [Role]})
         .then((user : any) => {
             return new Promise((resolve, reject) => {
-                const consumptionTimeout = user.refresh_token_created_at;
-                consumptionTimeout.setDate(consumptionTimeout.getDate() + config.refresh_token_validity);
                 if (user === null)
                 {
                     reject(new Error("Wrong credentials.")); return;
                 }
-                else if (consumptionTimeout > new Date())
+
+                const consumptionTimeout = user.refresh_token_created_at;
+                consumptionTimeout.setDate(consumptionTimeout.getDate() + config.refresh_token_validity);
+                if (consumptionTimeout < new Date())
                 {
-                    logger.data(user.refresh_token_created_at);
                     reject(new Error("Refresh token expired.")); return;
                 }
 
