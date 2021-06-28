@@ -3,7 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router';
 
 import store from '../store/index';
 
-import AppWelcome from '../views/AppWelcome.vue';
+import AppMain from '../views/AppMain.vue';
 import NotFound from '../views/NotFound.vue';
 import UserProfile from '../views/UserProfile.vue';
 
@@ -11,7 +11,7 @@ Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   { path: "*", component: NotFound },
-  { path: '/', name: 'home', component: AppWelcome, props: true},
+  { path: '/', name: 'home', component: AppMain, props: true},
   { path: "/profile", name: 'user-profile', component: UserProfile, meta: {auth: true }},
 ]
 

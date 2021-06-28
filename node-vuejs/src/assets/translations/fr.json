@@ -40,13 +40,36 @@
         "disconnect": "Déconnexion",
         "update": "Mettre à jour",
         "success": "Opération effectuer avec succés !",
-        "failed": "Une erreur est survenue."
+        "failed": "Une erreur est survenue.",
+        "create": "Créer"
     },
     "roles": {
         "enduser": {
             "consumer": "Consomateur",
             "restorer": "Restaurateur",
             "delivery": "Livreur"
+        }
+    },
+    "restorer": {
+        "noRestaurant": "Commencé par créer votre restaurant :",
+        "name": "Nom restaurant",
+        "manage": "Gestion",
+        "createArticle": "Ajouté un article",
+        "createMenu": "Ajouté un menu",
+        "menus": "Menus",
+        "articles": "Articles",
+        "orders": "Commandes",
+        "totalChecked": "Total sélectionné",
+        "columns": {
+            "menus": {
+                "name": "Nom",
+                "price": "Prix",
+                "articles": "Articles"
+            },
+            "articles": {
+                "name": "Nom",
+                "price": "Prix"
+            }
         }
     }
 }
