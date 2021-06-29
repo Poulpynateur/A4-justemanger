@@ -1,4 +1,4 @@
-import { Article, ArticleRepository } from "core/models/article";
+import { Article, ArticleRepository } from "../models/article";
 
 export const articleService = { 
     listAll: listAll,

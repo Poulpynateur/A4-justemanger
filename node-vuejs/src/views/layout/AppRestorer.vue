@@ -23,7 +23,7 @@
           </b-input>
         </b-field>
 
-        <b-field :label="$t('restorer.name')">
+        <b-field :label="$t('restorer.address')">
           <b-input
             type="text"
             v-model="form.address"
@@ -118,6 +118,7 @@ export default Vue.extend({
       selectedMenu: null,
       selectedArticle: null,
       form: {
+        ownerId: 0,
         name: "",
         address: "",
         category: ""
@@ -152,6 +153,7 @@ export default Vue.extend({
   },
   methods: {
     createRestaurant() {
+      this.form.ownerId = this.$store.state.currentUser.id;
       restaurantService
         .sendNewRestaurant(this.form)
         .then((restaurant) => {
@@ -177,7 +179,7 @@ export default Vue.extend({
         events: {
           modalFinished: (article) => {
             restaurantService
-              .sendNewArticle(article)
+              .sendNewArticle(this.restaurant.id, article)
               .then((article) => {
                 this.restaurant.articles.push(article);
               })
@@ -205,7 +207,7 @@ export default Vue.extend({
         events: {
           modalFinished: (menu) => {
             restaurantService
-              .sendNewArticle(menu)
+              .sendNewArticle(this.restaurant.id, menu)
               .then((menu) => {
                 this.restaurant.menus.push(menu);
               })
@@ -221,7 +223,7 @@ export default Vue.extend({
     },
     deleteSelectedArticle() {
       restaurantService
-        .deleteArticle(this.selectedArticle)
+        .deleteArticle(this.restaurant.id, this.selectedArticle)
         .then(() => {
           const index = this.restaurant.articles.findIndex(
             (a) => a.id == this.selectedArticle.id
@@ -238,7 +240,7 @@ export default Vue.extend({
     },
     deleteSelectedMenu() {
       restaurantService
-        .deleteMenu(this.selectedMenu)
+        .deleteArticle(this.restaurant.id, this.selectedMenu)
         .then(() => {
           const index = this.restaurant.menus.findIndex(
             (a) => a.id == this.selectedMenu.id
@@ -266,7 +268,7 @@ export default Vue.extend({
         events: {
           modalFinished: (article) => {
             restaurantService
-              .updateArticle(article)
+              .updateArticle(this.restaurant.id, article)
               .then((article) => {
                 const index = this.restaurant.articles.findIndex(
                   (a) => a.id == article.id
@@ -298,7 +300,7 @@ export default Vue.extend({
         events: {
           modalFinished: (menu) => {
             restaurantService
-              .updateMenu(menu)
+              .updateArticle(this.restaurant.id, menu)
               .then((menu) => {
                 const index = this.restaurant.menus.findIndex(
                   (a) => a.id == menu.id

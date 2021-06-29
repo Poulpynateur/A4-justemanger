@@ -1,4 +1,4 @@
-import { articleService } from "core/services/articleService";
+import { articleService } from "../../core/services/articleService";
 import {Request, Response} from "express";
 
 function readArticlesList(req: Request, res: Response) {

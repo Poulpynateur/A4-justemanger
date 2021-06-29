@@ -1,9 +1,11 @@
 /**** DTO ****/
 export class UserDTO {
-    public username: string = '';
+    public id?: number;
+    public username?: string;
+    public firstName?: string;
+    public email?: string;
+    public lastName?: string;
     public role?: string;
     public accessToken?: string;
-
-    constructor(username: string)
-    {this.username = username}
+    public refreshToken?: string;
 }

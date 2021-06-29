@@ -6,82 +6,70 @@ import { ArticleDTO, RestaurantDTO } from '../store/models/restaurant';
 const apiUrl = '/restaurants';
 
 function getFromId(id) {
-    const restaurant = new RestaurantDTO();
-    restaurant.id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    restaurant.name = "Placeholder";
-    restaurant.category = "Sausage";
-    restaurant.address = "46 rue du joyeux, Mulhouse";
-    restaurant.articles = [
-        {
-            id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
-            price: 10,
-            name: "Test article"
-        }
-    ];
-    restaurant.menus = [
-        {
-            id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
-            price: 10,
-            name: "Test menu",
-            subArticles: [{
-                id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
-                price: 10,
-                name: "Test article"
-            }]
-        },
-
-    ];
-    return Promise.resolve(restaurant);
+    return http.get(apiUrl + '/' + id)
+    .then((response) => {
+        return Promise.resolve(response.data as RestaurantDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
 }
 
 function getAll() {
-    const restaurant = new RestaurantDTO();
-    restaurant.id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    restaurant.name = "Placeholder";
-    restaurant.category = "Sausage";
-    restaurant.address = "46 rue du joyeux, Mulhouse";
-    restaurant.articles = [];
-    restaurant.menus = [];
-    return Promise.resolve([restaurant, restaurant]);
+    return http.get(apiUrl)
+    .then((response) => {
+        return Promise.resolve(response.data as RestaurantDTO[]);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
 }
 
 function getUserRestaurant() {
-    const restaurant = new RestaurantDTO();
-    restaurant.name = "Placeholder";
-    restaurant.articles = [];
-    restaurant.menus = [];
-    return Promise.resolve(restaurant);
+    return http.get('/my-restaurant')
+    .then((response) => {
+        return Promise.resolve(response.data as RestaurantDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
 }
 
 function sendNewRestaurant(restaurantInfo) {
-    const restaurant = restaurantInfo as RestaurantDTO;
-    restaurant.articles = [];
-    restaurant.menus = [];
-    return Promise.resolve(restaurant);
+    return http.post(apiUrl, restaurantInfo)
+    .then((response) => {
+        return Promise.resolve(response.data as RestaurantDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
 }
 
-function sendNewArticle(article) {
-    const art = article as ArticleDTO;
-    art.id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    return Promise.resolve(art);
+function sendNewArticle(restaurantId, article) {
+    return http.post(apiUrl + '/' + restaurantId + '/articles', article)
+    .then((response) => {
+        return Promise.resolve(response.data as ArticleDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
 }
 
-function updateArticle(article) {
-    return Promise.resolve(article);
-}
-function updateMenu(menu) {
-    return Promise.resolve(menu);
+function updateArticle(restaurantId, article) {
+    return http.put(apiUrl + '/' + restaurantId + '/articles/' + article.id, article)
+    .then((response) => {
+        return Promise.resolve(response.data as ArticleDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
 }
 
-function deleteArticle(article) {
-    return Promise.resolve();
-}
-function deleteMenu(menu) {
-    return Promise.resolve();
+function deleteArticle(restaurantId, article) {
+    return http.put(apiUrl + '/' + restaurantId + '/articles/' + article.id, article)
+    .then((response) => {
+        return Promise.resolve(response.data as ArticleDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
 }
 
 export default {
     getFromId, getAll, getUserRestaurant,
     sendNewRestaurant, sendNewArticle,
-    updateArticle, updateMenu, deleteArticle, deleteMenu
+    updateArticle, deleteArticle
 };

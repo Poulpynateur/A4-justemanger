@@ -1,33 +1,24 @@
-import { Restaurant, RestaurantRepository } from "core/models/restaurant";
+import { RestaurantRepository, RestaurantDTO } from "../models/restaurant";
 
-export const restaurantService = { 
-    listAll: listAll,
-    create: createRestaurant,
-    read: readRestaurant,
-    update: updateRestaurant,
-    delete: deleteRestaurant
-}
-
-export function listAll() {
+function getAll() {
     return RestaurantRepository.selectAll();
 }
 
-function createRestaurant(restaurantInfo: typeof Restaurant) {
-    return RestaurantRepository.insertRestaurant(restaurantInfo);
+function getFromId(restaurantId: string)
+{
+    return RestaurantRepository.getById(restaurantId);
 }
 
-function readRestaurant(id: number) {
-    return RestaurantRepository.selectRestaurant(id);
+function createRestaurant(restaurant: RestaurantDTO) {
+    return RestaurantRepository.createRestaurant(restaurant);
 }
 
-function updateRestaurant(id: number, updatedRestaurant: typeof Restaurant) {
-    return RestaurantRepository.updateRestaurant(id, updatedRestaurant);
-}
-
-function deleteRestaurant(id: number) {
-    return RestaurantRepository.deleteRestaurant(id);
+function getFromUser(currentUserID: number) {
+    return RestaurantRepository.foundRestaurantByOwner(currentUserID);
 }
 
 export default {
-    restaurantService
+    getAll,
+    createRestaurant,
+    getFromUser
 }
