@@ -8,3 +8,5 @@ router.get('/', testWS.test);
 router.get('/secured', authMiddleware.authenticateToken, testWS.testSecured);
 
 export default router;
+
+// un commentaire pour tester que le push se fait bien au bon endroit
