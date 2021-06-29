@@ -3,9 +3,23 @@
 @import "variables.scss";
 
 html { 
-    background: url('~@/assets/images/bg.jpg') no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-  }
+  background: url('~@/assets/images/bg.jpg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+html, body, #app {
+  height: 100%;
+}
+#app {
+  display: flex;
+  flex-direction: column;
+}
+.wrapper {
+  flex: 1 0 auto;
+}
+.footer {
+  flex-shrink: 0;
+}

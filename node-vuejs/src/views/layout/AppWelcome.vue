@@ -11,12 +11,13 @@
       :interval="interval"
       :repeat="repeat"
     >
-      <b-carousel-item v-for="(carousel, i) in carousels" :key="i">
+      <b-carousel-item class="relative" v-for="(carousel, i) in carousels" :key="i">
         <b-image
           class="max-height-100"
-          :src="carousel.src"
-          :alt="carousel.alt"
+          :src="carousel"
+          alt="Placeholder image"
         ></b-image>
+        <h1 class="title is-1 has-text-light">{{$t('welcome')}}</h1>
       </b-carousel-item>
     </b-carousel>
 
@@ -34,6 +35,16 @@
 <style lang="scss" scoped>
 .max-height-100 {
   max-height: 100vh;
+}
+.relative {
+  position: relative;
+
+  .title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 </style>
 
@@ -54,18 +65,9 @@ export default Vue.extend({
       pauseType: "is-primary",
       interval: 10000,
       carousels: [
-        {
-          src: require("@/assets/images/carousel - 0.jpg"),
-          alt: "Probably some chicken, idk.",
-        },
-        {
-          src: require("@/assets/images/carousel - 1.jpg"),
-          alt: "Healthy things.",
-        },
-        {
-          src: require("@/assets/images/carousel - 2.jpg"),
-          alt: "Lemon chicken, I think ?",
-        },
+        'http://lorempixel.com/1920/1080/food/1',
+        'http://lorempixel.com/1920/1080/food/2',
+        'http://lorempixel.com/1920/1080/food/3'
       ],
     };
   },

@@ -5,7 +5,10 @@ import store from '../store/index';
 
 import AppMain from '../views/AppMain.vue';
 import NotFound from '../views/NotFound.vue';
-import UserProfile from '../views/UserProfile.vue';
+import UserProfile from '../views/layout/UserProfile.vue';
+import RestaurantOrder from '../views/layout/RestaurantOrder.vue';
+import OrderBasket from '../views/layout/OrderBasket.vue';
+import OrderHistory from '../views/layout/OrderHistory.vue';
 
 Vue.use(VueRouter)
 
@@ -13,6 +16,9 @@ const routes: Array<RouteConfig> = [
   { path: "*", component: NotFound },
   { path: '/', name: 'home', component: AppMain, props: true},
   { path: "/profile", name: 'user-profile', component: UserProfile, meta: {auth: true }},
+  { path: "/restaurant/:restaurantId", name: 'restaurant', component: RestaurantOrder, props: true},
+  { path: "/basket", name: 'basket', component: OrderBasket, meta: {auth: true }},
+  { path: "/order-history", name: 'order-history', component: OrderHistory, meta: {auth: true }}
 ]
 
 const router = new VueRouter({

@@ -13,6 +13,16 @@
           </b-input>
         </b-field>
 
+        <b-field :label="$t('restorer.category')">
+          <b-input
+            type="text"
+            v-model="form.category"
+            :placeholder="$t('restorer.category')"
+            required
+          >
+          </b-input>
+        </b-field>
+
         <b-field :label="$t('restorer.name')">
           <b-input
             type="text"
@@ -98,7 +108,7 @@ import Vue from "vue";
 import ArticleModal from "../../components/restorer/ArticleModal.vue";
 import MenuModal from "../../components/restorer/MenuModal.vue";
 
-import restorerService from "../../services/restorerService";
+import restaurantService from "../../services/restaurantService";
 
 export default Vue.extend({
   name: "app-restorer",
@@ -110,6 +120,7 @@ export default Vue.extend({
       form: {
         name: "",
         address: "",
+        category: ""
       },
       columns: {
         menus: [
@@ -141,7 +152,7 @@ export default Vue.extend({
   },
   methods: {
     createRestaurant() {
-      restorerService
+      restaurantService
         .sendNewRestaurant(this.form)
         .then((restaurant) => {
           this.restaurant = restaurant;
@@ -165,7 +176,7 @@ export default Vue.extend({
         },
         events: {
           modalFinished: (article) => {
-            restorerService
+            restaurantService
               .sendNewArticle(article)
               .then((article) => {
                 this.restaurant.articles.push(article);
@@ -193,8 +204,8 @@ export default Vue.extend({
         },
         events: {
           modalFinished: (menu) => {
-            restorerService
-              .sendNewMenu(menu)
+            restaurantService
+              .sendNewArticle(menu)
               .then((menu) => {
                 this.restaurant.menus.push(menu);
               })
@@ -209,7 +220,7 @@ export default Vue.extend({
       });
     },
     deleteSelectedArticle() {
-      restorerService
+      restaurantService
         .deleteArticle(this.selectedArticle)
         .then(() => {
           const index = this.restaurant.articles.findIndex(
@@ -226,7 +237,7 @@ export default Vue.extend({
         });
     },
     deleteSelectedMenu() {
-      restorerService
+      restaurantService
         .deleteMenu(this.selectedMenu)
         .then(() => {
           const index = this.restaurant.menus.findIndex(
@@ -254,7 +265,7 @@ export default Vue.extend({
         },
         events: {
           modalFinished: (article) => {
-            restorerService
+            restaurantService
               .updateArticle(article)
               .then((article) => {
                 const index = this.restaurant.articles.findIndex(
@@ -286,7 +297,7 @@ export default Vue.extend({
         },
         events: {
           modalFinished: (menu) => {
-            restorerService
+            restaurantService
               .updateMenu(menu)
               .then((menu) => {
                 const index = this.restaurant.menus.findIndex(
@@ -306,7 +317,7 @@ export default Vue.extend({
     },
   },
   created() {
-    restorerService.getUserRestaurant().then((restaurant) => {
+    restaurantService.getUserRestaurant().then((restaurant) => {
       this.restaurant = restaurant;
     });
   },

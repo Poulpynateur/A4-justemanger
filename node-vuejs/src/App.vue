@@ -1,22 +1,30 @@
 <template>
   <div id="app">
-    <header>
-      <nav-menu />
-    </header>
-    <main style="padding-top: 3.6rem">
-      <router-view />
-    </main>
-
+    <div class="wrapper">
+      <header>
+        <nav-menu />
+      </header>
+      <main>
+        <router-view />
+      </main>
+    </div>
     <footer class="footer mt-6">
       <div class="content has-text-centered">
         <span>
           <a href="https://twitter.com/?lang=en">Twitter</a>
           <a class="ml-3" href="https://www.facebook.com/">Facebook</a>
-          <a class="ml-3" href="https://fr.wiktionary.org/wiki/R.I.P.">Google +</a>
+          <a class="ml-3" href="https://fr.wiktionary.org/wiki/R.I.P."
+            >Google +</a
+          >
         </span>
         <p class="has-text-grey-lighter">
-          <strong class="has-text-grey-lighter">A4 project</strong> created by myself. The source code can be found at <a class="has-text-grey-lighter" href="https://github.com/Poulpynateur/A4-justemanger">MIT</a>. The
-          website content is licensed by nothing.
+          <strong class="has-text-grey-lighter">A4 project</strong> created by
+          myself. The source code can be found at
+          <a
+            class="has-text-grey-lighter"
+            href="https://github.com/Poulpynateur/A4-justemanger"
+            >MIT</a
+          >. The website content is licensed by nothing.
         </p>
       </div>
     </footer>

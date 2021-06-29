@@ -2,6 +2,7 @@ export class RestaurantDTO {
     public id?: string;
     public name?: string;
     public address?: string;
+    public category?: string;
     public articles?: ArticleDTO[];
     public menus?: ArticleDTO[]; // articles with subArticles
 

@@ -1,6 +1,5 @@
 {
-    "welcome": "Bienvenue",
-    "welcomeSubtitle": "C'est JusteManger !",
+    "welcome": "Il est juste temps de manger.",
     "account": "Mon compte",
     "errors": {
         "404": "Page introuvable."
@@ -42,7 +41,8 @@
         "success": "Opération effectuer avec succés !",
         "failed": "Une erreur est survenue.",
         "create": "Créer",
-        "delete": "Supprimer"
+        "delete": "Supprimer",
+        "search": "Rechercher"
     },
     "roles": {
         "enduser": {
@@ -70,6 +70,7 @@
         "noRestaurant": "Commencé par créer votre restaurant :",
         "name": "Nom du restaurant",
         "address": "Adresse du restaurant",
+        "category": "Catégorie du restaurant",
         "manage": "Gestion",
         "createArticle": "Ajouté un article",
         "createMenu": "Ajouté un menu",
@@ -87,6 +88,28 @@
                 "name": "Nom",
                 "price": "Prix"
             }
+        }
+    },
+    "consumer": {
+        "search": {
+            "location": "Entrez une adresse ...",
+            "categorie": "Entrez une catégorie ...",
+            "noResult": "Aucun résultat",
+            "noResultHint": "Vous ne trouvez pas votre bonheur ? Pas de chance !"
+        },
+        "basket": "Panier",
+        "addBasket": "Ajouter au panier",
+        "deleteBasket": "Supprimer du panier",
+        "addedSuccess": "Article ajouté au panier avec succès !",
+        "removeSuccess": "Article supprimé du panier avec succès !",
+        "price": "Prix",
+        "command": "Commander",
+        "commandes": "Mes commandes",
+        "columns": {
+            "restaurant": "Restaurant",
+            "address": "Adresse de livraison",
+            "date":"Fait le",
+            "state": "État"
         }
     }
 }
