@@ -17,7 +17,7 @@ export const RoleEnum = {
 }
 
 /**** ORM ****/
-export const Role = global.db.define('roles', {
+export const Role = global.db_msql.define('roles', {
     id: {
         autoIncrement: true,
         primaryKey: true,

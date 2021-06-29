@@ -1,32 +1,55 @@
-import us from "../../core/services/userService";
-const userService = us.userService
 import {Request, Response} from "express";
+import { UserDTO } from '../../core/models/user';
+import { userService } from '../../core/services/userService';
+import authService from '../../core/services/authService';
 
-function readUsersList(req: Request, res: Response) {
-    res.status(200).json({message: userService.listAll()});
+// function readUsersList(req: Request, res: Response) {
+//     res.status(200).json({message: userService.listAll()});
+// }
+// 
+// function createUser(req: Request, res: Response) {
+//     res.status(200).json({ message: userService.create(req.body.user)});
+// }
+// 
+// function readUser(req: Request, res: Response) {
+//     res.status(200).json({ message: userService.read(req.params.id)});
+// }
+
+function update(req: Request, res: Response) {
+    const updatedUser: UserDTO = req.body as UserDTO;
+    const userId: number = parseInt(req.params.id);
+
+    authService.isConnectedUser(userId, req.currentUser)
+    .then(() => {
+        updatedUser.id = userId;
+        userService.update(updatedUser)
+        .then((user: UserDTO) => {
+            res.status(200).json(user);
+        }).catch((error: Error) => {
+            res.status(400).json({"message": error.message});
+        });
+    }).catch(() => {
+        res.status(403).json({"message": "Wrong user."});
+    });
 }
 
-function createUser(req: Request, res: Response) {
-    res.status(200).json({ message: userService.create(req.data.user)});
-}
-
-function readUser(req: Request, res: Response) {
-    res.status(200).json({ message: userService.read(req.params.id)});
-}
-
-function updateUser(req: Request, res: Response) {
-    res.status(200).json({ message: userService.update(req.params.id, req.data.updated)});
-}
-
-function deleteUser(req: Request, res: Response) {
-    res.status(200).json({ message: userService.delete(req.params.id)});
+function remove(req: Request, res: Response) {
+    const userId: number = parseInt(req.params.id);
+    authService.isConnectedUser(userId, req.currentUser)
+    .then(() => {
+        userService.delete(userId)
+        .then(() => {
+            res.status(200).json();
+        }).catch((error: Error) => {
+            res.status(400).json({"message": error.message});
+        });
+    }).catch(() => {
+        res.status(403).json({"message": "Wrong user."});
+    });
 }
 
 //user interface
 export default {
-    listAll: readUsersList,
-    create: createUser,
-    read: readUser,
-    update: updateUser,
-    delete: deleteUser
+    update,
+    remove
 }

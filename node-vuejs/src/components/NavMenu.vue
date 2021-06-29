@@ -100,7 +100,7 @@ export default Vue.extend({
       this.onTop = window.top.scrollY == 0;
     },
     hasRole(role) {
-      return this.$store.state.currentUser.role == role;
+      return this.$store.state?.currentUser?.role == role;
     },
   },
   computed: {

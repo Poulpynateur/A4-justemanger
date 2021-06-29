@@ -11,7 +11,7 @@ function checkJwtToken(token: string)
         try
         {
             const decoded: any = jwt.verify(token, config.jwt.public, {algorithms: ['RS256']});
-            const user = new UserDTO(decoded.username);
+            const user = decoded as UserDTO;
             resolve(user);
         }
         catch (error)
@@ -27,7 +27,16 @@ function getTokenFromRequest(req: Request) : string
     return authHeader && authHeader.split(' ')[1] || '';
 }
 
+function isConnectedUser(targetId: number, currentUser: UserDTO | undefined) {
+    return new Promise((resolve, reject) => {
+        if (targetId == currentUser?.id) resolve(true);
+        else reject();
+    });
+}
+
+
 export default {
+    isConnectedUser,
     getTokenFromRequest,
     checkJwtToken
 };

@@ -1,16 +1,15 @@
 import jwt from 'jsonwebtoken';
-import {Request} from "express";
+import { Request } from "express";
 
 import config from '../../config/config';
+import { UserDTO, User, UserRepository } from '../models/user';
 
-import {UserDTO, User, UserRepository} from '../models/user';
-
-const userService = {    
-	listAll: listAll,
-	create: createUser,
-	read: readUser,
-	update: updatedUser,
-	delete: deleteUser
+export const userService = { 
+    listAll: listAll,
+    create: createUser,
+    read: readUser,
+    update: updatedUser,
+    delete: deleteUser
 }
 
 export function listAll() {
@@ -25,14 +24,10 @@ export function readUser(id: number) {
     return UserRepository.selectUser(id);
 }
 
-export function updatedUser(id: number, updated: Object) {
-    return UserRepository.updateUser(id, updated);
+export function updatedUser(updated: UserDTO) {
+    return UserRepository.updateUser(updated);
 }
 
 export function deleteUser(id: number) {
     return UserRepository.deleteUser(id);
 }
-
-export default {
-    userService
-};

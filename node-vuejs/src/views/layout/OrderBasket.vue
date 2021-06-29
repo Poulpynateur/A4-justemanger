@@ -1,13 +1,25 @@
 <template>
   <div class="container box mt-6">
-    <article-card
-      v-for="article in $store.state.basket"
-      :key="article.id"
-      :article="article"
-      type="basket"
-    ></article-card>
+    <div v-if="$store.state.basket.length">
+      <article-card
+        v-for="article in $store.state.basket"
+        :key="article.id"
+        :article="article"
+        type="basket"
+      ></article-card>
 
-    <b-button type="is-primary" expanded>{{ $t("consumer.command") }}</b-button>
+      <b-button type="is-primary" expanded>{{
+        $t("consumer.command")
+      }}</b-button>
+    </div>
+    <div v-else>
+      <section class="hero">
+        <div class="hero-body">
+          <p class="title">{{$t('consumer.basketEmpty')}}</p>
+          <p class="subtitle">{{$t('consumer.basketEmptyDisclaimer')}}</p>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 

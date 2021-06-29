@@ -110,6 +110,8 @@
             "address": "Adresse de livraison",
             "date":"Fait le",
             "state": "État"
-        }
+        },
+        "basketEmpty": "Panier vide ...",
+        "basketEmptyDisclaimer": "N'hésitez pas à acheter !"
     }
 }

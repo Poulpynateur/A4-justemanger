@@ -7,7 +7,7 @@ import config from "../../config/config";
 import {Role} from "./role";
 
 /**** ORM ****/
-export const User = global.db.define('users', {
+export const User = global.db_msql.define('users', {
     id: {
         autoIncrement: true,
         primaryKey: true,
@@ -45,8 +45,11 @@ User.belongsTo(Role);
 
 /**** DTO ****/
 export class UserDTO {
+    
+    public id?: number;
     public username?: string;
     public firstName?: string;
+    public email?: string;
     public lastName?: string;
     public role?: string;
     public accessToken?: string;
@@ -57,7 +60,9 @@ export class UserDTO {
         if (user)
         {
             // Convert database model to DTO
+            this.id = user.id;
             this.username = user.username;
+            this.email = user.email;
             this.firstName = user.first_name;
             this.lastName = user.last_name;
             this.refreshToken = user.refresh_token;
@@ -66,9 +71,11 @@ export class UserDTO {
     }
 }
 
+
 /**** repository ****/
 export namespace UserRepository {
 
+    // FIXME
     export function selectAll() {
         try {
             return User.findAll();
@@ -77,6 +84,7 @@ export namespace UserRepository {
         }
     }
 
+    // FIXME
     export function isUsernameTaken(username: string) {
         var bool = true;
         User.findOne({ where: {username: username}}).then( (user: typeof User) => {
@@ -90,6 +98,7 @@ export namespace UserRepository {
         return bool;
     }
 
+    // FIXME
     export function isEmailRegistered(email: string) : boolean {
         var bool = true;
         User.findOne({ where: {email: email}}).then( (user: typeof User) => {
@@ -102,7 +111,9 @@ export namespace UserRepository {
         });
         return bool;
     }
-    
+
+    // FIXME
+
     export function insertUser(userInfo: typeof User)
     {
         if (!isUsernameTaken(userInfo.username as string)) {
@@ -111,9 +122,9 @@ export namespace UserRepository {
         }
     }
 
+    // FIXME
     export function selectUser(id: number)
     {
-        // faut checker ça, le double return
         return User.findOne({ where: { id: id }, include: [Role] })
         .then((user: any) => {
             return new Promise((resolve, reject) => {
@@ -127,20 +138,29 @@ export namespace UserRepository {
         });
     }
 
-    // todo : vérification de l'existant
-    export function updateUser(id: number, updatedUser: Object) {
-        try {
-            return User.update(updateUser, { where: { id: id } });
-        } catch (e) {
-            console.log(e);
-        }
+    export function updateUser(updatedUser: UserDTO) {
+        return User.findOne({where: {id: updatedUser.id}, include: [Role]})
+        .then((user: any) => {
+            if (user)
+            {
+                return user.update({
+                    username: updatedUser.username,
+                    email: updatedUser.email,
+                    first_name: updatedUser.firstName,
+                    last_name: updatedUser.lastName
+                });
+            }
+            return Promise.reject(new Error("User not found."));
+        }).then((user: any) => {
+            return Promise.resolve(new UserDTO(user));
+        });
     }
 
     export function deleteUser(id: number) {
-        try {
-            return User.destroy({ where: { id: id } });
-        } catch (e) {
-            console.log(e);
-        }
+        return User.findOne({where: {id: id}, include: [Role]})
+        .then((user: any) => {
+            if (user) return user.destroy();
+            return Promise.reject(new Error("User not found."));
+        });
     }
 }
