@@ -1,10 +1,10 @@
 import express from "express";
 
-import testRoutes from './testRoutes';
+import userRoutes from './userRoutes';
 
 let router = express.Router();
 
 /**** setup app routes ****/
-router.use('/', testRoutes);
+router.use('/users', userRoutes);
 
 export default router;
