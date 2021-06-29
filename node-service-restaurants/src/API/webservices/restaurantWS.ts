@@ -42,7 +42,6 @@ function update(req: Request, res: Response)
 
 function getFromUser(req: Request, res: Response)
 {
-    console.log("AGA WOWOWOWOT");
     if (req.currentUser?.id)
     {
         restaurantService.getFromUser(req.currentUser?.id)

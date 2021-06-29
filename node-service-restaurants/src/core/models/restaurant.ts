@@ -66,7 +66,12 @@ export namespace RestaurantRepository {
     export function foundRestaurantByOwner(currentUserID: number) {
         return Restaurant.findOne({owner_id: currentUserID})
         .then((restaurant: any) => {
-            return Promise.resolve(new RestaurantDTO(restaurant));
+            return new Promise((resolve, reject) => {
+                if (restaurant)
+                    resolve(new RestaurantDTO(restaurant));
+                else
+                    reject(new Error("Current user have no restaurant"));
+            });
         });
     }
 }

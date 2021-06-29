@@ -8,5 +8,6 @@ let router = express.Router();
 router.post('/restaurants', proxy());
 router.get('/restaurants', proxy());
 router.get('/restaurants/me', proxy());
+router.get('/my-restaurant', proxy());
 
 export default router;

@@ -10,6 +10,6 @@ router.post('/restaurants/', auth.connected, restaurantWS.create);
 router.get('/restaurants/:id', restaurantWS.getFromId);
 router.put('/restaurants/:id', auth.connected, restaurantWS.update);
 // FIXME : should probably be /users/:id/restaurant
-router.put('/my-restaurant', auth.connected, restaurantWS.getFromUser);
+router.get('/my-restaurant', auth.connected, restaurantWS.getFromUser);
 
 export default router;
