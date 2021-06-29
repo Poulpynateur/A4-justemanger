@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     rememberMe: false,
     currentUser: null,
-    language: defaultLocale
+    language: defaultLocale,
+    basket: []
   },
   mutations: {
     setLanguage(state, lang: Locales) {
@@ -31,7 +32,18 @@ export default new Vuex.Store({
     },
     initialiseStore(state) {
       if (localStorage.getItem('currentUser'))
-        state.currentUser = JSON.parse(localStorage.getItem('currentUser') || "");
+        state.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (localStorage.getItem('basket'))
+        state.basket = JSON.parse(localStorage.getItem('basket'));
+    },
+    addToBasket(state, article) {
+      state.basket.push(article);
+      localStorage.setItem('basket', JSON.stringify(state.basket));
+    },
+    removeFromBasket(state, article) {
+      const index = state.basket.findIndex((a) => a.id == article.id);
+      state.basket.splice(index, 1);
+      localStorage.setItem('basket', JSON.stringify(state.basket));
     }
   },
   actions: {

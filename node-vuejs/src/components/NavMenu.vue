@@ -1,50 +1,56 @@
 <template>
-  <section class="navbar-wrapper white-back">
-    <b-navbar class="container transparent" :transparent="true">
-      <template #brand>
-        <b-navbar-item class="p-0" tag="router-link" :to="{ path: '/' }">
-          <img src="@/assets/images/logo - large.png" class="image logo" />
-        </b-navbar-item>
-      </template>
-      <template #end>
-        <b-navbar-item tag="div">
-          <a
-            v-if="!isConnected"
-            class="button is-light"
-            @click="openLoginModal"
-            >{{ $t("auth.login") + " / " + $t("auth.register") }}</a
-          >
+  <b-navbar :shadow="true" :transparent="true" centered fixed-top>
+    <template #brand>
+      <b-navbar-item tag="router-link" :to="{ path: '/' }">
+        <img src="@/assets/images/logo - large.png" class="image logo" />
+      </b-navbar-item>
+    </template>
+    <template #end>
+    <b-navbar-item v-if="hasRole('enduser.consumer')" tag="div">
+      <router-link  :to="{ name: 'basket' }"><b-button icon-right="basket"><b-tag class="mr-2" type="is-primary" rounded>{{$store.state.basket.length}}</b-tag>{{ $t('consumer.basket') }}</b-button></router-link>
+    </b-navbar-item>
+      <b-navbar-item tag="div">
+        <a
+          v-if="!isConnected"
+          class="button is-light"
+          @click="openLoginModal"
+          >{{ $t("auth.login") + " / " + $t("auth.register") }}</a
+        >
           <b-navbar-dropdown v-else :arrowless="true" :label="$t('account')">
             <b-navbar-item>
               <router-link :to="{ name: 'user-profile' }">{{
                 getUserFullName
               }}</router-link>
             </b-navbar-item>
+            <b-navbar-item v-if="hasRole('enduser.consumer')">
+            <router-link :to="{ name: 'order-history' }">{{
+              $t("consumer.commandes")
+            }}</router-link>
+            </b-navbar-item>
             <b-navbar-item href="#" @click="disconnect()">{{
               $t("action.disconnect")
             }}</b-navbar-item>
           </b-navbar-dropdown>
-        </b-navbar-item>
-        <b-navbar-item tag="div">
-          <b-navbar-dropdown label="Lang">
-            <b-navbar-item
-              href="#"
-              v-for="(lang, i) in langs"
-              :key="i"
-              @click="changLang(lang.value)"
-            >
-              {{ lang.caption }}
-            </b-navbar-item>
-          </b-navbar-dropdown>
-        </b-navbar-item>
-      </template>
-    </b-navbar>
-  </section>
+      </b-navbar-item>
+      <b-navbar-item tag="div">
+        <b-navbar-dropdown label="Lang">
+          <b-navbar-item
+            href="#"
+            v-for="(lang, i) in langs"
+            :key="i"
+            @click="changLang(lang.value)"
+          >
+            {{ lang.caption }}
+          </b-navbar-item>
+        </b-navbar-dropdown>
+      </b-navbar-item>
+    </template>
+  </b-navbar>
 </template>
 
 <style scoped>
 .logo {
-  max-height: 3rem;
+  max-height: 2.5rem;
 }
 .transparent {
   background-color: transparent;
@@ -56,7 +62,6 @@
 }
 .white-back {
   background-color: white;
-  box-shadow: 0 5px 5px white;
 }
 </style>
 
@@ -72,7 +77,6 @@ export default Vue.extend({
   data() {
     return {
       langs: LOCALES,
-      onTop: true,
     };
   },
   methods: {
@@ -95,6 +99,9 @@ export default Vue.extend({
     onScroll: function () {
       this.onTop = window.top.scrollY == 0;
     },
+    hasRole(role) {
+      return this.$store.state.currentUser.role == role;
+    },
   },
   computed: {
     isConnected: function (): boolean {
@@ -107,12 +114,6 @@ export default Vue.extend({
         this.$store.state.currentUser.lastName
       );
     },
-  },
-  mounted() {
-    window.addEventListener("scroll", this.onScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.onScroll);
   },
 });
 </script>

@@ -46,5 +46,8 @@
         "enduser.consumer": "Consumer",
         "enduser.restorer": "Restorer",
         "enduser.delivery": "Delivery boy"
+    },
+    "restorer": {
+        "noRestaurant": "You don't have a restaurant yet"
     }
 }

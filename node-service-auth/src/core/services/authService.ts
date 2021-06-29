@@ -62,7 +62,7 @@ function refreshAccessToken(username: string, refreshToken: string)
 function generateJwtToken(user: UserDTO)
 {
     // don't include whole user to payload
-    return jwt.sign({username: user.username}, config.jwt.private, { expiresIn: config.jwt.validity, algorithm: 'RS256' });
+    return jwt.sign({id: user.id, username: user.username, role: user.role}, config.jwt.private, { expiresIn: config.jwt.validity, algorithm: 'RS256' });
 }
 
 function checkJwtToken(token: string)

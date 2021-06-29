@@ -27,6 +27,9 @@ async function migrateDB()
 
     // Default user
     const adminRole = await roleModel.Role.findOne({ where: { name: roleModel.RoleEnum.ADMIN } });
+    const consumerRole = await roleModel.Role.findOne({ where: { name: roleModel.RoleEnum.ENDUSER.CONSUMER } });
+    const restorerRole = await roleModel.Role.findOne({ where: { name: roleModel.RoleEnum.ENDUSER.RESTORER } });
+    const deliveryRole = await roleModel.Role.findOne({ where: { name: roleModel.RoleEnum.ENDUSER.DELIVERY } });
     const userModel = await import('../core/models/user');
     userModel.User.create({
         username: 'admin',
@@ -35,6 +38,30 @@ async function migrateDB()
         first_name: 'Admin',
         last_name: 'ADMIN',
         roleId: adminRole.get('id')
+    });
+    userModel.User.create({
+        username: 'resto',
+        password: crypto.hash('test', {algorithm: 'SHA256'}),
+        email: 'resto@resto.fr',
+        first_name: 'Jean',
+        last_name: 'RESTAURATEUR',
+        roleId: restorerRole.get('id')
+    });
+    userModel.User.create({
+        username: 'deliv',
+        password: crypto.hash('test', {algorithm: 'SHA256'}),
+        email: 'deliv@deliv.fr',
+        first_name: 'Michelle',
+        last_name: 'DELIBOY',
+        roleId: deliveryRole.get('id')
+    });
+    userModel.User.create({
+        username: 'consu',
+        password: crypto.hash('test', {algorithm: 'SHA256'}),
+        email: 'consu@consu.fr',
+        first_name: 'Pierre',
+        last_name: 'CONSUM',
+        roleId: consumerRole.get('id')
     });
 }
 

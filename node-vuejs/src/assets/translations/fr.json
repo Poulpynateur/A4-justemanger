@@ -1,6 +1,5 @@
 {
-    "welcome": "Bienvenue",
-    "welcomeSubtitle": "C'est JusteManger !",
+    "welcome": "Il est juste temps de manger.",
     "account": "Mon compte",
     "errors": {
         "404": "Page introuvable."
@@ -38,15 +37,79 @@
     "action": {
         "cancel": "Annuler",
         "disconnect": "Déconnexion",
-        "update": "Mettre à jour",
+        "update": "Éditer",
         "success": "Opération effectuer avec succés !",
-        "failed": "Une erreur est survenue."
+        "failed": "Une erreur est survenue.",
+        "create": "Créer",
+        "delete": "Supprimer",
+        "search": "Rechercher"
     },
     "roles": {
         "enduser": {
             "consumer": "Consomateur",
             "restorer": "Restaurateur",
             "delivery": "Livreur"
+        }
+    },
+    "delivery": {
+        "accepted": "Commande en cours",
+        "availables": "Commande disponibles",
+        "noAccepted": "Aucune commande en cours",
+        "noAcceptedDisclaimer": "Vous n'avez pas de commande en cours, allez dans l'onglet 'disponibles'.",
+        "accept": "Accepter la commande sélectionné",
+        "abort": "Annuler la livraison",
+        "finish": "Livraison terminer",
+        "columns": {
+            "restaurant": "Restaurant",
+            "customer": "Client",
+            "address": "Adresse de livraison",
+            "date": "Fait le"
+        }
+    },
+    "restorer": {
+        "noRestaurant": "Commencé par créer votre restaurant :",
+        "name": "Nom du restaurant",
+        "address": "Adresse du restaurant",
+        "category": "Catégorie du restaurant",
+        "manage": "Gestion",
+        "createArticle": "Ajouté un article",
+        "createMenu": "Ajouté un menu",
+        "menus": "Menus",
+        "articles": "Articles",
+        "orders": "Commandes",
+        "totalChecked": "Total sélectionné",
+        "columns": {
+            "menus": {
+                "name": "Nom",
+                "price": "Prix",
+                "articles": "Articles"
+            },
+            "articles": {
+                "name": "Nom",
+                "price": "Prix"
+            }
+        }
+    },
+    "consumer": {
+        "search": {
+            "location": "Entrez une adresse ...",
+            "categorie": "Entrez une catégorie ...",
+            "noResult": "Aucun résultat",
+            "noResultHint": "Vous ne trouvez pas votre bonheur ? Pas de chance !"
+        },
+        "basket": "Panier",
+        "addBasket": "Ajouter au panier",
+        "deleteBasket": "Supprimer du panier",
+        "addedSuccess": "Article ajouté au panier avec succès !",
+        "removeSuccess": "Article supprimé du panier avec succès !",
+        "price": "Prix",
+        "command": "Commander",
+        "commandes": "Mes commandes",
+        "columns": {
+            "restaurant": "Restaurant",
+            "address": "Adresse de livraison",
+            "date":"Fait le",
+            "state": "État"
         }
     }
 }

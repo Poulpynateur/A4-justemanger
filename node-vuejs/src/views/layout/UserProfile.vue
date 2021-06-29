@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import userService from "../services/userService";
+import userService from "../../services/userService";
 
 export default Vue.extend({
   name: "user-profile",
