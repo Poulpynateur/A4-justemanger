@@ -1,4 +1,4 @@
-import us from "core/services/userService";
+import us from "../../core/services/userService";
 const userService = us.userService
 import {Request, Response} from "express";
 

@@ -102,7 +102,6 @@ export namespace UserRepository {
         });
         return bool;
     }
-
     
     export function insertUser(userInfo: typeof User)
     {
