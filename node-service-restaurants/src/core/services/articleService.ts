@@ -1,38 +1,34 @@
-import { Article, ArticleRepository } from "../models/article";
+import { ArticleDTO, ArticleRepository } from "../models/article";
 
-export const articleService = { 
-    listAll: listAll,
-    listAllFromRestaurant: listAllFromRestaurant,
-    create: createArticle,
-    read: readArticle,
-    update: updateArticle,
-    delete: deleteArticle
+function create(restaurantId: string, newArticle: ArticleDTO)
+{
+    return ArticleRepository.create(restaurantId, newArticle);
 }
 
-export function listAll() {
-    return ArticleRepository.selectAll();
+function updateArticle(restaurantId: string, newArticle: ArticleDTO)
+{
+    return ArticleRepository.updateArticle(restaurantId, newArticle);
 }
 
-export function listAllFromRestaurant(id: number) {
-    return ArticleRepository.selectAllFromRestaurant(id)
+function removeArticle(restaurantId: string, articleId: string)
+{
+    return ArticleRepository.removeArticle(restaurantId, articleId);
 }
 
-function createArticle(articleInfo: typeof Article) {
-    return ArticleRepository.insertArticle(articleInfo);
+function updateMenu(restaurantId: string, newArticle: ArticleDTO)
+{
+    return ArticleRepository.updateMenu(restaurantId, newArticle);
 }
 
-function readArticle(id: number) {
-    return ArticleRepository.selectArticle(id);
-}
-
-function updateArticle(id: number, updatedArticle: typeof Article) {
-    return ArticleRepository.updateArticle(id, updatedArticle);
-}
-
-function deleteArticle(id: number) {
-    return ArticleRepository.deleteArticle(id);
+function removeMenu(restaurantId: string, articleId: string)
+{
+    return ArticleRepository.removeMenu(restaurantId, articleId);
 }
 
 export default {
-    articleService
+    create,
+    updateArticle,
+    removeArticle,
+    updateMenu,
+    removeMenu
 }

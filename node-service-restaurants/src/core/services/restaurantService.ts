@@ -18,6 +18,7 @@ function getFromUser(currentUserID: number) {
 }
 
 export default {
+    getFromId,
     getAll,
     createRestaurant,
     getFromUser

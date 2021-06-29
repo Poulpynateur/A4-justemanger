@@ -60,7 +60,7 @@ function updateArticle(restaurantId, article) {
 }
 
 function deleteArticle(restaurantId, article) {
-    return http.put(apiUrl + '/' + restaurantId + '/articles/' + article.id, article)
+    return http.delete(apiUrl + '/' + restaurantId + '/articles/' + article.id, article)
     .then((response) => {
         return Promise.resolve(response.data as ArticleDTO);
     }).catch((error) => {
@@ -68,8 +68,27 @@ function deleteArticle(restaurantId, article) {
     });
 }
 
+function updateMenu(restaurantId, article) {
+    return http.put(apiUrl + '/' + restaurantId + '/menus/' + article.id, article)
+    .then((response) => {
+        return Promise.resolve(response.data as ArticleDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
+}
+
+function deleteMenu(restaurantId, article) {
+    return http.delete(apiUrl + '/' + restaurantId + '/menus/' + article.id, article)
+    .then((response) => {
+        return Promise.resolve(response.data as ArticleDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
+}
+
+
 export default {
     getFromId, getAll, getUserRestaurant,
     sendNewRestaurant, sendNewArticle,
-    updateArticle, deleteArticle
+    updateArticle, deleteArticle, updateMenu, deleteMenu
 };

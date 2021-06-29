@@ -92,11 +92,35 @@
             >
           </div>
 
-          <b-table
-            :selected.sync="selectedMenu"
-            :data="restaurant.menus"
-            :columns="columns.menus"
-          ></b-table>
+          <b-table :selected.sync="selectedMenu" :data="restaurant.menus">
+            <b-table-column
+              width="300"
+              field="name"
+              :label="$t('restorer.columns.menus.name')"
+              v-slot="props"
+            >
+              {{ props.row.name }}
+            </b-table-column>
+            <b-table-column
+              field="subArticles"
+              :label="$t('restorer.columns.menus.articles')"
+              v-slot="props"
+            >
+              <span>
+                <b-tag v-for="sub in props.row.subArticles" :key="sub.id">
+                  {{ sub.name }}
+                </b-tag>
+              </span>
+            </b-table-column>
+            <b-table-column
+              width="100"
+              field="price"
+              :label="$t('restorer.columns.menus.price') + ' €'"
+              v-slot="props"
+            >
+              {{ props.row.price }}
+            </b-table-column>
+          </b-table>
         </b-tab-item>
       </b-tabs>
     </div>
@@ -109,6 +133,7 @@ import ArticleModal from "../../components/restorer/ArticleModal.vue";
 import MenuModal from "../../components/restorer/MenuModal.vue";
 
 import restaurantService from "../../services/restaurantService";
+import { ArticleDTO } from "../../store/models/restaurant";
 
 export default Vue.extend({
   name: "app-restorer",
@@ -121,25 +146,9 @@ export default Vue.extend({
         ownerId: 0,
         name: "",
         address: "",
-        category: ""
+        category: "",
       },
       columns: {
-        menus: [
-          {
-            field: "name",
-            label: this.$t("restorer.columns.menus.name"),
-            width: "300",
-          },
-          {
-            field: "subArticles",
-            label: this.$t("restorer.columns.menus.articles"),
-          },
-          {
-            field: "price",
-            label: this.$t("restorer.columns.menus.price") + " €",
-            width: "100",
-          },
-        ],
         articles: [
           { field: "name", label: this.$t("restorer.columns.articles.name") },
           {
@@ -240,7 +249,7 @@ export default Vue.extend({
     },
     deleteSelectedMenu() {
       restaurantService
-        .deleteArticle(this.restaurant.id, this.selectedMenu)
+        .deleteMenu(this.restaurant.id, this.selectedMenu)
         .then(() => {
           const index = this.restaurant.menus.findIndex(
             (a) => a.id == this.selectedMenu.id
@@ -300,7 +309,7 @@ export default Vue.extend({
         events: {
           modalFinished: (menu) => {
             restaurantService
-              .updateArticle(this.restaurant.id, menu)
+              .updateMenu(this.restaurant.id, menu)
               .then((menu) => {
                 const index = this.restaurant.menus.findIndex(
                   (a) => a.id == menu.id

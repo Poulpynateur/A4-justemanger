@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {ArticleDTO, articleSchema} from './article';
+import { Article, Menu, ArticleDTO } from './article';
 
 /**** ORM ****/
 const restaurantSchema = new mongoose.Schema({
@@ -20,10 +20,8 @@ export class RestaurantDTO {
     public articles?: ArticleDTO[];
     public menus?: ArticleDTO[]; // articles with subArticles
 
-    constructor(restaurant?: any)
-    {
-        if (restaurant)
-        {
+    constructor(restaurant?: any) {
+        if (restaurant) {
             // Convert database model to DTO
             this.id = restaurant._id;
             this.name = restaurant.name;
@@ -36,22 +34,44 @@ export class RestaurantDTO {
 /**** Repository ****/
 export namespace RestaurantRepository {
 
+    function withArticlesAndMenus(restaurant: any) {
+        return new Promise((resolve, reject) => {
+            if (restaurant) {
+                const restaurantDto = new RestaurantDTO(restaurant);
+                Article.find({ restaurantId: restaurant._id })
+                .then((articles: any) => {
+                    restaurantDto.articles = articles.map((article: any) => new ArticleDTO(article));
+                    return Menu.find({ restaurantId: restaurant._id });
+                })
+                .then((menus: any) => {
+                    restaurantDto.menus = menus.map((menu: any) => {
+                        const menuDTO = new ArticleDTO(menu);
+                        menuDTO.subArticles = menu.subArticles.map((sub: any) => new ArticleDTO(sub));
+                        return menuDTO;
+                    });
+                    resolve(restaurantDto);
+                });
+            }
+            else
+                reject("Restaurant not found.");
+        });
+    }
+
     export function getById(restaurantId: string) {
         return Restaurant.findById(restaurantId)
-        .then((restaurant: any) => {
-            return Promise.resolve(new RestaurantDTO(restaurant));
-        })
+            .then((restaurant: any) => {
+                return withArticlesAndMenus(restaurant);
+            })
     }
 
     export function selectAll() {
         return Restaurant.find({})
-        .then((restaurants: any) => {
-            return Promise.resolve(restaurants.map((restaurant: any) => new RestaurantDTO(restaurant.toObject())));
-        });
+            .then((restaurants: any) => {
+                return Promise.resolve(restaurants.map((restaurant: any) => new RestaurantDTO(restaurant.toObject())));
+            });
     }
 
     export function createRestaurant(restaurantDTO: RestaurantDTO) {
-        console.log(restaurantDTO);
         const restaurant = new Restaurant({
             name: restaurantDTO.name,
             owner_id: restaurantDTO.ownerId,
@@ -59,20 +79,15 @@ export namespace RestaurantRepository {
             category: restaurantDTO.category
         });
         return restaurant.save().then((newRestaurant: any) => {
-            return Promise.resolve(new RestaurantDTO(newRestaurant));
+            return withArticlesAndMenus(newRestaurant);
         });
     }
 
     export function foundRestaurantByOwner(currentUserID: number) {
-        return Restaurant.findOne({owner_id: currentUserID})
-        .then((restaurant: any) => {
-            return new Promise((resolve, reject) => {
-                if (restaurant)
-                    resolve(new RestaurantDTO(restaurant));
-                else
-                    reject(new Error("Current user have no restaurant"));
+        return Restaurant.findOne({ owner_id: currentUserID })
+            .then((restaurant: any) => {
+                return withArticlesAndMenus(restaurant);
             });
-        });
     }
 }
 

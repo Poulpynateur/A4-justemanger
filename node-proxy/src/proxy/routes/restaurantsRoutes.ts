@@ -9,5 +9,12 @@ router.post('/restaurants', proxy());
 router.get('/restaurants', proxy());
 router.get('/restaurants/me', proxy());
 router.get('/my-restaurant', proxy());
+router.post('/restaurants/:id/articles', proxy());
+router.get('/restaurants/:id', proxy());
+
+router.delete('/restaurants/:restaurantId/articles/:articleId', proxy());
+router.put('/restaurants/:restaurantId/articles/:articleId', proxy());
+router.delete('/restaurants/:restaurantId/menus/:articleId', proxy());
+router.put('/restaurants/:restaurantId/menus/:articleId', proxy());
 
 export default router;

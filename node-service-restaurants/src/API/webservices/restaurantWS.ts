@@ -26,7 +26,7 @@ function create(req: Request, res: Response)
 
 function getFromId(req: Request, res: Response)
 {
-    restaurantService.createRestaurant(req.body as RestaurantDTO)
+    restaurantService.getFromId(req.params.id)
     .then((restaurant: RestaurantDTO) => {
         res.status(200).json(restaurant);
     }).catch((error: any) => {
