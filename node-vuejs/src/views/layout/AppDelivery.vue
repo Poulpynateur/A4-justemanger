@@ -11,7 +11,7 @@
         <div class="card" v-else>
           <header class="card-header">
             <p class="card-header-title">
-              {{ active.customer }}
+              {{ active.customer.firstName + " " + active.customer.lastName }}
             </p>
           </header>
           <div class="card-content">
@@ -23,8 +23,10 @@
           <footer class="card-footer">
             <div class="card-footer-item">
               <div class="buttons">
-                <b-button type="is-danger">{{ $t("delivery.abort") }}</b-button>
-                <b-button type="is-success">{{
+                <b-button type="is-danger" @click="abortDelivery()">{{
+                  $t("delivery.abort")
+                }}</b-button>
+                <b-button type="is-success" @click="finishDelivery()">{{
                   $t("delivery.finish")
                 }}</b-button>
               </div>
@@ -34,18 +36,47 @@
       </b-tab-item>
 
       <b-tab-item :label="$t('delivery.availables')">
-        <b-button
-          type="is-primary"
-          expanded
-          :disabled="!selected"
-          @click="acceptSelectedOrder()"
-          >{{ $t("delivery.accept") }}</b-button
-        >
-        <b-table
-          :data="availables"
-          :columns="availablesCols"
-          :selected.sync="selected"
-        ></b-table>
+        <b-table :data="availables">
+          <b-table-column
+            field="restaurant"
+            :label="$t('delivery.columns.restaurant')"
+            v-slot="props"
+          >
+            {{
+              props.row.restaurant.name + " - " + props.row.restaurant.address
+            }}
+          </b-table-column>
+          <b-table-column
+            field="customer"
+            :label="$t('delivery.columns.customer')"
+            v-slot="props"
+          >
+            {{
+              props.row.customer.firstName + " " + props.row.customer.lastName
+            }}
+          </b-table-column>
+          <b-table-column
+            field="address"
+            :label="$t('delivery.columns.address')"
+            v-slot="props"
+          >
+            {{ props.row.address }}
+          </b-table-column>
+          <b-table-column
+            field="date"
+            :label="$t('delivery.columns.date')"
+            v-slot="props"
+          >
+            {{ props.row.date }}
+          </b-table-column>
+          <b-table-column v-slot="props" width="100">
+            <b-button
+              type="is-success"
+              @click="acceptSelectedOrder(props.row.id)"
+              >{{ $t("delivery.accept") }}</b-button
+            >
+          </b-table-column>
+        </b-table>
       </b-tab-item>
     </b-tabs>
   </div>
@@ -60,7 +91,6 @@ export default Vue.extend({
   data() {
     return {
       activeTab: 0,
-      selected: null,
       availables: [],
       availablesCols: [
         { field: "restaurant", label: this.$t("delivery.columns.restaurant") },
@@ -72,11 +102,25 @@ export default Vue.extend({
     };
   },
   methods: {
-    acceptSelectedOrder() {
-      deliveryService.acceptOrder(this.selected).then((order) => {
+    acceptSelectedOrder(orderId: string) {
+      deliveryService.acceptOrder(orderId).then((order) => {
         this.active = order;
-        this.selected = null;
         this.activeTab = 0;
+      });
+    },
+    abortDelivery() {
+      deliveryService.abortOrder(this.active.id).then((order) => {
+        this.active = null;
+        this.activeTab = 1;
+        deliveryService.getAvailableOrders().then((availables) => {
+          this.availables = availables;
+        });
+      });
+    },
+    finishDelivery() {
+      deliveryService.finishOrder(this.active.id).then((order) => {
+        this.active = null;
+        this.activeTab = 1;
       });
     },
   },

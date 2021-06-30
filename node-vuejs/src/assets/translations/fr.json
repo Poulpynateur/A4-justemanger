@@ -56,7 +56,7 @@
         "availables": "Commande disponibles",
         "noAccepted": "Aucune commande en cours",
         "noAcceptedDisclaimer": "Vous n'avez pas de commande en cours, allez dans l'onglet 'disponibles'.",
-        "accept": "Accepter la commande sélectionné",
+        "accept": "Accepter la livraison",
         "abort": "Annuler la livraison",
         "finish": "Livraison terminer",
         "columns": {

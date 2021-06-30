@@ -34,8 +34,8 @@ function getFromRestaurant(req: Request, res: Response) {
         });
 }
 
-function updateOrderState(req: Request, res: Response) {
-    orderService.updateOrderState(req.params.id, req.body.state)
+function updateOrder(req: Request, res: Response) {
+    orderService.updateOrder(req.params.id, req.body.state, req.body.deliveryBoy)
         .then((orders: OrderDTO[]) => {
             res.status(200).json(orders);
         }).catch((error: any) => {
@@ -43,9 +43,35 @@ function updateOrderState(req: Request, res: Response) {
         });
 }
 
+function getAvailableDelivery(req: Request, res: Response) {
+    orderService.getAvailableDelivery()
+        .then((orders: OrderDTO[]) => {
+            res.status(200).json(orders);
+        }).catch((error: any) => {
+            res.status(400).json({ "message": error.toString() });
+        });
+}
+
+function getOrderFromDeliveryBoy(req: Request, res: Response)
+{
+    if (req.currentUser?.id) {
+        orderService.getOrderFromDeliveryBoy(req.currentUser.id)
+        .then((order: OrderDTO) => {
+            res.status(200).json(order);
+        }).catch((error: any) => {
+            res.status(400).json({ "message": error.toString() });
+        });
+    }
+    else {
+        res.status(400).json({ "message": "User id missing in payload." });
+    }
+}
+
 export default {
     create,
     getFromUser,
     getFromRestaurant,
-    updateOrderState
+    updateOrder,
+    getAvailableDelivery,
+    getOrderFromDeliveryBoy
 }

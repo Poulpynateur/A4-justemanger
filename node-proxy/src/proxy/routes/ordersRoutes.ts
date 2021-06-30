@@ -43,5 +43,7 @@ router.get('/my-orders', proxy());
 
 router.get('/restaurants/:id/orders', proxy());
 router.put('/orders/:id', proxy());
+router.get('/deliveries/available-orders', proxy());
+router.get('/deliveries/me', proxy());
 
 export default router;

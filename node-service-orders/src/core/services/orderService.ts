@@ -1,4 +1,5 @@
 import {OrderDTO, OrderRepository} from '../models/order';
+import {UserDTO} from '../models/user';
 
 function create(newOrder: OrderDTO)
 {
@@ -15,14 +16,29 @@ function getFromRestaurant(restaurantId: string)
     return OrderRepository.getFromRestaurant(restaurantId);
 }
 
-function updateOrderState(orderId: string, state: string)
+function updateOrder(orderId: string, state: string, deliveryBoy: UserDTO)
 {
-    return OrderRepository.updateOrderState(orderId, state);
+    if (deliveryBoy)
+        return OrderRepository.updateOrderDelivery(orderId, state, deliveryBoy);
+    else
+        return OrderRepository.updateOrderState(orderId, state);
+}
+
+function getAvailableDelivery()
+{
+    return OrderRepository.getAvailableDelivery();
+}
+
+function getOrderFromDeliveryBoy(deliveryBoyId: number)
+{
+    return OrderRepository.getOrderFromDeliveryBoy(deliveryBoyId);
 }
 
 export default {
     create,
     getFromUser,
     getFromRestaurant,
-    updateOrderState
+    updateOrder,
+    getAvailableDelivery,
+    getOrderFromDeliveryBoy
 }

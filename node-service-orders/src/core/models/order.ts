@@ -4,6 +4,7 @@ import { userSchema, User, UserDTO } from './user';
 import { restaurantSchema, Restaurant, RestaurantDTO } from './restaurant';
 /**** ORM ****/
 const orderSchema = new mongoose.Schema({
+    delivery_boy: userSchema,
     customer: userSchema,
     restaurant: restaurantSchema,
     state: String,
@@ -18,6 +19,7 @@ export const Order = mongoose.model('Order', orderSchema)
 export class OrderDTO {
     public id?: string;
     public customer?: UserDTO;
+    public deliveryBoy?: UserDTO;
     public restaurant?: RestaurantDTO;
     public articles?: ArticleDTO[];
     public state?: string;
@@ -30,6 +32,7 @@ export class OrderDTO {
             this.state = order.state;
             this.address = order.address;
             this.date = order.date;
+            this.deliveryBoy = new UserDTO(order.delivery_boy);
             this.customer = new UserDTO(order.customer);
             this.restaurant = new RestaurantDTO(order.restaurant);
             this.articles = order.articles
@@ -107,6 +110,43 @@ export namespace OrderRepository {
         }).then((order: any) => {
             return Promise.resolve(new OrderDTO(order));
         })
+    }
+
+    export function updateOrderDelivery(orderId: string, state: string, deliveryBoy: UserDTO)
+    {
+        return Order.findById(orderId)
+        .then((order: any) => {
+            if (order) {
+                order.state = state;
+                order.delivery_boy = new User({
+                    id: deliveryBoy.id,
+                    first_name: deliveryBoy.firstName,
+                    last_name: deliveryBoy.lastName
+                });
+                return order.save();
+            }
+            return Promise.reject("Order not found");
+        }).then((order: any) => {
+            return Promise.resolve(new OrderDTO(order));
+        })
+    }
+
+    export function getAvailableDelivery()
+    {
+        return Order.find({state: 'restaurant.finished'}).then((orders: any) => {
+            return Promise.resolve(orders.map((o: any) => new OrderDTO(o)));
+        });
+    }
+
+    export function getOrderFromDeliveryBoy(deliveryBoyId: number)
+    {
+        return Order.findOne({'delivery_boy.id': deliveryBoyId, state: 'delivery.progress'}).then((order: any) => {
+            if (order)
+            {
+                return Promise.resolve(new OrderDTO(order));
+            }
+            return Promise.reject("No delivery.");
+        });
     }
 }
 
