@@ -1,14 +1,14 @@
 import * as express from "express";
-import articleIF from '../webservices/articleWS';
-import authMiddleware from '../middleware/authMiddleware';
+import auth from '../middleware/authMiddleware';
+import articleWS from '../webservices/articleWS';
 
 let router = express.Router();
 
-router.get('/', articleIF.listAll);
-router.get('/restaurant/:id/articles', articleIF.listAllFromRestaurant);
-router.post('/', articleIF.create);
-router.get('/:id', articleIF.read);
-router.put('/:id', articleIF.update);
-router.delete('/:id', articleIF.delete);
+router.post('/restaurants/:restaurantId/articles', auth.connected, articleWS.create);
+
+router.delete('/restaurants/:restaurantId/articles/:articleId', auth.connected, articleWS.removeArticle);
+router.put('/restaurants/:restaurantId/articles/:articleId', auth.connected, articleWS.updateArticle);
+router.delete('/restaurants/:restaurantId/menus/:articleId', auth.connected, articleWS.removeMenu);
+router.put('/restaurants/:restaurantId/menus/:articleId', auth.connected, articleWS.updateMenu);
 
 export default router;

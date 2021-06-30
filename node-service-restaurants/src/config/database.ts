@@ -10,11 +10,11 @@ const options: Object = {
 }
 
 function connect() {
-    mongoose.connect(uri, options).then(
-        () => logger.info(`Connected to database ${config.db.name}`)
-    ).catch(
+    mongoose.connect(uri, options).then(() => {
+        logger.info(`Connected to database ${config.db.name}`);
+    }).catch(
         (error) => logger.error(error)
     );
 }
 
-export default {connect};
+export default { connect };

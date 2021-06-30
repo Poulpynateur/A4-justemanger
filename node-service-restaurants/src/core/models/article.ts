@@ -1,148 +1,113 @@
 import mongoose from "mongoose";
 
-/**** ODM ****/
-export const articleSchema = mongoose.Schema({
+/**** ORM ****/
+export const articleSchema = new mongoose.Schema({
+    restaurantId: mongoose.Types.ObjectId,
     name: String,
-    image: String,
-    price: Number,
-    type: String, // menu/plat/boisson/dessert
-    restaurant: Number
+    price: String
 })
-
 export const Article = mongoose.model('Article', articleSchema);
+
+export const menuSchema = new mongoose.Schema({
+    restaurantId: mongoose.Types.ObjectId,
+    name: String,
+    price: String,
+    subArticles: [articleSchema]
+})
+export const Menu = mongoose.model('Menu', menuSchema);
+
+/**** DTO ****/
+export class ArticleDTO {
+    public id?: string;
+    public price?: number;
+    public name?: string;
+    public subArticles?: ArticleDTO[];
+
+    constructor(article?: any) {
+        if (article) {
+            this.id = article._id;
+            this.name = article.name;
+            this.price = article.price;
+        }
+    }
+}
 
 export namespace ArticleRepository {
 
-    export function selectAll() {
-        let errorMessage = ''
-        try {
-            Article.find()
-            .then((doc: any)=> { 
-                if (doc) {
-                    return doc;
-                } else {
-                    errorMessage = "No article was found...";
-                    console.log(errorMessage);
-                    return new Error(errorMessage);
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-                return err;
+    export function create(restaurantId: string, newArticle: ArticleDTO) {
+        if (newArticle.subArticles && newArticle.subArticles.length) {
+            const menu = new Menu({
+                restaurantId: restaurantId,
+                name: newArticle.name,
+                price: newArticle.price
             });
-        } catch (error) {
-            console.log(error)
-            return error;
+
+            return Article.find({ '_id': { $in: newArticle.subArticles } })
+                .then((articles: any) => {
+                    menu.subArticles = articles;
+                    return menu.save().then((menu: any) => {
+                        const menuDTO = new ArticleDTO(menu);
+                        menuDTO.subArticles = menu.subArticles.map((article: any) => new ArticleDTO(article));
+                        return Promise.resolve(menuDTO);
+                    });
+                });
+        }
+        else {
+            const article = new Article({
+                restaurantId: restaurantId,
+                name: newArticle.name,
+                price: newArticle.price
+            });
+
+            return article.save().then((article: any) => {
+                return Promise.resolve(new ArticleDTO(article));
+            });
         }
     }
 
-    export function selectAllFromRestaurant(id: number) {
-        let errorMessage = ''
-        try {
-            Article.find().where('restaurant').equals(id)
-            .then((doc: any)=> { 
-                if (doc) {
-                    return doc;
-                } else {
-                    errorMessage = "No article was found...";
-                    console.log(errorMessage);
-                    return new Error(errorMessage);
+    export function updateArticle(restaurantId: string, newArticle: ArticleDTO) {
+        return Article.findOne({ _id: newArticle.id, restaurantId: restaurantId })
+            .then((article: any) => {
+                if (article) {
+
+                    article.name = newArticle.name;
+                    article.price = newArticle.price;
+                    
+                    return article.save();
                 }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-                return err;
+                return Promise.reject(new Error("Article not found"));
+            }).then((article: any) => {
+                return Promise.resolve(new ArticleDTO(article));
             });
-        } catch (error) {
-            console.log(error)
-            return error;
-        }
     }
 
-    export function insertArticle(articleInfo: typeof Article) {
-        try {
-            var restaurant = new Article(articleInfo)
-            restaurant.save()
-            .then((err: Error, data: any) => {
-                if (err) {
-                    console.log(err)
-                    return err
+    export function updateMenu(restaurantId: string, newArticle: ArticleDTO) {
+        return Menu.findOne({ _id: newArticle.id, restaurantId: restaurantId })
+            .then((menu: any) => {
+                if (menu) {
+
+                    menu.name = newArticle.name;
+                    menu.price = newArticle.price;
+
+                    return Article.find({ '_id': { $in: newArticle.subArticles?.map(a => a.id) } })
+                        .then((articles: any) => {
+                            menu.subArticles = articles;
+                            return menu.save();
+                        });
                 }
-                else {
-                    return "Successfully inserted article."; // or a promise ?
-                }
-            })
-        } catch (error) {
-            console.log(error);
-            return error;
-        }
+                return Promise.reject(new Error("Menu not found"));
+            }).then((menu: any) => {
+                const menuDTO = new ArticleDTO(menu);
+                menuDTO.subArticles = menu.subArticles.map((article: any) => new ArticleDTO(article));
+                return Promise.resolve(menuDTO);
+            });
     }
 
-    export function selectArticle(id: number) {
-        var errorMessage = '';
-        if (mongoose.Types.ObjectId.isValid(id)) {
-            Article.findById(id)
-            .then((doc: typeof Article)=> { 
-                if (doc) {
-                    return doc;
-                } else {
-                    errorMessage = "There is no article found with the following id: " + id.toString()
-                    console.log(errorMessage);
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-            });
-        } else {
-            errorMessage = "The following id is not valid: " + id.toString()
-            console.log(errorMessage);
-        }
-        return new Error(errorMessage) // à revoir
+    export function removeArticle(restaurantId: string, articleId: string) {
+        return Article.findByIdAndDelete(articleId);
     }
 
-    export function updateArticle(id: number, updatedArticle: typeof Article) {
-        var errorMessage = '';
-        if (mongoose.Types.ObjectId.isValid(id)){
-            Article.findByIdAndUpdate(id, updatedArticle)
-            .then((error: Error, data: any) => {
-                if (error) {
-                    console.log(error);
-                    return error
-                } else {
-                    console.log(data, "\nSuccessfully updated article info: " + id.toString());
-                    return data;
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-            });
-        } else {
-            errorMessage = "The following id is not valid: " + id.toString()
-            console.log(errorMessage);
-        }
-        return new Error(errorMessage) 
-    }
-
-    export function deleteArticle(id: number) {
-        var errorMessage = '';
-        if (mongoose.Types.ObjectId.isValid(id)){
-            Article.findByIdAndRemove(id)
-            .then((error: Error, data: any) => {
-                if (error) {
-                    console.log(error);
-                    return error
-                } else {
-                    console.log(data, "\nSuccessfully removed article: " + id.toString())
-                    return data;
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-            });
-        } else {
-            errorMessage = "The following id is not valid: " + id.toString()
-            console.log(errorMessage);
-        }
-        return new Error(errorMessage) 
+    export function removeMenu(restaurantId: string, articleId: string) {
+        return Menu.findByIdAndDelete(articleId);
     }
 }
