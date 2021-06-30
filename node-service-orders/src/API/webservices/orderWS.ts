@@ -1,36 +1,51 @@
-import { orderService } from "core/services/orderService";
-import {Request, Response} from "express";
+import { Request, Response } from "express";
+import orderService from "../../core/services/orderService";
+import { OrderDTO } from '../../core/models/order';
 
-function readOrdersList(req: Request, res: Response) {
-    res.status(200).json({message: orderService.listAll()});
+function create(req: Request, res: Response) {
+    orderService.create(req.body as OrderDTO)
+        .then((order: OrderDTO) => {
+            res.status(200).json(order);
+        }).catch((error: any) => {
+            res.status(400).json({ "message": error.toString() });
+        });
 }
 
-function readOrdersFromUser(req: Request, res: Response) {
-    res.status(200).json({ message: orderService.listAllFromUser(req.params.id)});
+function getFromUser(req: Request, res: Response) {
+    if (req.currentUser?.id) {
+        orderService.getFromUser(req.currentUser?.id)
+            .then((orders: OrderDTO[]) => {
+                res.status(200).json(orders);
+            }).catch((error: any) => {
+                res.status(400).json({ "message": error.toString() });
+            });
+    }
+    else {
+        res.status(400).json({ "message": "User id missing in payload." });
+    }
 }
 
-function createOrder(req: Request, res: Response) {
-    res.status(200).json({ message: orderService.create(req.data.orderInfo)});
+function getFromRestaurant(req: Request, res: Response) {
+    orderService.getFromRestaurant(req.params.id)
+        .then((orders: OrderDTO[]) => {
+            res.status(200).json(orders);
+        }).catch((error: any) => {
+            res.status(400).json({ "message": error.toString() });
+        });
 }
 
-function readOrder(req: Request, res: Response) {
-    res.status(200).json({ message: orderService.read(req.params.id)});
+function updateOrderState(req: Request, res: Response) {
+    orderService.updateOrderState(req.params.id, req.body.state)
+        .then((orders: OrderDTO[]) => {
+            res.status(200).json(orders);
+        }).catch((error: any) => {
+            res.status(400).json({ "message": error.toString() });
+        });
 }
 
-function updateOrder(req: Request, res: Response) {
-    res.status(200).json({ message: orderService.update(req.params.id, req.data.updated)});
-}
-
-function deleteOrder(req: Request, res: Response) {
-    res.status(200).json({ message: orderService.delete(req.params.id)});
-}
-
-//user interface
 export default {
-    listAll: readOrdersList,
-    listAllFromUser: readOrdersFromUser,
-    create: createOrder,
-    read: readOrder,
-    update: updateOrder,
-    delete: deleteOrder
+    create,
+    getFromUser,
+    getFromRestaurant,
+    updateOrderState
 }

@@ -11,7 +11,7 @@ function checkJwtToken(token: string)
         try
         {
             const decoded: any = jwt.verify(token, config.jwt.public, {algorithms: ['RS256']});
-            const user = new UserDTO(decoded.username);
+            const user = new UserDTO(decoded);
             resolve(user);
         }
         catch (error)

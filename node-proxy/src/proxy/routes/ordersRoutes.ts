@@ -1,7 +1,9 @@
 import * as express from "express";
 import httpProxy from 'express-http-proxy';
 import config from '../../config/config';
+import {customProxy} from '../proxy';
 
+const proxy = customProxy(config.services.orders);
 let router = express.Router();
 
 /**
@@ -19,7 +21,8 @@ let router = express.Router();
  *       200:
  *         description: List of all the orders.
  */
-router.get('/orders', httpProxy(config.services.orders + '/'));
+router.post('/orders', proxy());
+
 
 /**
  * @swagger
@@ -36,6 +39,9 @@ router.get('/orders', httpProxy(config.services.orders + '/'));
  *       200:
  *         description: Specific order.
  */
-router.get('/orders/:id', httpProxy(config.services.orders + '/'));
+router.get('/my-orders', proxy());
+
+router.get('/restaurants/:id/orders', proxy());
+router.put('/orders/:id', proxy());
 
 export default router;

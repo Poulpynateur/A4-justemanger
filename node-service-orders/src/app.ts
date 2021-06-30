@@ -9,7 +9,7 @@ import logger from './config/logger';
 
 import router from './API/routes/index';
 
-// database.connect();
+database.connect();
 
 /**** app setup ****/
 const app = express();

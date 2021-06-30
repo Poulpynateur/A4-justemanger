@@ -1,38 +1,28 @@
-import { Order, OrderRepository } from "core/models/order";
+import {OrderDTO, OrderRepository} from '../models/order';
 
-export const orderService = { 
-    listAll: listAll,
-    listAllFromUser: listAllFromUser,
-    create: createOrder,
-    read: readOrder,
-    update: updateOrder,
-    delete: deleteOrder
+function create(newOrder: OrderDTO)
+{
+    return OrderRepository.create(newOrder);
 }
 
-export function listAll() {
-    return OrderRepository.selectAll();
+function getFromUser(userId: number)
+{
+    return OrderRepository.getFromUser(userId);
 }
 
-export function listAllFromUser(id: number) {
-    return OrderRepository.selectAllFromUser(id)
+function getFromRestaurant(restaurantId: string)
+{
+    return OrderRepository.getFromRestaurant(restaurantId);
 }
 
-function createOrder(order: typeof Order) {
-    return OrderRepository.insertOrder(order);
-}
-
-function readOrder(id: number) {
-    return OrderRepository.selectOrder(id);
-}
-
-function updateOrder(id: number, updatedOrder: typeof Order) {
-    return OrderRepository.updateOrder(id, updatedOrder);
-}
-
-function deleteOrder(id: number) {
-    return OrderRepository.deleteOrder(id);
+function updateOrderState(orderId: string, state: string)
+{
+    return OrderRepository.updateOrderState(orderId, state);
 }
 
 export default {
-    orderService
+    create,
+    getFromUser,
+    getFromRestaurant,
+    updateOrderState
 }

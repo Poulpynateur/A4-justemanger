@@ -31,9 +31,10 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "article-card",
-  props: ["article", "type"],
+  props: ["article", "restaurant", "type"],
   methods: {
     addToBasket(article) {
+      this.$store.commit('setBasketResto', this.restaurant);
       this.$store.commit('addToBasket', article);
       this.$buefy.toast.open({
         message: this.$t("consumer.addedSuccess"),

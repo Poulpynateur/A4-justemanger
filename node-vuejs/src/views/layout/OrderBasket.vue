@@ -7,8 +7,10 @@
         :article="article"
         type="basket"
       ></article-card>
-
-      <b-button type="is-primary" expanded>{{
+      <b-field label="Addresse de livraison">
+            <b-input v-model="address"></b-input>
+        </b-field>
+      <b-button type="is-primary" expanded @click="sendCommand()">{{
         $t("consumer.command")
       }}</b-button>
     </div>
@@ -33,11 +35,18 @@ export default Vue.extend({
   components: {
     ArticleCard,
   },
+  data() {
+    return {
+      address: ""
+    }
+  },
   methods: {
     sendCommand() {
       consumerService
-        .orderFromBasket()
-        .then(() => {})
+        .orderFromBasket(this.address)
+        .then(() => {
+          this.$store.commit('deleteBasket');
+        })
         .catch((error) => {
           this.$buefy.toast.open({
             message: this.$t("action.failed"),

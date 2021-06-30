@@ -1,149 +1,112 @@
 import mongoose from "mongoose";
-import {Article} from './article';
-
-/**** ODM ****/
-const orderSchema = mongoose.Schema({
-    user: Number,
-    restaurant: Number,
+import { articleSchema, menuSchema, Article, Menu, ArticleDTO } from './article';
+import { userSchema, User, UserDTO } from './user';
+import { restaurantSchema, Restaurant, RestaurantDTO } from './restaurant';
+/**** ORM ****/
+const orderSchema = new mongoose.Schema({
+    customer: userSchema,
+    restaurant: restaurantSchema,
     state: String,
-    articles: Array<typeof Article>()
+    articles: [articleSchema],
+    menus: [menuSchema],
+    address: String,
+    date: Date
 });
-
 export const Order = mongoose.model('Order', orderSchema)
 
+/**** DTO ****/
+export class OrderDTO {
+    public id?: string;
+    public customer?: UserDTO;
+    public restaurant?: RestaurantDTO;
+    public articles?: ArticleDTO[];
+    public state?: string;
+    public address?: string;
+    public date?: Date;
+
+    constructor(order: any) {
+        if (order) {
+            this.id = order._id;
+            this.state = order.state;
+            this.address = order.address;
+            this.date = order.date;
+            this.customer = new UserDTO(order.customer);
+            this.restaurant = new RestaurantDTO(order.restaurant);
+            this.articles = order.articles
+                .map((a: any) => new ArticleDTO(a))
+                .concat(
+                    order.menus.map((a: any) => new ArticleDTO(a))
+                );
+        }
+    }
+}
+
 export namespace OrderRepository {
-    
-    export function selectAll() {
-        let errorMessage = ''
-        try {
-            Order.find()
-            .then((doc: any)=> { 
-                if (doc) {
-                    return doc;
-                } else {
-                    errorMessage = "No order was found...";
-                    console.log(errorMessage);
-                    return new Error(errorMessage);
-                }
+
+    export function create(newOrder: OrderDTO) {
+        const newMenus = newOrder?.articles?.filter((a) => a.subArticles && a.subArticles.length);
+        const newArticles = newOrder?.articles?.filter((a) => !a.subArticles || !a.subArticles.length);
+
+        const order = new Order({
+            state: 'restaurant.pending',
+            address: newOrder.address,
+            date: newOrder.date,
+            customer: new User({
+                id: newOrder.customer?.id,
+                first_name: newOrder.customer?.firstName,
+                last_name: newOrder.customer?.lastName
             })
-            .catch((err: Error)=> {
-                console.log(err);
-                return err;
+        });
+
+        return Restaurant.findById(newOrder.restaurant?.id)
+            .then((restaurant: any) => {
+                order.restaurant = restaurant;
+                return Article.find({ '_id': { $in: newArticles?.map(a => a.id) } });
+            })
+            .then((articles: any) => {
+                order.articles = articles;
+                return Menu.find({ '_id': { $in: newMenus?.map(a => a.id) } });
+            })
+            .then((menus: any) => {
+                order.menus = menus;
+                return order.save();
+            })
+            .then((order: any) => {
+                return Promise.resolve(new OrderDTO(order));
             });
-        } catch (error) {
-            console.log(error)
-            return error;
-        }
     }
 
-    export function selectAllFromUser(id: number) {
-        let errorMessage = ''
-        try {
-            Order.find().where('user').equals(id)
-            .then((doc: any)=> { 
-                if (doc) {
-                    return doc;
-                } else {
-                    errorMessage = "No order was found...";
-                    console.log(errorMessage);
-                    return new Error(errorMessage);
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-                return err;
-            });
-        } catch (error) {
-            console.log(error)
-            return error;
-        }
+    export function getFromUser(userId: number) {
+        return Order.find({
+            'customer.id': userId
+        })
+        .then((orders: any) => {
+            return Promise.resolve(orders.map((o: any) => new OrderDTO(o)));
+        });
     }
 
-    export function insertOrder(orderInfo: typeof Order) {
-        try {
-            var order = new Order(orderInfo)
-            order.save()
-            .then((err: Error, data: any) => {
-                if (err) {
-                    console.log(err)
-                    return err
-                }
-                else {
-                    return "Successfully inserted order."; // or a promise ?
-                }
-            })
-        } catch (error) {
-            console.log(error);
-            return error;
-        }
+    export function getFromRestaurant(restaurantId: string)
+    {
+        return Order.find({
+            'restaurant._id': restaurantId
+        })
+        .then((orders: any) => {
+            return Promise.resolve(orders.map((o: any) => new OrderDTO(o)));
+        });
     }
 
-    export function selectOrder(id: number) {
-        var errorMessage = '';
-        if (mongoose.Types.ObjectId.isValid(id)) {
-            Order.findById(id)
-            .then((doc: typeof Order)=> { 
-                if (doc) {
-                    return doc;
-                } else {
-                    errorMessage = "There is no order found with the following id: " + id.toString()
-                    console.log(errorMessage);
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-            });
-        } else {
-            errorMessage = "The following id is not valid: " + id.toString()
-            console.log(errorMessage);
-        }
-        return new Error(errorMessage) // à revoir
-    }
-
-    export function updateOrder(id: number, updatedOrder: typeof Order) {
-        var errorMessage = '';
-        if (mongoose.Types.ObjectId.isValid(id)){
-            Order.findByIdAndUpdate(id, updatedOrder)
-            .then((error: Error, data: any) => {
-                if (error) {
-                    console.log(error);
-                    return error
-                } else {
-                    console.log(data, "\nSuccessfully updated order: " + id.toString());
-                    return data;
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-            });
-        } else {
-            errorMessage = "The following id is not valid: " + id.toString()
-            console.log(errorMessage);
-        }
-        return new Error(errorMessage) 
-    }
-
-    export function deleteOrder(id: number) {
-        var errorMessage = '';
-        if (mongoose.Types.ObjectId.isValid(id)){
-            Order.findByIdAndRemove(id)
-            .then((error: Error, data: any) => {
-                if (error) {
-                    console.log(error);
-                    return error
-                } else {
-                    console.log(data, "\nSuccessfully removed order: " + id.toString())
-                    return data;
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-            });
-        } else {
-            errorMessage = "The following id is not valid: " + id.toString()
-            console.log(errorMessage);
-        }
-        return new Error(errorMessage) 
+    export function updateOrderState(orderId: string, state: string)
+    {
+        return Order.findById(orderId)
+        .then((order: any) => {
+            if (order) {
+                order.state = state;
+                return order.save();
+            }
+            return Promise.reject("Order not found");
+        }).then((order: any) => {
+            return Promise.resolve(new OrderDTO(order));
+        })
     }
 }
 
