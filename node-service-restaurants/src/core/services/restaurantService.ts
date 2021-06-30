@@ -14,7 +14,7 @@ function createRestaurant(restaurant: RestaurantDTO) {
 }
 
 function getFromUser(currentUserID: number) {
-    return RestaurantRepository.foundRestaurantByOwner(currentUserID);
+    return RestaurantRepository.findRestaurantByOwner(currentUserID);
 }
 
 export default {

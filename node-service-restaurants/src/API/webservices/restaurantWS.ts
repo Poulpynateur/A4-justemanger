@@ -4,14 +4,16 @@ import restaurantService from "../../core/services/restaurantService";
 import { RestaurantDTO } from "../../core/models/restaurant";
 
 function getAll(req: Request, res: Response) {
+    
     restaurantService.getAll()
-    .then((restaurants: RestaurantDTO[]) => {
-        res.status(200).json(restaurants);
-    }).catch((error: any) => {
-        res.status(400).json({"message": error});
+    .then((restaurants: any) => {
+        res.status(200).json({"restaurants":restaurants});
+    }).catch((error: Error) => {
+        res.status(400).json({"WS message": error.message});
     });
+    
+    // res.status(200).json({"restaurants":"hello world"});
 }
-
 
 function create(req: Request, res: Response)
 {

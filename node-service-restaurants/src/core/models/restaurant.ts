@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+
+/*import database from '../../config/database';
+database.connect()*/
 import { Article, Menu, ArticleDTO } from './article';
 
 /**** ORM ****/
@@ -8,6 +11,8 @@ const restaurantSchema = new mongoose.Schema({
     address: String,
     category: String,
 });
+
+
 export const Restaurant = mongoose.model('Restaurant', restaurantSchema)
 
 /**** DTO ****/
@@ -53,7 +58,7 @@ export namespace RestaurantRepository {
                 });
             }
             else
-                reject("Restaurant not found.");
+                reject(new Error("Restaurant not found."));
         });
     }
 
@@ -65,10 +70,16 @@ export namespace RestaurantRepository {
     }
 
     export function selectAll() {
-        return Restaurant.find({})
+        return new Promise((resolve, reject) => {
+            Restaurant.find()
             .then((restaurants: any) => {
-                return Promise.resolve(restaurants.map((restaurant: any) => new RestaurantDTO(restaurant.toObject())));
+                restaurants.map((restaurant: any) => new RestaurantDTO(restaurant.toObject()));
+                resolve(restaurants)
+            })
+            .catch((error: Error) => {
+                reject(error);
             });
+        });
     }
 
     export function createRestaurant(restaurantDTO: RestaurantDTO) {
@@ -78,16 +89,27 @@ export namespace RestaurantRepository {
             address: restaurantDTO.address,
             category: restaurantDTO.category
         });
-        return restaurant.save().then((newRestaurant: any) => {
-            return withArticlesAndMenus(newRestaurant);
+        return new Promise((resolve, reject) => {
+            restaurant.save()
+            .then((newRestaurant: any) => {
+                resolve(withArticlesAndMenus(newRestaurant));
+            })
+            .catch((error: Error) => {
+                reject(error);
+            }) 
         });
     }
 
-    export function foundRestaurantByOwner(currentUserID: number) {
-        return Restaurant.findOne({ owner_id: currentUserID })
+    export function findRestaurantByOwner(currentUserID: number) {
+        return new Promise((resolve, reject) => {
+            Restaurant.findOne({ owner_id: currentUserID })
             .then((restaurant: any) => {
-                return withArticlesAndMenus(restaurant);
+                resolve(withArticlesAndMenus(restaurant));
+            })
+            .catch((error: Error) => {
+                reject(error);
             });
+        });
     }
 }
 

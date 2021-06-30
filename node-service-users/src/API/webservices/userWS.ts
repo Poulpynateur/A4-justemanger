@@ -41,6 +41,13 @@ function read(req: Request, res: Response) {
     })
 }
 
+function create(req: Request, res: Response) {
+    //console.log(req); // for debugging concerns
+    // let userInfo = req.body as UserDTO
+    // return userService.create(userInfo, req.body.password as string).then((ret: any))
+    res.status(200).json({"message":"create Function is not at this route, please see /register."});
+}
+
 // UserDTO ne contient pas de champ password
 function update(req: Request, res: Response) {
     const updatedUser: UserDTO = req.body as UserDTO;

@@ -93,7 +93,7 @@ export namespace UserRepository {
         })       
     }
 
-    // FIXME - fixed, untested
+    // FIXME - fixed, UNtested
     export function isUsernameTaken(username: string) {
         return User.findOne({ where: {username: username}}).then((user: any) => {
             if (user) {
@@ -104,7 +104,7 @@ export namespace UserRepository {
         });
     }
 
-    // FIXME - fixed, untested
+    // FIXME - fixed, UNtested
     function isEmailRegistered(email: string) : boolean {
         return User.findOne({ where: {email: email}}).then((user: any) => {
             if (user) {
@@ -127,8 +127,9 @@ export namespace UserRepository {
             }
         })
     }
+    
 
-    // FIXME
+    // FIXME - fixed, tested
     export function selectUser(id: number)
     {
         return User.findOne({ where: { id: id }, include: [Role] })

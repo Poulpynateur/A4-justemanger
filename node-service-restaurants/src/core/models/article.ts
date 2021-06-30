@@ -42,15 +42,20 @@ export namespace ArticleRepository {
                 price: newArticle.price
             });
 
-            return Article.find({ '_id': { $in: newArticle.subArticles } })
+            return new Promise((resolve, reject) => {
+                Article.find({ '_id': { $in: newArticle.subArticles } })
                 .then((articles: any) => {
                     menu.subArticles = articles;
                     return menu.save().then((menu: any) => {
                         const menuDTO = new ArticleDTO(menu);
                         menuDTO.subArticles = menu.subArticles.map((article: any) => new ArticleDTO(article));
-                        return Promise.resolve(menuDTO);
+                        resolve(menuDTO);
                     });
+                })
+                .catch((error: Error) => {
+                    reject(error);
                 });
+            });
         }
         else {
             const article = new Article({
@@ -59,8 +64,14 @@ export namespace ArticleRepository {
                 price: newArticle.price
             });
 
-            return article.save().then((article: any) => {
-                return Promise.resolve(new ArticleDTO(article));
+            return new Promise((resolve, reject) => {
+                article.save()
+                .then((article: any) => {
+                    return Promise.resolve(new ArticleDTO(article));
+                })
+                .catch((error: Error) => {
+                    reject(error);
+                });
             });
         }
     }
