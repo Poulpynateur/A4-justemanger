@@ -40,7 +40,7 @@ router.post('/orders', proxy());
  *         description: Specific order.
  */
 router.get('/my-orders', proxy());
-
+router.get('/restaurants/:id/stats', proxy());
 router.get('/restaurants/:id/orders', proxy());
 router.put('/orders/:id', proxy());
 router.get('/deliveries/available-orders', proxy());

@@ -79,6 +79,12 @@ export namespace OrderRepository {
             });
     }
 
+    export function getAll() {
+        return Order.find().then((orders: any) => {
+            return Promise.resolve(orders.map((o: any) => new OrderDTO(o)));
+        });
+    }
+
     export function getFromUser(userId: number) {
         return Order.find({
             'customer.id': userId

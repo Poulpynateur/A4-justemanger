@@ -67,11 +67,22 @@ function getOrderFromDeliveryBoy(req: Request, res: Response)
     }
 }
 
+function getStats(req: Request, res: Response)
+{
+    orderService.getStats()
+        .then((stats: any) => {
+            res.status(200).json(stats);
+        }).catch((error: any) => {
+            res.status(400).json({ "message": error.toString() });
+        });
+}
+
 export default {
     create,
     getFromUser,
     getFromRestaurant,
     updateOrder,
     getAvailableDelivery,
-    getOrderFromDeliveryBoy
+    getOrderFromDeliveryBoy,
+    getStats
 }

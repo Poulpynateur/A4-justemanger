@@ -142,6 +142,9 @@
             </b-table-column>
           </b-table>
         </b-tab-item>
+        <b-tab-item :label="$t('restorer.stats')">
+          <stats-chart v-if="statsLoaded" :chartData="stats"></stats-chart>
+        </b-tab-item>
       </b-tabs>
     </div>
   </div>
@@ -151,6 +154,7 @@
 import Vue from "vue";
 import ArticleModal from "../../components/restorer/ArticleModal.vue";
 import MenuModal from "../../components/restorer/MenuModal.vue";
+import StatsChart from "../../components/restorer/StatsChart.vue";
 
 import restaurantService from "../../services/restaurantService";
 import { OrderDTO } from "../../store/models/order";
@@ -158,8 +162,13 @@ import { ArticleDTO } from "../../store/models/restaurant";
 
 export default Vue.extend({
   name: "app-restorer",
+  components: {
+    StatsChart
+  },
   data() {
     return {
+      statsLoaded: false,
+      stats: [],
       restaurant: null,
       selectedMenu: null,
       selectedArticle: null,
@@ -185,11 +194,9 @@ export default Vue.extend({
   methods: {
     updateOrder(order: OrderDTO) {
       restaurantService
-        .updateOrder(order.id, 'restaurant.finished')
+        .updateOrder(order.id, "restaurant.finished")
         .then((order) => {
-          const index = this.orders.findIndex(
-            (a) => a.id == order.id
-          );
+          const index = this.orders.findIndex((a) => a.id == order.id);
           this.orders[index] = order;
         })
         .catch(() => {
@@ -363,13 +370,17 @@ export default Vue.extend({
           },
         },
       });
-    },
+    }
   },
   created() {
     restaurantService.getUserRestaurant().then((restaurant) => {
       this.restaurant = restaurant;
       restaurantService.getRestaurantOrders(restaurant.id).then((orders) => {
         this.orders = orders;
+      });
+      restaurantService.getStats(restaurant.id).then((stats) => {
+        this.stats = stats;
+        this.statsLoaded = true;
       });
     });
   },

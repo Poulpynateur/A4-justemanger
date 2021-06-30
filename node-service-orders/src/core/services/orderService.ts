@@ -34,11 +34,26 @@ function getOrderFromDeliveryBoy(deliveryBoyId: number)
     return OrderRepository.getOrderFromDeliveryBoy(deliveryBoyId);
 }
 
+function getStats()
+{
+    const stats: number[] = [];
+    stats.length = 24;
+    stats.fill(0);
+    return OrderRepository.getAll()
+    .then((orders: any) => {
+        orders.forEach((o:any) => {
+            stats[o.date.getHours()] += 1;
+        })
+        return Promise.resolve(stats);
+    });
+}
+
 export default {
     create,
     getFromUser,
     getFromRestaurant,
     updateOrder,
     getAvailableDelivery,
-    getOrderFromDeliveryBoy
+    getOrderFromDeliveryBoy,
+    getStats
 }

@@ -106,8 +106,17 @@ function updateOrder(orderId: string, state: string) {
     });
 }
 
+function getStats(restaurantId: string) {
+    return http.get(apiUrl + '/' + restaurantId + '/stats')
+    .then((response) => {
+        return Promise.resolve(response.data);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
+}
+
 export default {
-    getFromId, getAll, getUserRestaurant, getRestaurantOrders,
+    getFromId, getAll, getUserRestaurant, getRestaurantOrders, getStats,
     sendNewRestaurant, sendNewArticle, updateOrder,
     updateArticle, deleteArticle, updateMenu, deleteMenu
 };

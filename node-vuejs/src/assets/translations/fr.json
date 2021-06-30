@@ -77,6 +77,8 @@
         "menus": "Menus",
         "articles": "Articles",
         "orders": "Commandes",
+        "stats": "Statistiques",
+        "statsTitle": "Commandes par heures",
         "totalChecked": "Total sélectionné",
         "columns": {
             "menus": {
