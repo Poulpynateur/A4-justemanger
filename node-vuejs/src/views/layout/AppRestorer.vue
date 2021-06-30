@@ -60,9 +60,7 @@
               {{ props.row.state }}
             </b-table-column>
             <b-table-column v-slot="props" width="100">
-              <b-button type="is-success" @click="updateOrder(props.row)"
-                >Terminer</b-button
-              >
+              <b-button v-if="props.row.state == 'restaurant.progress'" type="is-success" @click="updateOrder(props.row)">Terminer</b-button>
             </b-table-column>
           </b-table>
         </b-tab-item>
@@ -198,6 +196,10 @@ export default Vue.extend({
         .then((order) => {
           const index = this.orders.findIndex((a) => a.id == order.id);
           this.orders[index] = order;
+           this.$buefy.toast.open({
+            message: this.$t("action.success"),
+            type: "is-success",
+          });
         })
         .catch(() => {
           this.$buefy.toast.open({

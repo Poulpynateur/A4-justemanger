@@ -1,36 +1,47 @@
+<template>
+  <div>
+    <canvas id="stats-chart-canva"></canvas>
+  </div>
+</template>
+
 <script>
-import { Line } from "vue-chartjs";
+import Chart from "chart.js";
 
 export default {
   name: "stats-chart",
-  extends: Line,
   props: ["chartData"],
-  data() {
-    return {
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
-    };
-  },
   mounted() {
-    this.renderChart(
-      {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    const ctx = document.getElementById('stats-chart-canva');
+    new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],
           datasets: [
             {
-              label: 'Data One',
-              backgroundColor: '#f87979',
-              pointBackgroundColor: 'white',
-              borderWidth: 1,
-              pointBorderColor: '#249EBF',
-              data: [60, 40, 20, 50, 90, 10, 20, 40, 50, 70, 90, 100]
-            }
-          ]
-      },
-      this.options
-    );
-  },
+              label: "Commandes par heures",
+              data: this.chartData,
+              backgroundColor: "rgba(54,73,93,.5)",
+              borderColor: "#36495d",
+              borderWidth: 3,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          lineTension: 1,
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                  padding: 25,
+                },
+              },
+            ],
+          },
+        },
+      });
+  }
 };
 </script>
 
