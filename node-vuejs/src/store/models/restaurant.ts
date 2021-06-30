@@ -1,4 +1,5 @@
 export class RestaurantDTO {
+    public ownerId?: number;
     public id?: string;
     public name?: string;
     public address?: string;

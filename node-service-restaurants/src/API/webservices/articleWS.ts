@@ -1,36 +1,67 @@
-import { articleService } from "core/services/articleService";
 import {Request, Response} from "express";
 
-function readArticlesList(req: Request, res: Response) {
-    res.status(200).json({message: articleService.listAll()});
+import articleService from "../../core/services/articleService";
+import {ArticleDTO} from "../../core/models/article";
+
+function create(req: Request, res: Response)
+{
+    articleService.create(req.params.restaurantId, req.body as ArticleDTO)
+    .then((article: ArticleDTO) => {
+        res.status(200).json(article);
+    }).catch((error: any) => {
+        console.log(error);
+        res.status(400).json({"message": error.toString()});
+    });
 }
 
-function readArticlesFromRestaurant(req: Request, res: Response) {
-    res.status(200).json({ message: articleService.listAllFromRestaurant(req.params.id)});
+function updateArticle(req: Request, res: Response)
+{
+    articleService.updateArticle(req.params.restaurantId, req.body as ArticleDTO)
+    .then((article: ArticleDTO) => {
+        res.status(200).json(article);
+    }).catch((error: any) => {
+        console.log(error);
+        res.status(400).json({"message": error.toString()});
+    });
 }
 
-function createArticle(req: Request, res: Response) {
-    res.status(200).json({ message: articleService.create(req.data.articleInfo)});
+function removeArticle(req: Request, res: Response)
+{
+    articleService.removeArticle(req.params.restaurantId, req.params.articleId)
+    .then(() => {
+        res.status(200).json({"message": "Success."});
+    }).catch((error: any) => {
+        console.log(error);
+        res.status(400).json({"message": error.toString()});
+    });
 }
 
-function readArticle(req: Request, res: Response) {
-    res.status(200).json({ message: articleService.read(req.params.id)});
+function updateMenu(req: Request, res: Response)
+{
+    articleService.updateMenu(req.params.restaurantId, req.body as ArticleDTO)
+    .then((article: ArticleDTO) => {
+        res.status(200).json(article);
+    }).catch((error: any) => {
+        console.log(error);
+        res.status(400).json({"message": error.toString()});
+    });
 }
 
-function updateArticle(req: Request, res: Response) {
-    res.status(200).json({ message: articleService.update(req.params.id, req.data.updated)});
+function removeMenu(req: Request, res: Response)
+{
+    articleService.removeMenu(req.params.restaurantId, req.params.articleId)
+    .then(() => {
+        res.status(200).json({"message": "Success."});
+    }).catch((error: any) => {
+        console.log(error);
+        res.status(400).json({"message": error.toString()});
+    });
 }
 
-function deleteArticle(req: Request, res: Response) {
-    res.status(200).json({ message: articleService.delete(req.params.id)});
-}
-
-//user interface
 export default {
-    listAll: readArticlesList,
-    listAllFromRestaurant: readArticlesFromRestaurant,
-    create: createArticle,
-    read: readArticle,
-    update: updateArticle,
-    delete: deleteArticle
+    create,
+    updateArticle,
+    removeArticle,
+    updateMenu,
+    removeMenu,
 }

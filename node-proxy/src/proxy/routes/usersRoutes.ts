@@ -1,7 +1,9 @@
 import * as express from "express";
 import httpProxy from 'express-http-proxy';
 import config from '../../config/config';
+import {customProxy} from '../proxy';
 
+const proxy = customProxy(config.services.users);
 let router = express.Router();
 
 /**
@@ -19,7 +21,7 @@ let router = express.Router();
  *       200:
  *         description: List of all the users.
  */
-router.get('/users', httpProxy(config.services.users + '/'));
+router.get('/users', proxy('/'));
 /**
  * @swagger
  * /users:
@@ -33,7 +35,7 @@ router.get('/users', httpProxy(config.services.users + '/'));
  *       200:
  *         description: Newly created user.
  */
-router.post('/users', httpProxy(config.services.users + '/'));
+router.post('/users', proxy('/'));
 /**
  * @swagger
  * /users/{id}:
@@ -49,7 +51,7 @@ router.post('/users', httpProxy(config.services.users + '/'));
  *       200:
  *         description: User infos.
  */
- router.get('/users/:id', httpProxy(config.services.users + '/'));
+ router.get('/users/:id', proxy('/'));
 
 /**
  * @swagger
@@ -66,7 +68,7 @@ router.post('/users', httpProxy(config.services.users + '/'));
  *       200:
  *         description: User infos.
  */
-router.delete('/users/:id', httpProxy(config.services.users + '/'));
+router.delete('/users/:id', proxy('/'));
 
 /**
  * @swagger
@@ -83,7 +85,7 @@ router.delete('/users/:id', httpProxy(config.services.users + '/'));
  *       200:
  *         description: List of all the orders.
  */
-router.put('/users/:id', httpProxy(config.services.users + '/'));
+router.put('/users/:id', proxy('/'));
 
 /**
  * @swagger
@@ -100,7 +102,7 @@ router.put('/users/:id', httpProxy(config.services.users + '/'));
  *       200:
  *         description: List of all the user orders.
  */
- router.get('/users/:id/orders', httpProxy(config.services.users + '/'));
+ router.get('/users/:id/orders', proxy('/'));
 
 /**
  * @swagger
@@ -117,7 +119,7 @@ router.put('/users/:id', httpProxy(config.services.users + '/'));
  *       200:
  *         description: Newly created order.
  */
-router.post('/users/:id/orders', httpProxy(config.services.users + '/'));
+router.post('/users/:id/orders', proxy('/'));
 
 /**
  * @swagger
@@ -134,6 +136,6 @@ router.post('/users/:id/orders', httpProxy(config.services.users + '/'));
  *       200:
  *         description: The updated order.
  */
-router.put('/users/:id/orders/:id', httpProxy(config.services.users + '/'));
+router.put('/users/:id/orders/:id', proxy('/'));
 
 export default router;

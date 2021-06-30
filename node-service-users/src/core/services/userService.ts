@@ -1,38 +1,30 @@
 import jwt from 'jsonwebtoken';
-import {Request} from "express";
+import { Request } from "express";
 
 import config from '../../config/config';
+import { UserDTO, User, UserRepository } from '../models/user';
 
-import {UserDTO, User, UserRepository} from '../models/user';
-
-const userService = {    
-	listAll: listAll,
-	create: createUser,
-	read: readUser,
-	update: updatedUser,
-	delete: deleteUser
-}
-
-export function listAll() {
+function listAll() {
     return UserRepository.selectAll();
 }
 
-export function createUser(user: typeof User) {
+function createUser(user: typeof User) {
     return UserRepository.insertUser(user);
 }
 
-export function readUser(id: number) {
+function readUser(id: number) {
     return UserRepository.selectUser(id);
 }
 
-export function updatedUser(id: number, updated: Object) {
-    return UserRepository.updateUser(id, updated);
+function updatedUser(updated: UserDTO) {
+    return UserRepository.updateUser(updated);
 }
 
-export function deleteUser(id: number) {
+function deleteUser(id: number) {
     return UserRepository.deleteUser(id);
 }
 
 export default {
-    userService
+    updatedUser,
+    deleteUser
 };

@@ -119,6 +119,7 @@ export default Vue.extend({
                 message: this.$t("action.success"),
                 type: "is-success",
               });
+              this.$router.push({name: 'home'});
             })
             .catch((error) => {
               this.$buefy.toast.open({

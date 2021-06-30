@@ -1,127 +1,93 @@
 import mongoose from "mongoose";
-import {Article} from './article';
+import { Article, Menu, ArticleDTO } from './article';
 
-/**** ODM ****/
-const restaurantSchema = mongoose.Schema({
+/**** ORM ****/
+const restaurantSchema = new mongoose.Schema({
+    owner_id: Number,
     name: String,
-    city: String,
-    code: String,
     address: String,
-    articles: Array<typeof Article>()
+    category: String,
 });
-
 export const Restaurant = mongoose.model('Restaurant', restaurantSchema)
 
+/**** DTO ****/
+export class RestaurantDTO {
+    public id?: string;
+    public ownerId?: number;
+    public name?: string;
+    public address?: string;
+    public category?: string;
+    public articles?: ArticleDTO[];
+    public menus?: ArticleDTO[]; // articles with subArticles
+
+    constructor(restaurant?: any) {
+        if (restaurant) {
+            // Convert database model to DTO
+            this.id = restaurant._id;
+            this.name = restaurant.name;
+            this.address = restaurant.address;
+            this.category = restaurant.category;
+        }
+    }
+}
+
+/**** Repository ****/
 export namespace RestaurantRepository {
-    
+
+    function withArticlesAndMenus(restaurant: any) {
+        return new Promise((resolve, reject) => {
+            if (restaurant) {
+                const restaurantDto = new RestaurantDTO(restaurant);
+                Article.find({ restaurantId: restaurant._id })
+                .then((articles: any) => {
+                    restaurantDto.articles = articles.map((article: any) => new ArticleDTO(article));
+                    return Menu.find({ restaurantId: restaurant._id });
+                })
+                .then((menus: any) => {
+                    restaurantDto.menus = menus.map((menu: any) => {
+                        const menuDTO = new ArticleDTO(menu);
+                        menuDTO.subArticles = menu.subArticles.map((sub: any) => new ArticleDTO(sub));
+                        return menuDTO;
+                    });
+                    resolve(restaurantDto);
+                });
+            }
+            else
+                reject("Restaurant not found.");
+        });
+    }
+
+    export function getById(restaurantId: string) {
+        return Restaurant.findById(restaurantId)
+            .then((restaurant: any) => {
+                return withArticlesAndMenus(restaurant);
+            })
+    }
+
     export function selectAll() {
-        let errorMessage = ''
-        try {
-            Restaurant.find()
-            .then((doc: any)=> { 
-                if (doc) {
-                    return doc;
-                } else {
-                    errorMessage = "No restaurant was found...";
-                    console.log(errorMessage);
-                    return new Error(errorMessage);
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-                return err;
+        return Restaurant.find({})
+            .then((restaurants: any) => {
+                return Promise.resolve(restaurants.map((restaurant: any) => new RestaurantDTO(restaurant.toObject())));
             });
-        } catch (error) {
-            console.log(error)
-            return error;
-        }
     }
 
-    export function insertRestaurant(restaurantInfo: typeof Restaurant) {
-        try {
-            var restaurant = new Restaurant(restaurantInfo)
-            restaurant.save()
-            .then((err: Error, data: any) => {
-                if (err) {
-                    console.log(err)
-                    return err
-                }
-                else {
-                    return "Successfully inserted restaurant."; // or a promise ?
-                }
-            })
-        } catch (error) {
-            console.log(error);
-            return error;
-        }
+    export function createRestaurant(restaurantDTO: RestaurantDTO) {
+        const restaurant = new Restaurant({
+            name: restaurantDTO.name,
+            owner_id: restaurantDTO.ownerId,
+            address: restaurantDTO.address,
+            category: restaurantDTO.category
+        });
+        return restaurant.save().then((newRestaurant: any) => {
+            return withArticlesAndMenus(newRestaurant);
+        });
     }
 
-    export function selectRestaurant(id: number) {
-        var errorMessage = '';
-        if (mongoose.Types.ObjectId.isValid(id)) {
-            Restaurant.findById(id)
-            .then((doc: typeof Restaurant)=> { 
-                if (doc) {
-                    return doc;
-                } else {
-                    errorMessage = "There is no restaurant found with the following id: " + id.toString()
-                    console.log(errorMessage);
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
+    export function foundRestaurantByOwner(currentUserID: number) {
+        return Restaurant.findOne({ owner_id: currentUserID })
+            .then((restaurant: any) => {
+                return withArticlesAndMenus(restaurant);
             });
-        } else {
-            errorMessage = "The following id is not valid: " + id.toString()
-            console.log(errorMessage);
-        }
-        return new Error(errorMessage) // à revoir
-    }
-
-    export function updateRestaurant(id: number, updatedRestaurant: typeof Restaurant) {
-        var errorMessage = '';
-        if (mongoose.Types.ObjectId.isValid(id)){
-            Restaurant.findByIdAndUpdate(id, updatedRestaurant)
-            .then((error: Error, data: any) => {
-                if (error) {
-                    console.log(error);
-                    return error
-                } else {
-                    console.log(data, "\nSuccessfully updated restaurant info: " + id.toString());
-                    return data;
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-            });
-        } else {
-            errorMessage = "The following id is not valid: " + id.toString()
-            console.log(errorMessage);
-        }
-        return new Error(errorMessage) 
-    }
-
-    export function deleteRestaurant(id: number) {
-        var errorMessage = '';
-        if (mongoose.Types.ObjectId.isValid(id)){
-            Restaurant.findByIdAndRemove(id)
-            .then((error: Error, data: any) => {
-                if (error) {
-                    console.log(error);
-                    return error
-                } else {
-                    console.log(data, "\nSuccessfully removed restaurant: " + id.toString())
-                    return data;
-                }
-            })
-            .catch((err: Error)=> {
-                console.log(err);
-            });
-        } else {
-            errorMessage = "The following id is not valid: " + id.toString()
-            console.log(errorMessage);
-        }
-        return new Error(errorMessage) 
     }
 }
 

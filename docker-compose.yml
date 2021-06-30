@@ -43,13 +43,13 @@ services:
         volumes:
             - ./node-service-auth:/app
         
-    service-users:
-        build: ./node-service-users
-        depends_on:
-             - db-sqlserver
-             - db-mongo
-        volumes:
-            - ./node-service-users:/app
+#    service-users:
+#        build: ./node-service-users
+#        depends_on:
+#             - db-sqlserver
+#             - db-mongo
+#        volumes:
+#            - ./node-service-users:/app
 #
 #    service-orders:
 #        build: ./node-service-orders
@@ -58,18 +58,18 @@ services:
 #        volumes:
 #            - ./node-service-orders:/app
 #
-#    service-restaurants:
-#        build: ./node-service-restaurants
-#        depends_on:
-#             - db-mongo
-#        volumes:
-#            - ./node-service-restaurants:/app
-    service-test:
-        build: ./node-service
+    service-restaurants:
+        build: ./node-service-restaurants
         depends_on:
              - db-mongo
         volumes:
-            - ./node-service:/app
+            - ./node-service-restaurants:/app
+#    service-test:
+#        build: ./node-service
+#        depends_on:
+#             - db-mongo
+#        volumes:
+#            - ./node-service:/app
 # /!\ Only for production, for test use `npm run serve` on the host inside the ./node-vuejs
 #    prod-vuejs:
 #        build:
