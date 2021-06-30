@@ -16,7 +16,7 @@ export function listAll() {
     return UserRepository.selectAll();
 }
 
-export function createUser(user: typeof User) {
+export function createUser(user: UserDTO) {
     return UserRepository.insertUser(user);
 }
 
