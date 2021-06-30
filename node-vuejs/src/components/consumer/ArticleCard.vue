@@ -1,15 +1,20 @@
 <template>
   <article class="card mb-2">
-    <header class="card-header">
-      <p class="card-header-title">
+    <div class="card-image">
+    <figure class="image is-2by1">
+      <img :src="'http://lorempixel.com/200/100/food/' + article.id" alt="Placeholder image">
+    </figure>
+  </div>
+    <div class="card-content">
+      <div class="content">
+        <p class="title">
         {{ article.name }}
       </p>
-    </header>
-    <div class="card-content" v-if="article.subArticles">
-      <div class="content">
-        <b-tag v-for="sub in article.subArticles" :key="sub.id">{{
+        <div v-if="article.subArticles">
+          <b-tag v-for="sub in article.subArticles" :key="sub.id">{{
           sub.name
         }}</b-tag>
+          </div>
       </div>
     </div>
     <footer class="card-footer">
@@ -34,15 +39,15 @@ export default Vue.extend({
   props: ["article", "restaurant", "type"],
   methods: {
     addToBasket(article) {
-      this.$store.commit('setBasketResto', this.restaurant);
-      this.$store.commit('addToBasket', article);
+      this.$store.commit("setBasketResto", this.restaurant);
+      this.$store.commit("addToBasket", article);
       this.$buefy.toast.open({
         message: this.$t("consumer.addedSuccess"),
         type: "is-success",
       });
     },
     deleteFromBasket(article) {
-      this.$store.commit('removeFromBasket', article);
+      this.$store.commit("removeFromBasket", article);
       this.$buefy.toast.open({
         message: this.$t("consumer.removeSuccess"),
         type: "is-success",
