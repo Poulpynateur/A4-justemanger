@@ -4,27 +4,30 @@ import { Request } from "express";
 import config from '../../config/config';
 import { UserDTO, User, UserRepository } from '../models/user';
 
-function listAll() {
+export const userService = { 
+    listAll: listAll,
+    create: createUser,
+    read: readUser,
+    update: updatedUser,
+    delete: deleteUser
+}
+
+export function listAll() {
     return UserRepository.selectAll();
 }
 
-function createUser(user: typeof User) {
+export function createUser(user: UserDTO) {
     return UserRepository.insertUser(user);
 }
 
-function readUser(id: number) {
+export function readUser(id: number) {
     return UserRepository.selectUser(id);
 }
 
-function updatedUser(updated: UserDTO) {
+export function updatedUser(updated: UserDTO) {
     return UserRepository.updateUser(updated);
 }
 
-function deleteUser(id: number) {
+export function deleteUser(id: number) {
     return UserRepository.deleteUser(id);
 }
-
-export default {
-    updatedUser,
-    deleteUser
-};

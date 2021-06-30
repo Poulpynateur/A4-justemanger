@@ -1,5 +1,5 @@
 import Sequelize from "sequelize";
-import crypto from "crypto-extra";
+// import crypto from "crypto-extra";
 
 import logger from "../../config/logger";
 import config from "../../config/config";
@@ -66,7 +66,7 @@ export class UserDTO {
             this.firstName = user.first_name;
             this.lastName = user.last_name;
             this.refreshToken = user.refresh_token;
-            this.role = user.role.name;
+            this.role = user.role; // getRole().name
         }
     }
 }
@@ -75,50 +75,57 @@ export class UserDTO {
 /**** repository ****/
 export namespace UserRepository {
 
-    // FIXME
     export function selectAll() {
-        try {
-            return User.findAll();
-        } catch (e) {
-            console.log(e);
-        }
+        
+        return User.findAll()
+        .then((users: any) => {
+            if (users) {
+                //return Promise.resolve(users);
+                
+                let DTOusers = [];
+                for (let user of users) {
+                    DTOusers.push(new UserDTO(user))
+                }
+                return Promise.resolve(DTOusers);
+                
+            }
+            return Promise.reject(new Error("No data."))
+        })       
     }
 
-    // FIXME
+    // FIXME - fixed, untested
     export function isUsernameTaken(username: string) {
-        var bool = true;
-        User.findOne({ where: {username: username}}).then( (user: typeof User) => {
-            if (user == null) {
-                var error = new Error("User already exists");
-                console.log(error);
-                // or we could decide to return error
-                return false;
+        return User.findOne({ where: {username: username}}).then((user: any) => {
+            if (user) {
+                return Promise.reject(new Error("Username already taken."));
+            } else {
+                return Promise.resolve(false);
             }
         });
-        return bool;
     }
 
-    // FIXME
-    export function isEmailRegistered(email: string) : boolean {
-        var bool = true;
-        User.findOne({ where: {email: email}}).then( (user: typeof User) => {
-            if (user == null) {
-                var error = new Error("email already registered");
-                console.log(error);
-                // or we could decide to return error
-                bool = false;
+    // FIXME - fixed, untested
+    function isEmailRegistered(email: string) : boolean {
+        return User.findOne({ where: {email: email}}).then((user: any) => {
+            if (user) {
+                return Promise.reject(new Error("email already registered"));
+            } else {
+                return Promise.resolve(false);
             }
         });
-        return bool;
     }
 
     // FIXME
     export function insertUser(userInfo: typeof User)
     {
-        if (!isUsernameTaken(userInfo.username as string)) {
-            var newUser = User.build(userInfo);
-            return newUser.save();            
-        }
+        isUsernameTaken(userInfo.username as string).then((isTaken: Boolean) => {
+            if (isTaken) {
+                return new Error("user name is not available...");
+            } else {
+                var newUser = User.build(userInfo);
+                return Promise.resolve(newUser.save());
+            }
+        })
     }
 
     // FIXME
