@@ -27,8 +27,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ArticleCard from "../../components/consumer/ArticleCard.vue";
-import consumerService from "../../services/consumerService";
+import ArticleCard from "../../../components/consumer/ArticleCard.vue";
+import consumerService from "../../../services/consumerService";
 
 export default Vue.extend({
   name: "order-basket",
@@ -46,6 +46,7 @@ export default Vue.extend({
         .orderFromBasket(this.address)
         .then(() => {
           this.$store.commit('deleteBasket');
+          this.$router.push({name: 'order-progress'});
         })
         .catch((error) => {
           this.$buefy.toast.open({

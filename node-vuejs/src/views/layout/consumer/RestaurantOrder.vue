@@ -27,8 +27,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ArticleCard from "../../components/consumer/ArticleCard.vue";
-import restaurantArticle from "../../services/restaurantService";
+import ArticleCard from "../../../components/consumer/ArticleCard.vue";
+import restaurantArticle from "../../../services/restaurantService";
 
 export default Vue.extend({
   name: "restaurant-order",

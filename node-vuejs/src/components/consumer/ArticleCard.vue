@@ -1,6 +1,6 @@
 <template>
   <article class="card mb-2">
-    <div class="card-image">
+    <div class="card-image" v-if="type != 'basket'">
     <figure class="image is-2by1">
       <img :src="'http://lorempixel.com/200/100/food/' + article.id" alt="Placeholder image">
     </figure>

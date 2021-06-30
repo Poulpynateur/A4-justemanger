@@ -112,6 +112,18 @@
             "state": "État"
         },
         "basketEmpty": "Panier vide ...",
-        "basketEmptyDisclaimer": "N'hésitez pas à acheter !"
+        "basketEmptyDisclaimer": "N'hésitez pas à acheter !",
+        "progress": {
+            "steps": {
+                "1": "Préparation",
+                "2": "Livraison",
+                "3": "Fini"
+            },
+            "disclaimers": {
+                "preparing": "En préparation par le restaurant",
+                "delivering": "Livraison en cours ...",
+                "delivered": "C'est près !"
+            }
+        }
     }
 }

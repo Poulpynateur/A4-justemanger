@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import consumerService from "../../services/consumerService";
+import consumerService from "../../../services/consumerService";
 
 export default Vue.extend({
   name: "order-history",
