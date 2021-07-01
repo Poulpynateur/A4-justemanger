@@ -79,17 +79,11 @@ export namespace UserRepository {
 
     export function selectAll() {
         
-        return User.findAll()
+        return User.findAll({include: Role})
         .then((users: any) => {
+            console.log(users);
             if (users) {
-                //return Promise.resolve(users);
-                
-                let DTOusers = [];
-                for (let user of users) {
-                    DTOusers.push(new UserDTO(user))
-                }
-                return Promise.resolve(DTOusers);
-                
+                return Promise.resolve(users.map((user: any) => new UserDTO(user)));
             }
             return Promise.reject(new Error("No data."))
         })       
