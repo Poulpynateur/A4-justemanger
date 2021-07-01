@@ -42,7 +42,7 @@ export namespace ArticleRepository {
                 price: newArticle.price
             });
 
-            return Article.find({ '_id': { $in: newArticle.subArticles } })
+            return Article.find({ '_id': { $in: newArticle.subArticles?.map(a => a.id) } })
                 .then((articles: any) => {
                     menu.subArticles = articles;
                     return menu.save().then((menu: any) => {

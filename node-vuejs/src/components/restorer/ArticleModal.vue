@@ -44,7 +44,7 @@ export default Vue.extend({
   name: "article-modal",
   props: {
     modalType: {type: String},
-    article: {type: ArticleDTO, default: () => new ArticleDTO()}
+    article: {type: Object, default: () => new ArticleDTO()}
   },
   methods: {
       createNewArticle() {

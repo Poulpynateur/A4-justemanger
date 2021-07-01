@@ -31,6 +31,7 @@
             :data="articles"
             :columns="articlesCols"
             :checked-rows.sync="menu.subArticles"
+            :custom-is-checked="isChecked"
             checkable
             :checkbox-position="'left'"
           >
@@ -62,17 +63,21 @@ export default Vue.extend({
   props: {
     modalType: { type: String },
     menu: {
-      type: ArticleDTO,
+      type: Object,
       default: () => new ArticleDTO(),
     },
     articles: {},
     articlesCols: {},
   },
   methods: {
+    isChecked(a: any, b: any)
+    {
+      return a.id === b.id;
+    },
     createNewMenu() {
       this.$emit("modalFinished", this.menu);
       this.$emit("close");
     },
-  },
+  }
 });
 </script>

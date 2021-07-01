@@ -139,7 +139,7 @@
               v-slot="props"
             >
               <span>
-                <b-tag v-for="sub in props.row.subArticles" :key="sub.id">
+                <b-tag class="mr-1" v-for="sub in props.row.subArticles" :key="sub.id">
                   {{ sub.name }}
                 </b-tag>
               </span>
