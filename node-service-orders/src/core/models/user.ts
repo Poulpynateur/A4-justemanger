@@ -26,6 +26,8 @@ export class UserDTO {
         {
             // Convert database model to DTO
             this.id = user.id;
+            this.username = user.username;
+            this.role = user.role;
             this.firstName = user.first_name;
             this.lastName = user.last_name;
         }

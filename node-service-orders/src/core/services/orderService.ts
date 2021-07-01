@@ -55,13 +55,7 @@ function getStats()
     });
 }
 
-function subscribeOrderSSE(callback: any)
-{
-    orderEvent.on("orderUpdate", callback);
-}
-
 export default {
-    subscribeOrderSSE,
     getAll,
     create,
     getFromUser,

@@ -53,14 +53,28 @@
                 props.row.customer.firstName + " " + props.row.customer.lastName
               }}
             </b-table-column>
-            <b-table-column field="date" :label="$t('consumer.columns.date')" v-slot="props">
+            <b-table-column
+              field="date"
+              :label="$t('consumer.columns.date')"
+              v-slot="props"
+            >
               {{ props.row.date }}
             </b-table-column>
-            <b-table-column field="state" :label="$t('consumer.columns.state')" v-slot="props" width="150">
+            <b-table-column
+              field="state"
+              :label="$t('consumer.columns.state')"
+              v-slot="props"
+              width="150"
+            >
               <order-state :state="props.row.state"></order-state>
             </b-table-column>
             <b-table-column v-slot="props" width="100">
-              <b-button v-if="props.row.state == 'restaurant.pending'" type="is-success" @click="updateOrder(props.row)">Terminer</b-button>
+              <b-button
+                v-if="props.row.state == 'restaurant.pending'"
+                type="is-success"
+                @click="updateOrder(props.row)"
+                >Terminer</b-button
+              >
             </b-table-column>
           </b-table>
         </b-tab-item>
@@ -153,17 +167,17 @@ import Vue from "vue";
 import ArticleModal from "../../components/restorer/ArticleModal.vue";
 import MenuModal from "../../components/restorer/MenuModal.vue";
 import StatsChart from "../../components/restorer/StatsChart.vue";
-import OrderState from '../../components/OrderState.vue';
+import OrderState from "../../components/OrderState.vue";
 
+import orderService from "../../services/orderService";
 import restaurantService from "../../services/restaurantService";
 import { OrderDTO } from "../../store/models/order";
-import { ArticleDTO } from "../../store/models/restaurant";
 
 export default Vue.extend({
   name: "app-restorer",
   components: {
     StatsChart,
-    OrderState
+    OrderState,
   },
   data() {
     return {
@@ -192,23 +206,24 @@ export default Vue.extend({
     };
   },
   methods: {
+    handleError(error) {
+      this.$buefy.toast.open({
+        message: this.$t("action.failed"),
+        type: "is-danger",
+      });
+    },
     updateOrder(order: OrderDTO) {
       restaurantService
         .updateOrder(order.id, "restaurant.finished")
         .then((order) => {
           const index = this.orders.findIndex((a) => a.id == order.id);
           this.orders[index] = order;
-           this.$buefy.toast.open({
+          this.$buefy.toast.open({
             message: this.$t("action.success"),
             type: "is-success",
           });
         })
-        .catch(() => {
-          this.$buefy.toast.open({
-            message: this.$t("action.failed"),
-            type: "is-danger",
-          });
-        });
+        .catch(this.handleError);
     },
     createRestaurant() {
       this.form.ownerId = this.$store.state.currentUser.id;
@@ -217,12 +232,7 @@ export default Vue.extend({
         .then((restaurant) => {
           this.restaurant = restaurant;
         })
-        .catch(() => {
-          this.$buefy.toast.open({
-            message: this.$t("action.failed"),
-            type: "is-danger",
-          });
-        });
+        .catch(this.handleError);
     },
     createArticle() {
       this.$buefy.modal.open({
@@ -241,12 +251,7 @@ export default Vue.extend({
               .then((article) => {
                 this.restaurant.articles.push(article);
               })
-              .catch((error) => {
-                this.$buefy.toast.open({
-                  message: this.$t("action.failed"),
-                  type: "is-danger",
-                });
-              });
+              .catch(this.handleError);
           },
         },
       });
@@ -269,12 +274,7 @@ export default Vue.extend({
               .then((menu) => {
                 this.restaurant.menus.push(menu);
               })
-              .catch(() => {
-                this.$buefy.toast.open({
-                  message: this.$t("action.failed"),
-                  type: "is-danger",
-                });
-              });
+              .catch(this.handleError);
           },
         },
       });
@@ -289,12 +289,7 @@ export default Vue.extend({
           this.restaurant.articles.splice(index, 1);
           this.selectedArticle = null;
         })
-        .catch((error) => {
-          this.$buefy.toast.open({
-            message: this.$t("action.failed"),
-            type: "is-danger",
-          });
-        });
+        .catch(this.handleError);
     },
     deleteSelectedMenu() {
       restaurantService
@@ -306,12 +301,7 @@ export default Vue.extend({
           this.restaurant.menus.splice(index, 1);
           this.selectedMenu = null;
         })
-        .catch((error) => {
-          this.$buefy.toast.open({
-            message: this.$t("action.failed"),
-            type: "is-danger",
-          });
-        });
+        .catch(this.handleError);
     },
     updateSelectedArticle() {
       this.$buefy.modal.open({
@@ -333,12 +323,7 @@ export default Vue.extend({
                 );
                 this.restaurant.articles[index] = article;
               })
-              .catch((error) => {
-                this.$buefy.toast.open({
-                  message: this.$t("action.failed"),
-                  type: "is-danger",
-                });
-              });
+              .catch(this.handleError);
           },
         },
       });
@@ -365,16 +350,11 @@ export default Vue.extend({
                 );
                 this.restaurant.menus[index] = menu;
               })
-              .catch((error) => {
-                this.$buefy.toast.open({
-                  message: this.$t("action.failed"),
-                  type: "is-danger",
-                });
-              });
+              .catch(this.handleError);
           },
         },
       });
-    }
+    },
   },
   created() {
     restaurantService.getUserRestaurant().then((restaurant) => {
@@ -386,6 +366,23 @@ export default Vue.extend({
         this.stats = stats;
         this.statsLoaded = true;
       });
+    });
+
+    orderService.subscribeOrderCreateEvent((data) => {
+      if (data == "restaurant.pending") {
+        this.$notification.show(
+          "JusteManger",
+          {
+            body: "Une nouvelle commande vient d'être créer!",
+          },
+          {}
+        );
+        restaurantService
+          .getRestaurantOrders(this.restaurant.id)
+          .then((orders) => {
+            this.orders = orders;
+          });
+      }
     });
   },
 });

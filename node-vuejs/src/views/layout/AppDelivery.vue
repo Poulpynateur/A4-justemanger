@@ -85,6 +85,7 @@
 <script lang="ts">
 import Vue from "vue";
 import deliveryService from "../../services/deliveryService";
+import orderService from "../../services/orderService";
 
 export default Vue.extend({
   name: "app-delivery",
@@ -123,6 +124,20 @@ export default Vue.extend({
         this.activeTab = 1;
       });
     },
+    createdOrder(data) {
+      if (data == "restaurant.finished") {
+        this.$notification.show(
+          "JusteManger",
+          {
+            body: "Une nouvelle commande vient d'être ajouté à la liste!",
+          },
+          {}
+        );
+        deliveryService.getAvailableOrders().then((availables) => {
+          this.availables = availables;
+        });
+      }
+    },
   },
   created() {
     deliveryService.getActiveOrder().then((active) => {
@@ -130,6 +145,9 @@ export default Vue.extend({
     });
     deliveryService.getAvailableOrders().then((availables) => {
       this.availables = availables;
+    });
+    orderService.subscribeOrderCreateEvent((data) => {
+      this.createdOrder(data);
     });
   },
 });

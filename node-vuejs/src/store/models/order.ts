@@ -1,8 +1,9 @@
 import { ArticleDTO, RestaurantDTO } from "./restaurant";
 import { UserDTO } from "./user";
 
-//@ts-nocheck
 Date.prototype.toString = function () {
+    // FIXME
+    //@ts-ignore
     return Intl.DateTimeFormat('fr-FR', { dateStyle: 'full', timeStyle: 'long' }).format(this);
 }
 

@@ -45,7 +45,6 @@ function subscribeOrderUpdateEvent(callback: any)
             'Authorization': 'Bearer ' + store.state.currentUser.accessToken
         }
     }).addEventListener('message', response => {
-        console.log(response);
         callback(response.data);
     });
 }

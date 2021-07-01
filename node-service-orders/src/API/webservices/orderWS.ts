@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import orderService from "../../core/services/orderService";
-import { OrderDTO } from '../../core/models/order';
+import { OrderDTO, orderEvent } from '../../core/models/order';
 
 function create(req: Request, res: Response) {
     orderService.create(req.body as OrderDTO)
@@ -87,9 +87,9 @@ function getAll(req: Request, res: Response)
         });
 }
 
-function orderSSE(req: Request, res: Response)
+function orderUpdatedSSE(req: Request, res: Response)
 {
-    orderService.subscribeOrderSSE((data: any) => {
+    orderEvent.on("orderUpdated", (data: any) => {
         if (data.id == req.params.userId)
         {
             res.write('data: ' + data.message + '\n\n');
@@ -105,8 +105,24 @@ function orderSSE(req: Request, res: Response)
     res.write("retry: 10000\n\n");
 }
 
+function orderCreatedSSE(req: Request, res: Response)
+{
+    orderEvent.on("orderCreated", (data: any) => {
+        res.write('data: ' + data + '\n\n');
+    });
+
+    res.set({
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive"
+    });
+
+    res.write("retry: 10000\n\n");
+}
+
 export default {
-    orderSSE,
+    orderUpdatedSSE,
+    orderCreatedSSE,
     getAll,
     create,
     getFromUser,
