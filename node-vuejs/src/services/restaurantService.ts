@@ -25,7 +25,7 @@ function getAll() {
 }
 
 function getUserRestaurant() {
-    return http.get('/my-restaurant')
+    return http.get('/users/' + store.state.currentUser.id + '/restaurant')
     .then((response) => {
         return Promise.resolve(response.data as RestaurantDTO);
     }).catch((error) => {

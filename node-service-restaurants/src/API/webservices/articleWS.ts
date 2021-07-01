@@ -9,7 +9,6 @@ function create(req: Request, res: Response)
     .then((article: ArticleDTO) => {
         res.status(200).json(article);
     }).catch((error: any) => {
-        console.log(error);
         res.status(400).json({"message": error.toString()});
     });
 }
@@ -20,7 +19,6 @@ function updateArticle(req: Request, res: Response)
     .then((article: ArticleDTO) => {
         res.status(200).json(article);
     }).catch((error: any) => {
-        console.log(error);
         res.status(400).json({"message": error.toString()});
     });
 }
@@ -31,7 +29,6 @@ function removeArticle(req: Request, res: Response)
     .then(() => {
         res.status(200).json({"message": "Success."});
     }).catch((error: any) => {
-        console.log(error);
         res.status(400).json({"message": error.toString()});
     });
 }
@@ -42,7 +39,6 @@ function updateMenu(req: Request, res: Response)
     .then((article: ArticleDTO) => {
         res.status(200).json(article);
     }).catch((error: any) => {
-        console.log(error);
         res.status(400).json({"message": error.toString()});
     });
 }
@@ -53,7 +49,6 @@ function removeMenu(req: Request, res: Response)
     .then(() => {
         res.status(200).json({"message": "Success."});
     }).catch((error: any) => {
-        console.log(error);
         res.status(400).json({"message": error.toString()});
     });
 }

@@ -24,7 +24,7 @@ function orderFromBasket(address: string)
 
 function getUserOrders()
 {
-    return http.get('/my-orders')
+    return http.get('/users/' + store.state.currentUser.id + '/orders')
     .then((response) => {
         return Promise.resolve(response.data as OrderDTO[]);
     }).catch((error) => {

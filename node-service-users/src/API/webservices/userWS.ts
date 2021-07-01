@@ -4,7 +4,7 @@ import { userService } from '../../core/services/userService';
 import authService from '../../core/services/authService';
 
 function readUsersList(req: Request, res: Response) {
-    const userId: number = parseInt(req.params.id);
+    const userId: number = parseInt(req.params.userId);
     userService.listAll().then((users: any) => {
         res.status(200).json(users);
     })
@@ -33,7 +33,7 @@ function readUsersList(req: Request, res: Response) {
 // 
 
 function read(req: Request, res: Response) {
-    userService.read(parseInt(req.params.id)).then((user: UserDTO) => {
+    userService.read(parseInt(req.params.userId)).then((user: UserDTO) => {
         res.status(200).json(user);
     })
         .catch((error: Error) => {
@@ -44,7 +44,7 @@ function read(req: Request, res: Response) {
 // UserDTO ne contient pas de champ password
 function update(req: Request, res: Response) {
     const updatedUser: UserDTO = req.body as UserDTO;
-    const userId: number = parseInt(req.params.id);
+    const userId: number = parseInt(req.params.userId);
 
     updatedUser.id = userId;
     userService.update(updatedUser)
@@ -56,7 +56,7 @@ function update(req: Request, res: Response) {
 }
 
 function remove(req: Request, res: Response) {
-    const userId: number = parseInt(req.params.id);
+    const userId: number = parseInt(req.params.userId);
     userService.delete(userId)
         .then(() => {
             res.status(200).json();

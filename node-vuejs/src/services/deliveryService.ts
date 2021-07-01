@@ -9,7 +9,7 @@ const apiUrl = '/deliveries';
 
 function getActiveOrder() 
 {
-    return http.get(apiUrl + '/me')
+    return http.get('/users/' + store.state.currentUser.id + '/delivery')
     .then((response) => {
         return Promise.resolve(response.data as OrderDTO);
     }).catch((error) => {

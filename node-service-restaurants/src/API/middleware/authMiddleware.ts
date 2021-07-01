@@ -15,4 +15,42 @@ function connected(req: Request, res: Response, next: NextFunction) {
     });
 }
 
-export default {connected};
+function isRestaurantOwner(req: Request, res: Response, next: NextFunction)
+{
+    if (req.currentUser?.id)
+    {
+        authService.isRestaurantOwner(req.currentUser?.id, req.params.restaurantId)
+        .then(() => {
+            next();
+        })
+        .catch(() => {
+            res.status(403).json({message: "Connected user is not the owner of the ressource."});
+        })
+    }
+    else
+        res.status(403).json({message: "Connected user is not the owner of the ressource."});
+}
+
+function hasRoles(roles: string[])
+{
+    return function(req: Request, res: Response, next: NextFunction) {
+        if (req.currentUser?.role && roles.includes(req.currentUser.role))
+            next();
+        else
+            res.status(403).json({message: "Connected user does not have the rights to access the ressource."});
+    }
+}
+
+function isCurrentUserOrHasroles(roles: string[])
+{
+    return function(req: Request, res: Response, next: NextFunction) {
+        if (req.currentUser?.role && roles.includes(req.currentUser.role))
+            next();
+        else if (parseInt(req.params.userId) == req.currentUser?.id)
+            next();
+        else
+            res.status(403).json({message: "Connected user does not have the rights to access the ressource."});
+    }
+}
+
+export default {connected, isRestaurantOwner, hasRoles, isCurrentUserOrHasroles};

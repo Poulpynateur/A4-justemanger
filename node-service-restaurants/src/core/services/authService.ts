@@ -4,6 +4,7 @@ import {Request} from "express";
 import config from '../../config/config';
 
 import {UserDTO} from '../models/user';
+import {RestaurantDTO, RestaurantRepository} from '../models/restaurant';
 
 function checkJwtToken(token: string)
 {
@@ -27,7 +28,19 @@ function getTokenFromRequest(req: Request) : string
     return authHeader && authHeader.split(' ')[1] || '';
 }
 
+function isRestaurantOwner(userId: number, restaurantId: string)
+{
+    return RestaurantRepository.getById(restaurantId)
+    .then((restaurant: RestaurantDTO) => {
+        if (restaurant.ownerId == userId)
+            return Promise.resolve(true);
+        else
+            return Promise.reject(false);
+    })
+}
+
 export default {
+    isRestaurantOwner,
     getTokenFromRequest,
     checkJwtToken
 };

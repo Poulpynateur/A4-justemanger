@@ -7,8 +7,7 @@ let router = express.Router();
 
 router.post('/restaurants', proxy());
 router.get('/restaurants', proxy());
-router.get('/restaurants/me', proxy());
-router.get('/my-restaurant', proxy());
+router.get('/users/:userId/restaurant', proxy());
 router.post('/restaurants/:id/articles', proxy());
 router.get('/restaurants/:id', proxy());
 

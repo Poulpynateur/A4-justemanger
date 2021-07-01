@@ -40,11 +40,11 @@ router.post('/orders', proxy());
  *         description: Specific order.
  */
 router.get('/orders', proxy());
-router.get('/my-orders', proxy());
+router.get('/users/:id/orders', proxy());
 router.get('/restaurants/:id/stats', proxy());
 router.get('/restaurants/:id/orders', proxy());
 router.put('/orders/:id', proxy());
 router.get('/deliveries/available-orders', proxy());
-router.get('/deliveries/me', proxy());
+router.get('/users/:userId/delivery', proxy());
 
 export default router;

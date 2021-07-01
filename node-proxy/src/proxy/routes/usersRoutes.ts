@@ -102,7 +102,6 @@ router.put('/users/:id', proxy('/'));
  *       200:
  *         description: List of all the user orders.
  */
- router.get('/users/:id/orders', proxy('/'));
 
 /**
  * @swagger
@@ -119,7 +118,7 @@ router.put('/users/:id', proxy('/'));
  *       200:
  *         description: Newly created order.
  */
-router.post('/users/:id/orders', proxy('/'));
+
 
 /**
  * @swagger
@@ -136,6 +135,5 @@ router.post('/users/:id/orders', proxy('/'));
  *       200:
  *         description: The updated order.
  */
-router.put('/users/:id/orders/:id', proxy('/'));
 
 export default router;

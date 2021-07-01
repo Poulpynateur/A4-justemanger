@@ -5,11 +5,24 @@ import auth from '../middleware/authMiddleware';
 
 let router = express.Router();
 
-router.get('/', userWS.readUsersList);
-// router.post('/', userIF.create);
-router.get('/:id', auth.connected, userWS.read);
+const managementRoles = ['management.commercial', 'management.technical', 'admin'];
 
-router.put('/:id', auth.connected, userWS.update);
-router.delete('/:id', auth.connected, userWS.remove);
+router.get('/',
+    auth.connected,
+    auth.hasRoles(managementRoles),
+    userWS.readUsersList);
+// router.post('/', userIF.create);
+router.get('/:userId',
+    auth.connected,
+    auth.isCurrentUserOrHasroles(managementRoles),
+    userWS.read);
+router.put('/:userId',
+    auth.connected,
+    auth.isCurrentUserOrHasroles(managementRoles),
+    userWS.update);
+router.delete('/:userId',
+    auth.connected,
+    auth.isCurrentUserOrHasroles(managementRoles),
+    userWS.remove);
 
 export default router;

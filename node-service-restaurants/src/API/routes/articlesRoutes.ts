@@ -4,11 +4,11 @@ import articleWS from '../webservices/articleWS';
 
 let router = express.Router();
 
-router.post('/restaurants/:restaurantId/articles', auth.connected, articleWS.create);
+router.post('/restaurants/:restaurantId/articles', auth.connected, auth.isRestaurantOwner, articleWS.create);
 
-router.delete('/restaurants/:restaurantId/articles/:articleId', auth.connected, articleWS.removeArticle);
-router.put('/restaurants/:restaurantId/articles/:articleId', auth.connected, articleWS.updateArticle);
-router.delete('/restaurants/:restaurantId/menus/:articleId', auth.connected, articleWS.removeMenu);
-router.put('/restaurants/:restaurantId/menus/:articleId', auth.connected, articleWS.updateMenu);
+router.delete('/restaurants/:restaurantId/articles/:articleId', auth.connected, auth.isRestaurantOwner, articleWS.removeArticle);
+router.put('/restaurants/:restaurantId/articles/:articleId', auth.connected, auth.isRestaurantOwner, articleWS.updateArticle);
+router.delete('/restaurants/:restaurantId/menus/:articleId', auth.connected, auth.isRestaurantOwner, articleWS.removeMenu);
+router.put('/restaurants/:restaurantId/menus/:articleId', auth.connected, auth.isRestaurantOwner, articleWS.updateMenu);
 
 export default router;

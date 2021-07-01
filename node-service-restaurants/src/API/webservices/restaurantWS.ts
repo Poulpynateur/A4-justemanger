@@ -19,18 +19,16 @@ function create(req: Request, res: Response)
     .then((restaurant: RestaurantDTO) => {
         res.status(200).json(restaurant);
     }).catch((error: any) => {
-        console.log(error);
         res.status(400).json({"message": error.toString()});
     });
 }
 
 function getFromId(req: Request, res: Response)
 {
-    restaurantService.getFromId(req.params.id)
+    restaurantService.getFromId(req.params.restaurantId)
     .then((restaurant: RestaurantDTO) => {
         res.status(200).json(restaurant);
     }).catch((error: any) => {
-        console.log(error);
         res.status(400).json({"message": error.toString()});
     });
 }
@@ -48,7 +46,6 @@ function getFromUser(req: Request, res: Response)
         .then((restaurant: RestaurantDTO) => {
             res.status(200).json(restaurant);
         }).catch((error: any) => {
-            console.log(error);
             res.status(400).json({"message": error.toString()});
         });
     }
