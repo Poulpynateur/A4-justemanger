@@ -54,6 +54,7 @@ export class UserDTO {
     public role?: string;
     public accessToken?: string;
     public refreshToken?: string;
+    public state?: string;
 
     constructor(user?: any)
     {
@@ -66,7 +67,8 @@ export class UserDTO {
             this.firstName = user.first_name;
             this.lastName = user.last_name;
             this.refreshToken = user.refresh_token;
-            this.role = user.role; // getRole().name
+            this.role = user.role.name;
+            this.state = user.state;
         }
     }
 }

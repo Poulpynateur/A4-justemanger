@@ -37,7 +37,8 @@ async function migrateDB()
         email: 'admin@justemanger.fr',
         first_name: 'Admin',
         last_name: 'ADMIN',
-        roleId: adminRole.get('id')
+        roleId: adminRole.get('id'),
+        state: 'actif',
     });
     userModel.User.create({
         username: 'resto',
@@ -45,7 +46,8 @@ async function migrateDB()
         email: 'resto@resto.fr',
         first_name: 'Jean',
         last_name: 'RESTAURATEUR',
-        roleId: restorerRole.get('id')
+        roleId: restorerRole.get('id'),
+        state: 'actif',
     });
     userModel.User.create({
         username: 'deliv',
@@ -53,7 +55,8 @@ async function migrateDB()
         email: 'deliv@deliv.fr',
         first_name: 'Michelle',
         last_name: 'DELIBOY',
-        roleId: deliveryRole.get('id')
+        roleId: deliveryRole.get('id'),
+        state: 'actif',
     });
     userModel.User.create({
         username: 'consu',
@@ -61,7 +64,8 @@ async function migrateDB()
         email: 'consu@consu.fr',
         first_name: 'Pierre',
         last_name: 'CONSUM',
-        roleId: consumerRole.get('id')
+        roleId: consumerRole.get('id'),
+        state: 'actif',
     });
 }
 
