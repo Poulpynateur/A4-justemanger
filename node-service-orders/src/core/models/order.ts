@@ -50,14 +50,19 @@ export class OrderDTO {
 export const orderEvent = new events.EventEmitter();
 export namespace OrderRepository {
 
-    function updatedEvent(order: OrderDTO)
+    function consumerEvent(order: OrderDTO)
     {
-        orderEvent.emit("orderUpdated", {id: order.customer?.id, message: order.state});
+        orderEvent.emit("consumer", order.state);
         return order;
     }
-    function createdEvent(order: OrderDTO)
+    function restaurantEvent(order: OrderDTO)
     {
-        orderEvent.emit("orderCreated", order.state);
+        orderEvent.emit("restaurant", order.state);
+        return order;
+    }
+    function deliveryEvent(order: OrderDTO)
+    {
+        orderEvent.emit("delivery", order.state);
         return order;
     }
 
@@ -90,7 +95,7 @@ export namespace OrderRepository {
                 return order.save();
             })
             .then((order: any) => {
-                return Promise.resolve(createdEvent(new OrderDTO(order)));
+                return Promise.resolve(restaurantEvent(new OrderDTO(order)));
             });
     }
 
@@ -129,7 +134,7 @@ export namespace OrderRepository {
             }
             return Promise.reject("Order not found");
         }).then((order: any) => {
-            return Promise.resolve(createdEvent(new OrderDTO(order)));
+            return Promise.resolve(consumerEvent(deliveryEvent(new OrderDTO(order))));
         })
     }
 
@@ -148,7 +153,7 @@ export namespace OrderRepository {
             }
             return Promise.reject("Order not found");
         }).then((order: any) => {
-            return Promise.resolve(updatedEvent(new OrderDTO(order)));
+            return Promise.resolve(consumerEvent(new OrderDTO(order)));
         })
     }
 

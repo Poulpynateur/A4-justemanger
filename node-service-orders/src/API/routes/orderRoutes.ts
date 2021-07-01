@@ -13,7 +13,8 @@ router.get('/restaurants/:id/orders', auth.connected, orderWS.getFromRestaurant)
 router.get('/deliveries/available-orders', auth.connected, auth.hasRoles(['enduser.delivery']), orderWS.getAvailableDelivery);
 router.get('/users/:userId/delivery', auth.connected, orderWS.getOrderFromDeliveryBoy);
 
-router.get('/users/:userId/orders/update', auth.connected, orderWS.orderUpdatedSSE);
-router.get('/orders-notifications', auth.connected, auth.hasRoles(['enduser.restorer', 'enduser.delivery']), orderWS.orderCreatedSSE);
+router.get('/users/:userId/orders/updates', auth.connected, orderWS.orderConsumerSSE);
+router.get('/restaurants/:restaurantId/orders/updates', auth.connected, orderWS.orderRestaurantSSE);
+router.get('/deliveries/available-orders/updates', auth.connected, orderWS.orderDeliverySSE);
 
 export default router;

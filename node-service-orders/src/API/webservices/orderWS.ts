@@ -87,42 +87,45 @@ function getAll(req: Request, res: Response)
         });
 }
 
-function orderUpdatedSSE(req: Request, res: Response)
+function SSE(res: Response, event: string, callback: any)
 {
-    orderEvent.on("orderUpdated", (data: any) => {
-        if (data.id == req.params.userId)
-        {
-            res.write('data: ' + data.message + '\n\n');
-        }
-    });
-
+    orderEvent.on(event, callback);
     res.set({
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache",
         "Connection": "keep-alive"
     });
-
     res.write("retry: 10000\n\n");
 }
 
-function orderCreatedSSE(req: Request, res: Response)
+// TODO : custom logic to check security
+function orderDeliverySSE(req: Request, res: Response)
 {
-    orderEvent.on("orderCreated", (data: any) => {
+    SSE(res, "delivery", (data: any) => {
         res.write('data: ' + data + '\n\n');
     });
+}
 
-    res.set({
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        "Connection": "keep-alive"
+// TODO : custom logic to check security
+function orderRestaurantSSE(req: Request, res: Response)
+{
+    SSE(res, "restaurant", (data: any) => {
+        res.write('data: ' + data + '\n\n');
     });
+}
 
-    res.write("retry: 10000\n\n");
+// TODO : custom logic to check security
+function orderConsumerSSE(req: Request, res: Response)
+{
+    SSE(res, "consumer", (data: any) => {
+        res.write('data: ' + data + '\n\n');
+    });
 }
 
 export default {
-    orderUpdatedSSE,
-    orderCreatedSSE,
+    orderDeliverySSE,
+    orderRestaurantSSE,
+    orderConsumerSSE,
     getAll,
     create,
     getFromUser,

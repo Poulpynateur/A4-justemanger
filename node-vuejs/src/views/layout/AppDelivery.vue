@@ -125,18 +125,16 @@ export default Vue.extend({
       });
     },
     createdOrder(data) {
-      if (data == "restaurant.finished") {
-        this.$notification.show(
-          "JusteManger",
-          {
-            body: "Une nouvelle commande vient d'être ajouté à la liste!",
-          },
-          {}
-        );
-        deliveryService.getAvailableOrders().then((availables) => {
-          this.availables = availables;
-        });
-      }
+      this.$notification.show(
+        "JusteManger",
+        {
+          body: "Une nouvelle commande vient d'être ajouté à la liste!",
+        },
+        {}
+      );
+      deliveryService.getAvailableOrders().then((availables) => {
+        this.availables = availables;
+      });
     },
   },
   created() {
@@ -146,7 +144,7 @@ export default Vue.extend({
     deliveryService.getAvailableOrders().then((availables) => {
       this.availables = availables;
     });
-    orderService.subscribeOrderCreateEvent((data) => {
+    orderService.deliveryOrderEvent((data) => {
       this.createdOrder(data);
     });
   },

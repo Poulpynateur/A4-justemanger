@@ -38,19 +38,7 @@ function filterContain(target: string, filter: string)
     return target.toLowerCase().includes(filter.toLowerCase());
 }
 
-function subscribeOrderUpdateEvent(callback: any)
-{
-    return new EventSource('http://localhost:8000/users/' + store.state.currentUser.id + '/orders/update', {
-        headers: {
-            'Authorization': 'Bearer ' + store.state.currentUser.accessToken
-        }
-    }).addEventListener('message', response => {
-        callback(response.data);
-    });
-}
-
 export default {
-    subscribeOrderUpdateEvent,
     filterContain,
     getUserOrders,
     orderFromBasket

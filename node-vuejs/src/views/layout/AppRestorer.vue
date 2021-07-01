@@ -172,6 +172,7 @@ import OrderState from "../../components/OrderState.vue";
 import orderService from "../../services/orderService";
 import restaurantService from "../../services/restaurantService";
 import { OrderDTO } from "../../store/models/order";
+import { ArticleDTO } from "../../store/models/restaurant";
 
 export default Vue.extend({
   name: "app-restorer",
@@ -216,8 +217,12 @@ export default Vue.extend({
       restaurantService
         .updateOrder(order.id, "restaurant.finished")
         .then((order) => {
-          const index = this.orders.findIndex((a) => a.id == order.id);
-          this.orders[index] = order;
+          // HACK : because this.orders is not correctly updated
+          restaurantService
+            .getRestaurantOrders(this.restaurant.id)
+            .then((orders) => {
+              this.orders = orders;
+            });
           this.$buefy.toast.open({
             message: this.$t("action.success"),
             type: "is-success",
@@ -336,7 +341,7 @@ export default Vue.extend({
         trapFocus: true,
         props: {
           modalType: this.$t("action.update"),
-          menu: this.selectedMenu,
+          menu: this.selectedMenu as ArticleDTO,
           articles: this.restaurant.articles,
           articlesCols: this.columns.articles,
         },
@@ -366,23 +371,23 @@ export default Vue.extend({
         this.stats = stats;
         this.statsLoaded = true;
       });
-    });
 
-    orderService.subscribeOrderCreateEvent((data) => {
-      if (data == "restaurant.pending") {
-        this.$notification.show(
-          "JusteManger",
-          {
-            body: "Une nouvelle commande vient d'être créer!",
-          },
-          {}
-        );
-        restaurantService
-          .getRestaurantOrders(this.restaurant.id)
-          .then((orders) => {
-            this.orders = orders;
-          });
-      }
+      orderService.restaurantOrderEvent(this.restaurant.id, (data) => {
+        if (data == "restaurant.pending") {
+          this.$notification.show(
+            "JusteManger",
+            {
+              body: "Une nouvelle commande vient d'être créer!",
+            },
+            {}
+          );
+          restaurantService
+            .getRestaurantOrders(this.restaurant.id)
+            .then((orders) => {
+              this.orders = orders;
+            });
+        }
+      });
     });
   },
 });

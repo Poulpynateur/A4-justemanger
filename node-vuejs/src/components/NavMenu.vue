@@ -1,5 +1,5 @@
 <template>
-  <b-navbar :shadow="true" :transparent="true" centered fixed-top>
+  <b-navbar :shadow="true" :transparent="true" :close-on-click="true" centered fixed-top>
     <template #brand>
       <b-navbar-item tag="router-link" :to="{ path: '/' }">
         <img src="@/assets/images/logo - large.png" class="image logo" />

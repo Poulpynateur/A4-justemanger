@@ -120,11 +120,13 @@
         "progress": {
             "steps": {
                 "1": "Préparation",
-                "2": "Livraison",
-                "3": "Fini"
+                "2": "Plat prêt",
+                "3": "Livraison",
+                "4": "Fini"
             },
             "disclaimers": {
-                "preparing": "En préparation par le restaurant",
+                "preparing": "En préparation par le restaurant ...",
+                "waiting": "En attente de livraison ...",
                 "delivering": "Livraison en cours ...",
                 "delivered": "C'est près !"
             }

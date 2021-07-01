@@ -33,6 +33,8 @@
     "typescript": "^4.3.4"
   },
   "scripts": {
+    "build": "tsc",
+    "start": "nodemon ./dist/server.js",
     "dev": "ts-node-dev --respawn --poll --transpile-only src/app.ts"
   },
   "keywords": [],
