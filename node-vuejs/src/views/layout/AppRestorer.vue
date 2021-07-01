@@ -53,11 +53,11 @@
                 props.row.customer.firstName + " " + props.row.customer.lastName
               }}
             </b-table-column>
-            <b-table-column field="date" label="Date" v-slot="props">
+            <b-table-column field="date" :label="$t('consumer.columns.date')" v-slot="props">
               {{ props.row.date }}
             </b-table-column>
-            <b-table-column field="state" label="État" v-slot="props">
-              {{ props.row.state }}
+            <b-table-column field="state" :label="$t('consumer.columns.state')" v-slot="props" width="150">
+              <order-state :state="props.row.state"></order-state>
             </b-table-column>
             <b-table-column v-slot="props" width="100">
               <b-button v-if="props.row.state == 'restaurant.progress'" type="is-success" @click="updateOrder(props.row)">Terminer</b-button>
@@ -153,6 +153,7 @@ import Vue from "vue";
 import ArticleModal from "../../components/restorer/ArticleModal.vue";
 import MenuModal from "../../components/restorer/MenuModal.vue";
 import StatsChart from "../../components/restorer/StatsChart.vue";
+import OrderState from '../../components/OrderState.vue';
 
 import restaurantService from "../../services/restaurantService";
 import { OrderDTO } from "../../store/models/order";
@@ -161,7 +162,8 @@ import { ArticleDTO } from "../../store/models/restaurant";
 export default Vue.extend({
   name: "app-restorer",
   components: {
-    StatsChart
+    StatsChart,
+    OrderState
   },
   data() {
     return {

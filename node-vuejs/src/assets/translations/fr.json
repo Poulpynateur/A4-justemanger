@@ -127,5 +127,15 @@
                 "delivered": "C'est près !"
             }
         }
+    },
+    "order": {
+        "restaurant": {
+            "pending": "En préparation par le restaurant",
+            "finished": "En attente de livraison"
+        },
+        "delivery": {
+            "progress": "Livraison en cours",
+            "end": "Commande livrée"
+        }
     }
 }
