@@ -6,11 +6,12 @@ import {UserDTO} from '../store/models/user';
 // TODO : create a class that regroup requests
 const apiUrl = '/auth';
 
-function register(user: any): Promise<void> {
+function register(user: any) {
     return http.post(apiUrl + '/register', user)
     .then((response) => {
         const user: UserDTO = response.data as UserDTO;
         store.commit('setCurrentUser', user);
+        return Promise.resolve(user);
     }).catch((error) => {
         return Promise.reject(error.response.data);
     });

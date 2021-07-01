@@ -21,6 +21,8 @@
         "deleteAccountDisclaimer": "Supprimer son compte est une action irreversible, voulez vous continuez ?"
     },
     "form": {
+        "sponsor": "Vous avez été parrainer par ",
+        "sponsorCode": "Code parrainage",
         "firstName": "Prénom",
         "lastName": "Nom",
         "email": "E-mail",

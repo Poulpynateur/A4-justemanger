@@ -32,6 +32,12 @@ export const User = global.db.define('users', {
     state: {
         type: Sequelize.STRING
     },
+    sponsor_id: {
+        type: Sequelize.INTEGER
+    },
+    sponsor_code: {
+        type: Sequelize.STRING
+    },
     refresh_token: {
         type: Sequelize.STRING(300)
     },
@@ -48,6 +54,8 @@ export class UserDTO {
     
     public id?: number;
     public username?: string;
+    public sponsorCode?: string;
+    public sponsorName?: string;
     public firstName?: string;
     public email?: string;
     public lastName?: string;
@@ -62,6 +70,7 @@ export class UserDTO {
         {
             // Convert database model to DTO
             this.id = user.id;
+            this.sponsorCode = user.sponsor_code;
             this.username = user.username;
             this.email = user.email;
             this.firstName = user.first_name;
@@ -78,15 +87,35 @@ export namespace UserRepository {
 
     export function createNewUser(userDTO: UserDTO, password: string)
     {
-        return Role.findOne({where: {name: userDTO.role}}).then((role:any) => {
+        return Role.findOne({where: {name: userDTO.role}})
+        .then((role:any) => {
             return User.create({
+                sponsor_code: crypto.randomString(6).toUpperCase(),
                 username: userDTO.username,
                 password: crypto.hash(password),
                 email: userDTO.email,
                 first_name: userDTO.firstName,
                 last_name: userDTO.lastName,
-                roleId: role.get('id')
+                roleId: role.get('id'),
+                state: 'actif'
             });
+        })
+        .then((user: any) => {
+            if (userDTO.sponsorCode)
+            {
+                return User.findOne({where: {sponsor_code: userDTO.sponsorCode}})
+                .then((sponsor: any) => {
+                    if (sponsor)
+                    {
+                        user.sponsor_id = sponsor.id;
+                    }
+                    return user.save();
+                })
+            }
+            else
+            {
+                return Promise.resolve(user);
+            }
         })
         .then((user: any) => {
             return Promise.resolve({username: user.username, password});
@@ -100,7 +129,22 @@ export namespace UserRepository {
             return user.update({ refresh_token: crypto.hash(userDTO.refreshToken, {algorithm: 'SHA256'}), refresh_token_created_at: Date.now()})
         })
         .then((user: any) => {
+            if (user.sponsor_id)
+            {
+                return User.findByPk(user.sponsor_id)
+                .then((sponsor: any) => {
+                    if (sponsor)
+                    {
+                        userDTO.sponsorName = sponsor.first_name + ' ' + sponsor.last_name;
+                    }
+                    return Promise.resolve(user);
+                });
+            }
+            return Promise.resolve(user);
+        })
+        .then((user: any) => {
             const loggedUser = new UserDTO(user);
+            loggedUser.sponsorName = userDTO.sponsorName;
             // Because these values are hashed in database
             loggedUser.accessToken = userDTO.accessToken;
             loggedUser.refreshToken = userDTO.refreshToken;

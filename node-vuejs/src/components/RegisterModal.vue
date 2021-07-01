@@ -77,6 +77,12 @@
             </option>
           </b-select>
         </b-field>
+
+        <b-field
+          :label="$t('form.sponsorCode')"
+        >
+          <b-input v-model="newUser.sponsorCode" type="text"> </b-input>
+        </b-field>
       </section>
       <footer class="modal-card-foot">
         <b-button :label="$t('action.cancel')" @click="$emit('close')" />
@@ -93,6 +99,7 @@
 <script lang="ts">
 import Vue from "vue";
 import authService from "../services/authService";
+import { UserDTO } from "../store/models/user";
 
 export default Vue.extend({
   name: "register-modal",
@@ -107,6 +114,7 @@ export default Vue.extend({
         firstName: "",
         lastName: "",
         role: "enduser.consumer",
+        sponsorCode: "",
       },
       errors: {
         username: "",
@@ -124,8 +132,15 @@ export default Vue.extend({
     sendNewUser() {
       authService
         .register(this.newUser)
-        .then(() => {
+        .then((user: UserDTO) => {
           this.$emit("close");
+          if (user.sponsorName) {
+            this.$buefy.notification.open({
+              duration: 10000,
+              message: this.$t('form.sponsor') + user.sponsorName,
+              type: "is-success",
+            });
+          }
         })
         .catch((data) => {
           // Reset messages

@@ -39,6 +39,7 @@ async function migrateDB()
         last_name: 'ADMIN',
         roleId: adminRole.get('id'),
         state: 'actif',
+        sponsor_code: 'SPECI@L',
     });
     userModel.User.create({
         username: 'resto',
@@ -48,6 +49,7 @@ async function migrateDB()
         last_name: 'RESTAURATEUR',
         roleId: restorerRole.get('id'),
         state: 'actif',
+        sponsor_code: crypto.randomString(6).toUpperCase(),
     });
     userModel.User.create({
         username: 'deliv',
@@ -57,6 +59,7 @@ async function migrateDB()
         last_name: 'DELIBOY',
         roleId: deliveryRole.get('id'),
         state: 'actif',
+        sponsor_code: crypto.randomString(6).toUpperCase(),
     });
     userModel.User.create({
         username: 'consu',
@@ -66,6 +69,7 @@ async function migrateDB()
         last_name: 'CONSUM',
         roleId: consumerRole.get('id'),
         state: 'actif',
+        sponsor_code: crypto.randomString(6).toUpperCase(),
     });
 }
 

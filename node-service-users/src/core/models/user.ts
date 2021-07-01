@@ -32,6 +32,9 @@ export const User = global.db_msql.define('users', {
     state: {
         type: Sequelize.STRING
     },
+    sponsor_code: {
+        type: Sequelize.STRING
+    },
     refresh_token: {
         type: Sequelize.STRING(300)
     },
@@ -48,6 +51,7 @@ export class UserDTO {
     
     public id?: number;
     public username?: string;
+    public sponsorCode?: string;
     public firstName?: string;
     public email?: string;
     public lastName?: string;
@@ -62,6 +66,7 @@ export class UserDTO {
         {
             // Convert database model to DTO
             this.id = user.id;
+            this.sponsorCode = user.sponsor_code;
             this.username = user.username;
             this.email = user.email;
             this.firstName = user.first_name;
@@ -79,7 +84,7 @@ export namespace UserRepository {
 
     export function selectAll() {
         
-        return User.findAll({include: Role})
+        return User.findAll({include: [Role]})
         .then((users: any) => {
             console.log(users);
             if (users) {

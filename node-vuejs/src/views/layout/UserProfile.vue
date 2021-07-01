@@ -1,5 +1,6 @@
 <template>
   <div class="container box mt-6">
+    <p>{{$t('form.sponsorCode') + ' : '}} <strong>{{user.sponsorCode}}</strong></p>
     <form action="">
       <b-field
         :label="$t('auth.username')"
