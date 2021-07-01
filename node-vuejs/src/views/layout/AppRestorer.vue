@@ -46,7 +46,25 @@
       </h1>
 
       <b-tabs>
-        <b-tab-item :label="$t('restorer.orders')"> </b-tab-item>
+        <b-tab-item :label="$t('restorer.orders')">
+          <b-table :data="orders">
+            <b-table-column field="customer" label="Client" v-slot="props">
+              {{
+                props.row.customer.firstName + " " + props.row.customer.lastName
+              }}
+            </b-table-column>
+            <b-table-column field="date" label="Date" v-slot="props">
+              {{ props.row.date }}
+            </b-table-column>
+            <b-table-column field="state" label="État" v-slot="props">
+              {{ props.row.state }}
+            </b-table-column>
+            <b-table-column v-slot="props" width="100">
+              <b-button v-if="props.row.state == 'restaurant.progress'" type="is-success" @click="updateOrder(props.row)">Terminer</b-button>
+            </b-table-column>
+          </b-table>
+        </b-tab-item>
+
         <b-tab-item :label="$t('restorer.articles')">
           <div class="buttons mb-0">
             <b-button type="is-primary" @click="createArticle()">{{
@@ -122,6 +140,9 @@
             </b-table-column>
           </b-table>
         </b-tab-item>
+        <b-tab-item :label="$t('restorer.stats')">
+          <stats-chart v-if="statsLoaded" :chartData="stats"></stats-chart>
+        </b-tab-item>
       </b-tabs>
     </div>
   </div>
@@ -131,17 +152,25 @@
 import Vue from "vue";
 import ArticleModal from "../../components/restorer/ArticleModal.vue";
 import MenuModal from "../../components/restorer/MenuModal.vue";
+import StatsChart from "../../components/restorer/StatsChart.vue";
 
 import restaurantService from "../../services/restaurantService";
+import { OrderDTO } from "../../store/models/order";
 import { ArticleDTO } from "../../store/models/restaurant";
 
 export default Vue.extend({
   name: "app-restorer",
+  components: {
+    StatsChart
+  },
   data() {
     return {
+      statsLoaded: false,
+      stats: [],
       restaurant: null,
       selectedMenu: null,
       selectedArticle: null,
+      orders: [],
       form: {
         ownerId: 0,
         name: "",
@@ -161,6 +190,24 @@ export default Vue.extend({
     };
   },
   methods: {
+    updateOrder(order: OrderDTO) {
+      restaurantService
+        .updateOrder(order.id, "restaurant.finished")
+        .then((order) => {
+          const index = this.orders.findIndex((a) => a.id == order.id);
+          this.orders[index] = order;
+           this.$buefy.toast.open({
+            message: this.$t("action.success"),
+            type: "is-success",
+          });
+        })
+        .catch(() => {
+          this.$buefy.toast.open({
+            message: this.$t("action.failed"),
+            type: "is-danger",
+          });
+        });
+    },
     createRestaurant() {
       this.form.ownerId = this.$store.state.currentUser.id;
       restaurantService
@@ -325,11 +372,18 @@ export default Vue.extend({
           },
         },
       });
-    },
+    }
   },
   created() {
     restaurantService.getUserRestaurant().then((restaurant) => {
       this.restaurant = restaurant;
+      restaurantService.getRestaurantOrders(restaurant.id).then((orders) => {
+        this.orders = orders;
+      });
+      restaurantService.getStats(restaurant.id).then((stats) => {
+        this.stats = stats;
+        this.statsLoaded = true;
+      });
     });
   },
 });

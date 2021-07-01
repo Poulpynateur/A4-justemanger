@@ -9,28 +9,50 @@ const apiUrl = '/deliveries';
 
 function getActiveOrder() 
 {
-    return Promise.reject();
+    return http.get(apiUrl + '/me')
+    .then((response) => {
+        return Promise.resolve(response.data as OrderDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
 }
 
 function getAvailableOrders()
 {
-    const order = new OrderDTO();
-    order.restaurant = new RestaurantDTO();
-    order.restaurant.name = "LeRestaurant";
-    order.restaurant.address = "45 avenue du pied, Paris";
-    order.state = "restaurant.finished";
-    order.address = "11 rue du canard enchanté, Lingolsheim";
-    order.customer = new UserDTO();
-    order.customer.firstName = "Jean";
-    order.customer.lastName = "GUIEL";
-    order.date = new Date();
-    return Promise.resolve([order]);
+    return http.get(apiUrl + '/available-orders')
+    .then((response) => {
+        return Promise.resolve(response.data as OrderDTO[]);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
 }
 
 // 66
-function acceptOrder(order) {
-    order.state = "delivery.progress";
-    return Promise.resolve(order);
+function acceptOrder(orderId) {
+    return http.put('/orders/' + orderId, {state: 'delivery.progress', deliveryBoy: store.state.currentUser})
+    .then((response) => {
+        return Promise.resolve(response.data as OrderDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
 }
 
-export default { getActiveOrder, getAvailableOrders, acceptOrder };
+function abortOrder(orderId) {
+    return http.put('/orders/' + orderId, {state: 'restaurant.finished'})
+    .then((response) => {
+        return Promise.resolve(response.data as OrderDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
+}
+
+function finishOrder(orderId) {
+    return http.put('/orders/' + orderId, {state: 'delivery.end'})
+    .then((response) => {
+        return Promise.resolve(response.data as OrderDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
+}
+
+export default { getActiveOrder, getAvailableOrders, acceptOrder, abortOrder, finishOrder };

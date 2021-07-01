@@ -1,14 +1,15 @@
 import * as express from "express";
-import orderIF from '../webservices/orderWS';
-import authMiddleware from '../middleware/authMiddleware';
+import auth from '../middleware/authMiddleware';
+import orderWS from '../webservices/orderWS';
 
 let router = express.Router();
 
-router.get('/', orderIF.listAll);
-router.get('/user/:id', orderIF.listAllFromUser); // liste des orders d'un utilisateur
-router.post('/', orderIF.create);
-router.get('/:id', orderIF.read);
-router.put('/:id', orderIF.update);
-router.delete('/:id', orderIF.delete);
+router.post('/orders', auth.connected, orderWS.create);
+router.put('/orders/:id', auth.connected, orderWS.updateOrder);
+router.get('/my-orders', auth.connected, orderWS.getFromUser);
+router.get('/restaurants/:id/stats', auth.connected, orderWS.getStats);
+router.get('/restaurants/:id/orders', auth.connected, orderWS.getFromRestaurant);
+router.get('/deliveries/available-orders', auth.connected, orderWS.getAvailableDelivery);
+router.get('/deliveries/me', auth.connected, orderWS.getOrderFromDeliveryBoy);
 
 export default router;

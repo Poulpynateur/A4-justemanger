@@ -5,6 +5,6 @@ import orderRoutes from './orderRoutes';
 let router = express.Router();
 
 /**** setup app routes ****/
-router.use('/orders', orderRoutes);
+router.use('/', orderRoutes);
 
 export default router;

@@ -1,38 +1,59 @@
-import { Order, OrderRepository } from "core/models/order";
+import {OrderDTO, OrderRepository} from '../models/order';
+import {UserDTO} from '../models/user';
 
-export const orderService = { 
-    listAll: listAll,
-    listAllFromUser: listAllFromUser,
-    create: createOrder,
-    read: readOrder,
-    update: updateOrder,
-    delete: deleteOrder
+function create(newOrder: OrderDTO)
+{
+    return OrderRepository.create(newOrder);
 }
 
-export function listAll() {
-    return OrderRepository.selectAll();
+function getFromUser(userId: number)
+{
+    return OrderRepository.getFromUser(userId);
 }
 
-export function listAllFromUser(id: number) {
-    return OrderRepository.selectAllFromUser(id)
+function getFromRestaurant(restaurantId: string)
+{
+    return OrderRepository.getFromRestaurant(restaurantId);
 }
 
-function createOrder(order: typeof Order) {
-    return OrderRepository.insertOrder(order);
+function updateOrder(orderId: string, state: string, deliveryBoy: UserDTO)
+{
+    if (deliveryBoy)
+        return OrderRepository.updateOrderDelivery(orderId, state, deliveryBoy);
+    else
+        return OrderRepository.updateOrderState(orderId, state);
 }
 
-function readOrder(id: number) {
-    return OrderRepository.selectOrder(id);
+function getAvailableDelivery()
+{
+    return OrderRepository.getAvailableDelivery();
 }
 
-function updateOrder(id: number, updatedOrder: typeof Order) {
-    return OrderRepository.updateOrder(id, updatedOrder);
+function getOrderFromDeliveryBoy(deliveryBoyId: number)
+{
+    return OrderRepository.getOrderFromDeliveryBoy(deliveryBoyId);
 }
 
-function deleteOrder(id: number) {
-    return OrderRepository.deleteOrder(id);
+function getStats()
+{
+    const stats: number[] = [];
+    stats.length = 24;
+    stats.fill(0);
+    return OrderRepository.getAll()
+    .then((orders: any) => {
+        orders.forEach((o:any) => {
+            stats[o.date.getHours()] += 1;
+        })
+        return Promise.resolve(stats);
+    });
 }
 
 export default {
-    orderService
+    create,
+    getFromUser,
+    getFromRestaurant,
+    updateOrder,
+    getAvailableDelivery,
+    getOrderFromDeliveryBoy,
+    getStats
 }

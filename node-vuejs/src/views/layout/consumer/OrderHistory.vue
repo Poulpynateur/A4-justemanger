@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import consumerService from "../../services/consumerService";
+import consumerService from "../../../services/consumerService";
 
 export default Vue.extend({
   name: "order-history",
@@ -37,19 +37,6 @@ export default Vue.extend({
           },
         ],
     };
-  },
-  methods: {
-    sendCommand() {
-      consumerService
-        .orderFromBasket()
-        .then(() => {})
-        .catch((error) => {
-          this.$buefy.toast.open({
-            message: this.$t("action.failed"),
-            type: "is-danger",
-          });
-        });
-    },
   },
   created() {
     consumerService

@@ -10,7 +10,8 @@ export default new Vuex.Store({
     rememberMe: false,
     currentUser: null,
     language: defaultLocale,
-    basket: []
+    basket: [],
+    basketRestaurant: null
   },
   mutations: {
     setLanguage(state, lang: Locales) {
@@ -35,6 +36,19 @@ export default new Vuex.Store({
         state.currentUser = JSON.parse(localStorage.getItem('currentUser'));
       if (localStorage.getItem('basket'))
         state.basket = JSON.parse(localStorage.getItem('basket'));
+      if (localStorage.getItem('basketResto'))
+        state.basketRestaurant = JSON.parse(localStorage.getItem('basketResto'));
+    },
+    setBasketResto(state, restaurant) {
+      if (state.basketRestaurant)
+      {
+        if (restaurant.id != state.basketRestaurant.id)
+        {
+          state.basket = [];
+        }
+      }
+      state.basketRestaurant = restaurant;
+      localStorage.setItem('basketResto', JSON.stringify(state.basketRestaurant));
     },
     addToBasket(state, article) {
       state.basket.push(article);
@@ -44,6 +58,14 @@ export default new Vuex.Store({
       const index = state.basket.findIndex((a) => a.id == article.id);
       state.basket.splice(index, 1);
       localStorage.setItem('basket', JSON.stringify(state.basket));
+    },
+    deleteBasket(state) {
+      state.basket = [];
+      state.basketRestaurant = null;
+      if (localStorage.getItem('basket'))
+        localStorage.removeItem('basket');
+      if (localStorage.getItem('basketResto'))
+        localStorage.removeItem('basketResto');
     }
   },
   actions: {

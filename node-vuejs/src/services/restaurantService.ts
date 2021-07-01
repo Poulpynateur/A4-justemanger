@@ -2,6 +2,7 @@ import http from './api';
 
 import store from '../store/index';
 import { ArticleDTO, RestaurantDTO } from '../store/models/restaurant';
+import { OrderDTO } from '../store/models/order';
 
 const apiUrl = '/restaurants';
 
@@ -86,9 +87,36 @@ function deleteMenu(restaurantId, article) {
     });
 }
 
+function getRestaurantOrders(restaurantId: string)
+{
+    return http.get(apiUrl + '/' + restaurantId + '/orders')
+    .then((response) => {
+        return Promise.resolve(response.data as OrderDTO[]);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
+}
+
+function updateOrder(orderId: string, state: string) {
+    return http.put('/orders/' + orderId, {state: state})
+    .then((response) => {
+        return Promise.resolve(response.data as OrderDTO);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
+}
+
+function getStats(restaurantId: string) {
+    return http.get(apiUrl + '/' + restaurantId + '/stats')
+    .then((response) => {
+        return Promise.resolve(response.data);
+    }).catch((error) => {
+        return Promise.reject(error.response.data);
+    });
+}
 
 export default {
-    getFromId, getAll, getUserRestaurant,
-    sendNewRestaurant, sendNewArticle,
+    getFromId, getAll, getUserRestaurant, getRestaurantOrders, getStats,
+    sendNewRestaurant, sendNewArticle, updateOrder,
     updateArticle, deleteArticle, updateMenu, deleteMenu
 };

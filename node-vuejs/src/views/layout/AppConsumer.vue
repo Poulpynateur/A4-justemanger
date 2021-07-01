@@ -33,7 +33,7 @@
         v-for="(item, index) in filteredRestaurant"
         :key="index"
       >
-        <restaurant-card :index="index" :restaurant="item"></restaurant-card>
+        <restaurant-card :restaurant="item"></restaurant-card>
       </section>
     </div>
   </div>

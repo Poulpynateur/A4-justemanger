@@ -7,6 +7,7 @@
           v-for="menu in restaurant.menus"
           :key="menu.id"
           :article="menu"
+          :restaurant="restaurant"
         ></article-card>
       </div>
     </section>
@@ -17,6 +18,7 @@
           v-for="article in restaurant.articles"
           :key="article.id"
           :article="article"
+          :restaurant="restaurant"
         ></article-card>
       </div>
     </section>
@@ -25,8 +27,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ArticleCard from "../../components/consumer/ArticleCard.vue";
-import restaurantArticle from "../../services/restaurantService";
+import ArticleCard from "../../../components/consumer/ArticleCard.vue";
+import restaurantArticle from "../../../services/restaurantService";
 
 export default Vue.extend({
   name: "restaurant-order",

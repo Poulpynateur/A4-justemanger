@@ -2,7 +2,7 @@
 <article class="card">
   <div class="card-image">
     <figure class="image is-2by1">
-      <img :src="'http://lorempixel.com/200/100/food/' + index" alt="Placeholder image">
+      <img :src="'http://lorempixel.com/200/100/food/' + restaurant.id" alt="Placeholder image">
     </figure>
   </div>
   <div class="card-content">
@@ -26,6 +26,6 @@
 import Vue from "vue";
 export default Vue.extend({
   name: "restaurant-card",
-  props: ['restaurant', 'index']
+  props: ['restaurant']
 });
 </script>
