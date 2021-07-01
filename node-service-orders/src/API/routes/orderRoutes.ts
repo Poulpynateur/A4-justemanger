@@ -4,6 +4,7 @@ import orderWS from '../webservices/orderWS';
 
 let router = express.Router();
 
+router.get('/orders', auth.connected, orderWS.getAll);
 router.post('/orders', auth.connected, orderWS.create);
 router.put('/orders/:id', auth.connected, orderWS.updateOrder);
 router.get('/my-orders', auth.connected, orderWS.getFromUser);

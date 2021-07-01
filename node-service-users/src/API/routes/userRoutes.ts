@@ -7,9 +7,7 @@ let router = express.Router();
 
 router.get('/', userWS.readUsersList);
 // router.post('/', userIF.create);
-router.get('/:id', userWS.read);
-// router.put('/:id', userIF.update);
-// router.delete('/:id', userIF.delete);
+router.get('/:id', auth.connected, userWS.read);
 
 router.put('/:id', auth.connected, userWS.update);
 router.delete('/:id', auth.connected, userWS.remove);

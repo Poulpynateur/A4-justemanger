@@ -81,6 +81,7 @@ export namespace OrderRepository {
 
     export function getAll() {
         return Order.find().then((orders: any) => {
+            console.log(orders);
             return Promise.resolve(orders.map((o: any) => new OrderDTO(o)));
         });
     }

@@ -1,6 +1,11 @@
 import {OrderDTO, OrderRepository} from '../models/order';
 import {UserDTO} from '../models/user';
 
+function getAll()
+{
+    return OrderRepository.getAll();
+}
+
 function create(newOrder: OrderDTO)
 {
     return OrderRepository.create(newOrder);
@@ -49,6 +54,7 @@ function getStats()
 }
 
 export default {
+    getAll,
     create,
     getFromUser,
     getFromRestaurant,

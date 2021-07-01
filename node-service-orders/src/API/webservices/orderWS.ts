@@ -77,7 +77,17 @@ function getStats(req: Request, res: Response)
         });
 }
 
+function getAll(req: Request, res: Response)
+{
+    orderService.getAll()
+        .then((orders: OrderDTO[]) => {
+            res.status(200).json(orders);
+        }).catch((error: any) => {
+            res.status(400).json({ "message": error.toString() });
+        });
+}
 export default {
+    getAll,
     create,
     getFromUser,
     getFromRestaurant,
