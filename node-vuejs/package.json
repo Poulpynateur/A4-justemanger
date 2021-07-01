@@ -17,6 +17,7 @@
     "buefy": "^0.9.8",
     "chart.js": "^2.9.4",
     "eventsource": "^1.1.0",
+    "rickspower": "^1.0.0",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.1",
     "vue-i18n": "^8.24.5",

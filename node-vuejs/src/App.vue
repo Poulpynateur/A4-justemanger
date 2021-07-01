@@ -26,6 +26,7 @@
             >MIT</a
           >. The website content is licensed by nothing.
         </p>
+        <rick-roll></rick-roll>
       </div>
     </footer>
   </div>
@@ -41,13 +42,16 @@
 </style>
 
 <script lang="ts">
+//@ts-nocheck
 import Vue from "vue";
 import NavMenu from "./components/NavMenu.vue";
+import RickRoll from "rickspower/RickRoll.vue";
 
 export default Vue.extend({
   name: "app",
   components: {
     NavMenu,
+    RickRoll
   },
   beforeCreate() {
     this.$store.commit("initialiseStore");
