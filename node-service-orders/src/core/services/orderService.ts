@@ -1,5 +1,7 @@
-import {OrderDTO, OrderRepository} from '../models/order';
+import {OrderDTO, OrderRepository, orderEvent} from '../models/order';
 import {UserDTO} from '../models/user';
+
+import events from 'events';
 
 function getAll()
 {
@@ -53,7 +55,13 @@ function getStats()
     });
 }
 
+function subscribeOrderSSE(callback: any)
+{
+    orderEvent.on("orderUpdate", callback);
+}
+
 export default {
+    subscribeOrderSSE,
     getAll,
     create,
     getFromUser,

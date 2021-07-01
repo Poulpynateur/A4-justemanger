@@ -60,7 +60,7 @@
               <order-state :state="props.row.state"></order-state>
             </b-table-column>
             <b-table-column v-slot="props" width="100">
-              <b-button v-if="props.row.state == 'restaurant.progress'" type="is-success" @click="updateOrder(props.row)">Terminer</b-button>
+              <b-button v-if="props.row.state == 'restaurant.pending'" type="is-success" @click="updateOrder(props.row)">Terminer</b-button>
             </b-table-column>
           </b-table>
         </b-tab-item>

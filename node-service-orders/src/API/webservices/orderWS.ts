@@ -86,7 +86,27 @@ function getAll(req: Request, res: Response)
             res.status(400).json({ "message": error.toString() });
         });
 }
+
+function orderSSE(req: Request, res: Response)
+{
+    orderService.subscribeOrderSSE((data: any) => {
+        if (data.id == req.params.userId)
+        {
+            res.write('data: ' + data.message + '\n\n');
+        }
+    });
+
+    res.set({
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive"
+    });
+
+    res.write("retry: 10000\n\n");
+}
+
 export default {
+    orderSSE,
     getAll,
     create,
     getFromUser,

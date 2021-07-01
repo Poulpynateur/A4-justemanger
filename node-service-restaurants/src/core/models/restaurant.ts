@@ -24,6 +24,7 @@ export class RestaurantDTO {
         if (restaurant) {
             // Convert database model to DTO
             this.id = restaurant._id;
+            this.ownerId = restaurant.owner_id;
             this.name = restaurant.name;
             this.address = restaurant.address;
             this.category = restaurant.category;

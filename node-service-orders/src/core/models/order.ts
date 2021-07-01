@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
+import events from 'events';
+
 import { articleSchema, menuSchema, Article, Menu, ArticleDTO } from './article';
 import { userSchema, User, UserDTO } from './user';
 import { restaurantSchema, Restaurant, RestaurantDTO } from './restaurant';
+
 /**** ORM ****/
 const orderSchema = new mongoose.Schema({
     delivery_boy: userSchema,
@@ -44,7 +47,14 @@ export class OrderDTO {
     }
 }
 
+export const orderEvent = new events.EventEmitter();
 export namespace OrderRepository {
+
+    function updateOrderEvent(order: OrderDTO)
+    {
+        orderEvent.emit("orderUpdate", {id: order.customer?.id, message: order.state});
+        return order;
+    }
 
     export function create(newOrder: OrderDTO) {
         const newMenus = newOrder?.articles?.filter((a) => a.subArticles && a.subArticles.length);
@@ -81,7 +91,6 @@ export namespace OrderRepository {
 
     export function getAll() {
         return Order.find().then((orders: any) => {
-            console.log(orders);
             return Promise.resolve(orders.map((o: any) => new OrderDTO(o)));
         });
     }
@@ -115,7 +124,7 @@ export namespace OrderRepository {
             }
             return Promise.reject("Order not found");
         }).then((order: any) => {
-            return Promise.resolve(new OrderDTO(order));
+            return Promise.resolve(updateOrderEvent(new OrderDTO(order)));
         })
     }
 
@@ -134,7 +143,7 @@ export namespace OrderRepository {
             }
             return Promise.reject("Order not found");
         }).then((order: any) => {
-            return Promise.resolve(new OrderDTO(order));
+            return Promise.resolve(updateOrderEvent(new OrderDTO(order)));
         })
     }
 
