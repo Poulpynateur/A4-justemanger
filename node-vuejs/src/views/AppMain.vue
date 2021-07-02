@@ -1,6 +1,7 @@
 <template>
   <div>
     <app-welcome v-if="!isConnected()"></app-welcome>
+    <app-external-dev v-else-if="haveRole('admin') || haveRole('developper')"></app-external-dev>
     <app-consumer v-else-if="haveRole('enduser.consumer')"></app-consumer>
     <app-delivery v-else-if="haveRole('enduser.delivery')"></app-delivery>
     <app-restorer v-else-if="haveRole('enduser.restorer')"></app-restorer>
@@ -18,6 +19,7 @@ import Vue from "vue";
 import LoginModal from "../components/LoginModal.vue";
 
 import AppWelcome from "./layout/AppWelcome.vue";
+import AppExternalDev from "./layout/AppExternalDev.vue";
 import AppConsumer from "./layout/AppConsumer.vue";
 import AppDelivery from "./layout/AppDelivery.vue";
 import AppRestorer from "./layout/AppRestorer.vue";
@@ -29,7 +31,8 @@ export default Vue.extend({
     AppWelcome,
     AppConsumer,
     AppDelivery,
-    AppRestorer
+    AppRestorer,
+    AppExternalDev
   },
   data() {
     return {

@@ -141,5 +141,9 @@
             "progress": "Livraison en cours",
             "end": "Commande livrée"
         }
+    },
+    "externalDev": {
+        "component": "Télécharger les composants",
+        "npm": "Composant : Powered by JusteManger"
     }
 }
