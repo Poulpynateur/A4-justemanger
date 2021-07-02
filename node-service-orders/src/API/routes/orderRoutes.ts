@@ -17,4 +17,6 @@ router.get('/users/:userId/orders/updates', auth.connected, orderWS.orderConsume
 router.get('/restaurants/:restaurantId/orders/updates', auth.connected, orderWS.orderRestaurantSSE);
 router.get('/deliveries/available-orders/updates', auth.connected, orderWS.orderDeliverySSE);
 
+router.get('/orders-stats', orderWS.getOrdersStats);
+
 export default router;

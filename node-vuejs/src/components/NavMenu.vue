@@ -16,11 +16,9 @@
           @click="openLoginModal"
           >{{ $t("auth.login") + " / " + $t("auth.register") }}</a
         >
-          <b-navbar-dropdown v-else :arrowless="true" :label="$t('account')">
+          <b-navbar-dropdown v-else :arrowless="true" :label="getUserFullName">
             <b-navbar-item>
-              <router-link :to="{ name: 'user-profile' }">{{
-                getUserFullName
-              }}</router-link>
+              <router-link :to="{ name: 'user-profile' }">{{$t('account') }}</router-link>
             </b-navbar-item>
             <b-navbar-item v-if="hasRole('enduser.consumer')">
             <router-link :to="{ name: 'order-history' }">{{

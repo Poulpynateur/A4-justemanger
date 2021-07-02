@@ -52,6 +52,7 @@ services:
             - ./node-service-users:/app
 
     service-orders:
+#        scale: 2
         build: ./node-service-orders
         depends_on:
              - db-mongo

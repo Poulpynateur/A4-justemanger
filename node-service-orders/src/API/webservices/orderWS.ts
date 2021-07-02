@@ -122,7 +122,18 @@ function orderConsumerSSE(req: Request, res: Response)
     });
 }
 
+function getOrdersStats(req: Request, res: Response)
+{
+    orderService.getOrdersStats()
+        .then((ordersStats: any) => {
+            res.status(200).json(ordersStats);
+        }).catch((error: any) => {
+            res.status(400).json({ "message": error.toString() });
+        });
+}
+
 export default {
+    getOrdersStats,
     orderDeliverySSE,
     orderRestaurantSSE,
     orderConsumerSSE,

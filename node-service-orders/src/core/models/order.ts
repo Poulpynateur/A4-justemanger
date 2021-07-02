@@ -50,18 +50,15 @@ export class OrderDTO {
 export const orderEvent = new events.EventEmitter();
 export namespace OrderRepository {
 
-    function consumerEvent(order: OrderDTO)
-    {
+    function consumerEvent(order: OrderDTO) {
         orderEvent.emit("consumer", order.state);
         return order;
     }
-    function restaurantEvent(order: OrderDTO)
-    {
+    function restaurantEvent(order: OrderDTO) {
         orderEvent.emit("restaurant", order.state);
         return order;
     }
-    function deliveryEvent(order: OrderDTO)
-    {
+    function deliveryEvent(order: OrderDTO) {
         orderEvent.emit("delivery", order.state);
         return order;
     }
@@ -109,70 +106,74 @@ export namespace OrderRepository {
         return Order.find({
             'customer.id': userId
         })
-        .then((orders: any) => {
-            return Promise.resolve(orders.map((o: any) => new OrderDTO(o)));
-        });
+            .then((orders: any) => {
+                return Promise.resolve(orders.map((o: any) => new OrderDTO(o)));
+            });
     }
 
-    export function getFromRestaurant(restaurantId: string)
-    {
+    export function getFromRestaurant(restaurantId: string) {
         return Order.find({
             'restaurant._id': restaurantId
         })
-        .then((orders: any) => {
+            .then((orders: any) => {
+                return Promise.resolve(orders.map((o: any) => new OrderDTO(o)));
+            });
+    }
+
+    export function updateOrderState(orderId: string, state: string) {
+        return Order.findById(orderId)
+            .then((order: any) => {
+                if (order) {
+                    order.state = state;
+                    return order.save();
+                }
+                return Promise.reject("Order not found");
+            }).then((order: any) => {
+                return Promise.resolve(consumerEvent(deliveryEvent(new OrderDTO(order))));
+            })
+    }
+
+    export function updateOrderDelivery(orderId: string, state: string, deliveryBoy: UserDTO) {
+        return Order.findById(orderId)
+            .then((order: any) => {
+                if (order) {
+                    order.state = state;
+                    order.delivery_boy = new User({
+                        id: deliveryBoy.id,
+                        first_name: deliveryBoy.firstName,
+                        last_name: deliveryBoy.lastName
+                    });
+                    return order.save();
+                }
+                return Promise.reject("Order not found");
+            }).then((order: any) => {
+                return Promise.resolve(consumerEvent(new OrderDTO(order)));
+            })
+    }
+
+    export function getAvailableDelivery() {
+        return Order.find({ state: 'restaurant.finished' }).then((orders: any) => {
             return Promise.resolve(orders.map((o: any) => new OrderDTO(o)));
         });
     }
 
-    export function updateOrderState(orderId: string, state: string)
-    {
-        return Order.findById(orderId)
-        .then((order: any) => {
+    export function getOrderFromDeliveryBoy(deliveryBoyId: number) {
+        return Order.findOne({ 'delivery_boy.id': deliveryBoyId, state: 'delivery.progress' }).then((order: any) => {
             if (order) {
-                order.state = state;
-                return order.save();
-            }
-            return Promise.reject("Order not found");
-        }).then((order: any) => {
-            return Promise.resolve(consumerEvent(deliveryEvent(new OrderDTO(order))));
-        })
-    }
-
-    export function updateOrderDelivery(orderId: string, state: string, deliveryBoy: UserDTO)
-    {
-        return Order.findById(orderId)
-        .then((order: any) => {
-            if (order) {
-                order.state = state;
-                order.delivery_boy = new User({
-                    id: deliveryBoy.id,
-                    first_name: deliveryBoy.firstName,
-                    last_name: deliveryBoy.lastName
-                });
-                return order.save();
-            }
-            return Promise.reject("Order not found");
-        }).then((order: any) => {
-            return Promise.resolve(consumerEvent(new OrderDTO(order)));
-        })
-    }
-
-    export function getAvailableDelivery()
-    {
-        return Order.find({state: 'restaurant.finished'}).then((orders: any) => {
-            return Promise.resolve(orders.map((o: any) => new OrderDTO(o)));
-        });
-    }
-
-    export function getOrderFromDeliveryBoy(deliveryBoyId: number)
-    {
-        return Order.findOne({'delivery_boy.id': deliveryBoyId, state: 'delivery.progress'}).then((order: any) => {
-            if (order)
-            {
                 return Promise.resolve(new OrderDTO(order));
             }
             return Promise.reject("No delivery.");
         });
+    }
+
+    export function getTotalOrderRestaurants() {
+        const aggregatorOpts = [{
+            $group: {
+                _id: "$restaurant.name",
+                count: { $sum: 1 }
+            }
+        }]
+        return Order.aggregate(aggregatorOpts);
     }
 }
 

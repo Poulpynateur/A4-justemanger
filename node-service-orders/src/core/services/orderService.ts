@@ -55,7 +55,13 @@ function getStats()
     });
 }
 
+function getOrdersStats()
+{
+    return OrderRepository.getTotalOrderRestaurants();
+}
+
 export default {
+    getOrdersStats,
     getAll,
     create,
     getFromUser,

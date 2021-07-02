@@ -47,3 +47,20 @@ Accèder au shell d'un conteneur :
 ```
 docker-compose exec [nom-container] /bin/bash
 ```
+
+# Récupération des stats et events
+
+Récupération des valeurs statistiques (CPU, mémoire, DD) :
+```
+docker stats -a
+```
+
+Récupération des events générals :
+```
+docker events
+```
+
+Récupération des events networks () :
+```
+docker system events --filter 'type=network'
+```
